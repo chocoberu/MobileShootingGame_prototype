@@ -34,6 +34,16 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	class UAnimInstance* AnimInstance;
 
+	// Weapon
+	UPROPERTY()
+	class ASWeapon* CurrentWeapon;
+
+	UPROPERTY(EditAnywhere, Category = "Player")
+	TSubclassOf<class ASWeapon> StarterWeaponClass;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Player")
+	FName WeaponAttachSocketName;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
