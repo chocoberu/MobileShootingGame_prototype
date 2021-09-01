@@ -4,34 +4,31 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "SWeapon.generated.h"
+#include "SProjectile.generated.h"
 
 UCLASS()
-class MOBILESHOOTING_API ASWeapon : public AActor
+class MOBILESHOOTING_API ASProjectile : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ASWeapon();
+	ASProjectile();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-	
-	// Virtual fuunc 
-	// 하위 클래스에서 구현
-	virtual void NormalAttack();
-
-	virtual void SkillAttack();
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
 protected:
-	
+
 	// Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	class USkeletalMeshComponent* MeshComp;
+	class USphereComponent* SphereComp;
 
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	class UStaticMeshComponent* MeshComp;
 };
