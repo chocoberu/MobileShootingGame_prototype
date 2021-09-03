@@ -4,6 +4,7 @@
 #include "SProjectile.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 
 // Sets default values
 ASProjectile::ASProjectile()
@@ -13,9 +14,18 @@ ASProjectile::ASProjectile()
 
 	SphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComop"));
+	ProjectileMovemetComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComp"));
 
 	RootComponent = SphereComp;
 	MeshComp->SetupAttachment(RootComponent);
+	
+	ProjectileMovemetComp->SetUpdatedComponent(RootComponent);
+	ProjectileMovemetComp->InitialSpeed = 1000.0f;
+	ProjectileMovemetComp->MaxSpeed = 1000.0f;
+	ProjectileMovemetComp->bRotationFollowsVelocity = true;
+	ProjectileMovemetComp->bShouldBounce = true;
+	ProjectileMovemetComp->Bounciness = 0.3f;
+
 }
 
 // Called when the game starts or when spawned
