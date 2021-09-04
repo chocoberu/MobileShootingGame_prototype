@@ -33,5 +33,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class USkeletalMeshComponent* MeshComp;
 
+	UPROPERTY()
+	class ASProjectile* Projectile;
+	
+	UPROPERTY(EditAnywhere, Category = "Weapon")
+	TSubclassOf<class ASProjectile> ProjectileClass;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Weapon")
+	FName WeaponMuzzleSocketName;
 
 };

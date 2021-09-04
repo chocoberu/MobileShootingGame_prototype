@@ -23,6 +23,9 @@ protected:
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 
+	UFUNCTION()
+	void OnHealthChanged(class USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
+
 	// Camera
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UCameraComponent* CameraComp;
@@ -34,15 +37,21 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	class UAnimInstance* AnimInstance;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	class USHealthComponent* HealthComp;
+
 	// Weapon
 	UPROPERTY()
-	class ASWeapon* CurrentWeapon;
+	class ASWeapon* MainWeapon;
 
 	UPROPERTY(EditAnywhere, Category = "Player")
-	TSubclassOf<class ASWeapon> StarterWeaponClass;
+	TSubclassOf<class ASWeapon> MainWeaponClass;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Player")
 	FName WeaponAttachSocketName;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Player")
+	bool bDied;
 
 public:	
 	// Called every frame
@@ -50,5 +59,7 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	virtual void MainAttack();
 
 };

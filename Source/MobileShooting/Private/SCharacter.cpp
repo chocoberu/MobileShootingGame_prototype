@@ -6,6 +6,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "SWeapon.h"
+#include "Components/SHealthComponent.h"
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -21,6 +23,12 @@ ASCharacter::ASCharacter()
 
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComp->SetupAttachment(SpringArmComp);
+
+	HealthComp = CreateDefaultSubobject<USHealthComponent>(TEXT("HealthComp"));
+	HealthComp->OnHealthChanged.AddUObject(this, &ASCharacter::OnHealthChanged);
+
+	WeaponAttachSocketName = TEXT("hand_r_weapon");
+	bDied = false;
 }
 
 // Called when the game starts or when spawned
@@ -32,6 +40,17 @@ void ASCharacter::BeginPlay()
 
 	if (AnimInstance == nullptr)
 		UE_LOG(LogTemp, Error, TEXT("AnimInstance is nullptr"));
+
+	// Spawn a default weapon
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	MainWeapon = GetWorld()->SpawnActor<ASWeapon>(MainWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+	if (MainWeapon != nullptr)
+	{
+		MainWeapon->SetOwner(this);
+		MainWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponAttachSocketName);
+	}
 }
 
 void ASCharacter::MoveForward(float Value)
@@ -42,6 +61,25 @@ void ASCharacter::MoveForward(float Value)
 void ASCharacter::MoveRight(float Value)
 {
 	AddMovementInput(GetActorRightVector() * Value);
+}
+
+void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
+{
+	if (Health <= 0.0f && !bDied)
+	{
+		bDied = true;
+
+		GetMovementComponent()->StopMovementImmediately();
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		//auto AnimInst = Cast<UTPlayerAnimInstance>(GetMesh()->GetAnimInstance());
+		//AnimInst->SetDeadAnim();
+
+		DetachFromControllerPendingDestroy();
+		//GetWorldTimerManager().ClearTimer(NormalAttackTimer);
+
+		SetLifeSpan(10.0f);
+	}
 }
 
 // Called every frame
@@ -63,6 +101,18 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAxis("Turn", this, &ACharacter::AddControllerYawInput);
 
 	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("MainAttack", EInputEvent::IE_Pressed, this, &ASCharacter::MainAttack);
 
+}
+
+void ASCharacter::MainAttack()
+{
+	if (MainWeapon == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("MainWeapon is nullptr"));
+		return;
+	}
+
+	MainWeapon->NormalAttack();
 }
 

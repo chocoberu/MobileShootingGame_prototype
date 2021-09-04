@@ -11,6 +11,8 @@ ASRifleBullet::ASRifleBullet()
 void ASRifleBullet::BeginPlay()
 {
 	Super::BeginPlay();
+
+	SetLifeSpan(3.0f);
 }
 
 void ASRifleBullet::Tick(float DeltaTime)
