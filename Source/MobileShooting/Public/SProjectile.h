@@ -23,6 +23,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+
+	float GetAttackDamage() const { return AttackDamage; }
+
 protected:
 
 	// Components
@@ -34,4 +38,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UProjectileMovementComponent* ProjectileMovemetComp;
+
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	float AttackDamage;
 };

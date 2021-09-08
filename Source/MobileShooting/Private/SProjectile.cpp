@@ -5,6 +5,7 @@
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "GameFramework/Character.h"
 
 // Sets default values
 ASProjectile::ASProjectile()
@@ -18,6 +19,8 @@ ASProjectile::ASProjectile()
 
 	RootComponent = SphereComp;
 	MeshComp->SetupAttachment(RootComponent);
+
+	MeshComp->SetCollisionProfileName(TEXT("Projectile"));
 	
 	ProjectileMovemetComp->SetUpdatedComponent(RootComponent);
 	ProjectileMovemetComp->InitialSpeed = 1000.0f;
@@ -40,5 +43,24 @@ void ASProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ASProjectile::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorBeginOverlap(OtherActor);
+
+	if (OtherActor == GetOwner())
+		return;
+	
+	auto Player = Cast<ACharacter>(OtherActor);
+	if (Player != nullptr)
+	{
+		FDamageEvent DamageEvent;
+		Player->TakeDamage(AttackDamage, DamageEvent, nullptr, GetOwner());
+		UE_LOG(LogTemp, Log, TEXT("Projectile Overlap %s Damage : %f"), *OtherActor->GetName(), AttackDamage);
+	}
+
+	SphereComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	SetActorHiddenInGame(true);
 }
 
