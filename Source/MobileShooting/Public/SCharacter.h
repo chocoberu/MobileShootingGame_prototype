@@ -60,6 +60,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	virtual void MainAttack();
+	virtual void StartMainAttack();
+
+	virtual void StopMainAttack();
 
 };

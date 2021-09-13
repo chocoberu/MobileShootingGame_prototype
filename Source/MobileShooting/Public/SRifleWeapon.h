@@ -26,6 +26,10 @@ public:
 	
 	// Virtual fuunc 
 	// 하위 클래스에서 구현
+	virtual void StartNormalAttack();
+
+	virtual void StopNormalAttack();
+
 	virtual void NormalAttack();
 
 	virtual void SkillAttack();

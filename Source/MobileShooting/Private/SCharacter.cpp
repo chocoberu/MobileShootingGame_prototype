@@ -72,12 +72,7 @@ void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Hea
 		GetMovementComponent()->StopMovementImmediately();
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-		//auto AnimInst = Cast<UTPlayerAnimInstance>(GetMesh()->GetAnimInstance());
-		//AnimInst->SetDeadAnim();
-
 		DetachFromControllerPendingDestroy();
-		//GetWorldTimerManager().ClearTimer(NormalAttackTimer);
-
 		SetLifeSpan(10.0f);
 	}
 }
@@ -101,18 +96,19 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAxis("Turn", this, &ACharacter::AddControllerYawInput);
 
 	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("MainAttack", EInputEvent::IE_Pressed, this, &ASCharacter::MainAttack);
+	PlayerInputComponent->BindAction("MainAttack", EInputEvent::IE_Pressed, this, &ASCharacter::StartMainAttack);
+	PlayerInputComponent->BindAction("MainAttack", EInputEvent::IE_Released, this, &ASCharacter::StopMainAttack);
 
 }
 
-void ASCharacter::MainAttack()
+void ASCharacter::StartMainAttack()
 {
-	if (MainWeapon == nullptr)
-	{
-		UE_LOG(LogTemp, Error, TEXT("MainWeapon is nullptr"));
-		return;
-	}
-
-	MainWeapon->NormalAttack();
+	if(MainWeapon)
+		MainWeapon->StartNormalAttack();
 }
 
+void ASCharacter::StopMainAttack()
+{
+	if(MainWeapon)
+		MainWeapon->StopNormalAttack();
+}

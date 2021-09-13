@@ -19,10 +19,21 @@ void ASWeapon::BeginPlay()
 	
 }
 
+void ASWeapon::StartNormalAttack()
+{
+	// 하위 클래스에서 구현
+}
+
+void ASWeapon::StopNormalAttack()
+{
+	// 하위 클래스에서 구현
+}
+
 void ASWeapon::NormalAttack()
 {
 	// 하위 클래스에서 구현
 }
+
 
 void ASWeapon::SkillAttack()
 {

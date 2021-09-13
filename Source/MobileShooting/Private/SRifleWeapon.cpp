@@ -12,6 +12,20 @@ ASRifleWeapon::ASRifleWeapon()
 void ASRifleWeapon::BeginPlay()
 {
 	Super::BeginPlay();
+
+	NormalAttackCoolTime = 60.0f / RateOfFire;
+}
+
+void ASRifleWeapon::StartNormalAttack()
+{
+	float FirstDelay = FMath::Max(LastNormalAttackTime + NormalAttackCoolTime - GetWorld()->TimeSeconds, 0.0f);
+
+	GetWorldTimerManager().SetTimer(NormalAttackTimer, this, &ASRifleWeapon::NormalAttack, NormalAttackCoolTime, true, FirstDelay);
+}
+
+void ASRifleWeapon::StopNormalAttack()
+{
+	GetWorldTimerManager().ClearTimer(NormalAttackTimer);
 }
 
 void ASRifleWeapon::NormalAttack()
@@ -36,8 +50,6 @@ void ASRifleWeapon::NormalAttack()
 	{
 		Bullet->SetOwner(MyOwner);
 	}
-	
-	
 }
 
 void ASRifleWeapon::SkillAttack()
