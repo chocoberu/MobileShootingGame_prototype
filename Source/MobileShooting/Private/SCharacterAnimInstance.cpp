@@ -16,4 +16,18 @@ void USCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 void USCharacterAnimInstance::PlayNormalAttack()
 {
 	// TODO
+	if (NormalAttackMontage != nullptr)
+	{
+		Montage_Play(NormalAttackMontage, 1.0f);
+		UE_LOG(LogTemp, Log, TEXT("NormalAttack Montage Play"));
+	}
+}
+
+void USCharacterAnimInstance::PlayReload()
+{
+	if (ReloadMontage != nullptr)
+	{
+		Montage_Play(ReloadMontage, 1.0f);
+		UE_LOG(LogTemp, Log, TEXT("Reload Montage Play"));
+	}
 }

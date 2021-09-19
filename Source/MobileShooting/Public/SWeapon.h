@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "SWeapon.generated.h"
 
+using FOnReloadMontageDelegate = TMulticastDelegate<void()>;
+
 UCLASS()
 class MOBILESHOOTING_API ASWeapon : public AActor
 {
@@ -55,5 +57,23 @@ protected:
 
 	float LastNormalAttackTime;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	int32 DefaultBulletCount;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	int32 CurrentBulletCount;
+
+	bool bReloading;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	float ReloadCoolTime;
+
+	FTimerHandle ReloadTimer;
+
 	FTimerHandle NormalAttackTimer;
+
+public:
+	// µ®∏Æ∞‘¿Ã∆Æ
+
+	FOnReloadMontageDelegate OnReloadMontageDelegate;
 };

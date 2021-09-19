@@ -22,8 +22,15 @@ public:
 
 	virtual void PlayNormalAttack();
 
+	virtual void PlayReload();
+
 protected:
+
+	// Montage
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Attack", Meta = (AllowPrivateAccess = true))
 	UAnimMontage* NormalAttackMontage;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Attack", Meta = (AllowPrivateAccess = true))
+	UAnimMontage* ReloadMontage;
 };

@@ -18,8 +18,12 @@ void ASRifleWeapon::BeginPlay()
 
 void ASRifleWeapon::StartNormalAttack()
 {
-	float FirstDelay = FMath::Max(LastNormalAttackTime + NormalAttackCoolTime - GetWorld()->TimeSeconds, 0.0f);
+	if (bReloading == true)
+	{
+		return;
+	}
 
+	float FirstDelay = FMath::Max(LastNormalAttackTime + NormalAttackCoolTime - GetWorld()->TimeSeconds, 0.0f);
 	GetWorldTimerManager().SetTimer(NormalAttackTimer, this, &ASRifleWeapon::NormalAttack, NormalAttackCoolTime, true, FirstDelay);
 }
 
@@ -49,6 +53,29 @@ void ASRifleWeapon::NormalAttack()
 	if (Bullet != nullptr)
 	{
 		Bullet->SetOwner(MyOwner);
+	}
+
+	// 醚舅 荐 贸府
+
+	CurrentBulletCount--;
+
+	UE_LOG(LogTemp, Log, TEXT("Current Bullet : %d"), CurrentBulletCount);
+
+	if (CurrentBulletCount == 0)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Reloading"));
+		bReloading = true;
+		StopNormalAttack();
+
+		// 胆府霸捞飘 贸府
+		OnReloadMontageDelegate.Broadcast();
+
+		// 酿鸥烙 贸府
+		GetWorldTimerManager().SetTimer(ReloadTimer, FTimerDelegate::CreateLambda([&]() {
+			bReloading = false;
+			CurrentBulletCount = DefaultBulletCount;
+			}), ReloadCoolTime, false);
+
 	}
 }
 
