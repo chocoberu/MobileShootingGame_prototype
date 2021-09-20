@@ -24,6 +24,8 @@ public:
 
 	virtual void PlayReload();
 
+	void SetDeadAnim(bool Value);
+
 protected:
 
 	// Montage
@@ -33,4 +35,8 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Attack", Meta = (AllowPrivateAccess = true))
 	UAnimMontage* ReloadMontage;
+
+	// Dead
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Attack", Meta = (AllowPrivateAccess = true))
+	bool bDead = false;
 };

@@ -31,3 +31,8 @@ void USCharacterAnimInstance::PlayReload()
 		UE_LOG(LogTemp, Log, TEXT("Reload Montage Play"));
 	}
 }
+
+void USCharacterAnimInstance::SetDeadAnim(bool Value)
+{
+	bDead = Value;
+}

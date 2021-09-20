@@ -65,6 +65,13 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Player")
 	FName WeaponAttachSocketName;
 
+	// UI, HUD
+	
+	// Controller
+	UPROPERTY()
+	class ASPlayerController* PlayerController;
+	
+
 	UPROPERTY(BlueprintReadOnly, Category = "Player")
 	bool bDied;
 

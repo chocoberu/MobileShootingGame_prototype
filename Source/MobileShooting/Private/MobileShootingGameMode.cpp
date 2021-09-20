@@ -3,6 +3,7 @@
 #include "MobileShootingGameMode.h"
 #include "MobileShootingCharacter.h"
 #include "UObject/ConstructorHelpers.h"
+#include "SPlayerController.h"
 
 AMobileShootingGameMode::AMobileShootingGameMode()
 {
@@ -10,6 +11,8 @@ AMobileShootingGameMode::AMobileShootingGameMode()
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/ThirdPersonCPP/Blueprints/ThirdPersonCharacter"));
 	if (PlayerPawnBPClass.Class != NULL)
 	{
-		DefaultPawnClass = PlayerPawnBPClass.Class;
+		DefaultPawnClass = PlayerPawnBPClass.Class;		
 	}
+
+	PlayerControllerClass = ASPlayerController::StaticClass();
 }

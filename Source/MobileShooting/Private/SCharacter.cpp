@@ -9,6 +9,7 @@
 #include "SWeapon.h"
 #include "Components/SHealthComponent.h"
 #include "SCharacterAnimInstance.h"
+#include "SPlayerController.h"
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -28,13 +29,13 @@ ASCharacter::ASCharacter()
 	HealthComp = CreateDefaultSubobject<USHealthComponent>(TEXT("HealthComp"));
 	HealthComp->OnHealthChanged.AddUObject(this, &ASCharacter::OnHealthChanged);
 
+	// UI
+
 	WeaponAttachSocketName = TEXT("hand_r_weapon");
 	bDied = false;
 
-	// 카메라
+	// 카메라 설정
 	{
-		//ArmLengthTo = 800.0f;
-		//ArmRotationTo = FRotator(-45.0f, 0.0f, 0.0f);
 		SpringArmComp->bUsePawnControlRotation = false;
 		SpringArmComp->bInheritPitch = false;
 		SpringArmComp->bInheritRoll = false;
@@ -42,6 +43,8 @@ ASCharacter::ASCharacter()
 		SpringArmComp->bDoCollisionTest = false;
 		bUseControllerRotationYaw = true;
 	}
+
+	
 }
 
 // Called when the game starts or when spawned
@@ -52,7 +55,16 @@ void ASCharacter::BeginPlay()
 	AnimInstance = Cast<USCharacterAnimInstance>(GetMesh()->GetAnimInstance());
 
 	if (AnimInstance == nullptr)
+	{
 		UE_LOG(LogTemp, Error, TEXT("AnimInstance is nullptr"));
+	}
+
+	PlayerController = Cast<ASPlayerController>(GetController());
+
+	if (PlayerController == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("PlayerController is nullptr"));
+	}
 
 	// Spawn a default weapon
 	FActorSpawnParameters SpawnParams;
@@ -66,6 +78,8 @@ void ASCharacter::BeginPlay()
 
 		MainWeapon->OnReloadMontageDelegate.AddUObject(this, &ASCharacter::ReloadMainWeapon);
 	}
+
+	GetController();
 }
 
 void ASCharacter::MoveForward(float Value)
@@ -88,6 +102,12 @@ void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Hea
 		if (MainWeapon != nullptr)
 		{
 			MainWeapon->StopNormalAttack();
+			MainWeapon->SetLifeSpan(10.0f);
+		}
+
+		if (AnimInstance != nullptr)
+		{
+			AnimInstance->SetDeadAnim(true);
 		}
 
 		bDied = true;
