@@ -2,10 +2,10 @@
 
 
 #include "SProjectile.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
-#include "GameFramework/ProjectileMovementComponent.h"
-#include "GameFramework/Character.h"
+
 
 // Sets default values
 ASProjectile::ASProjectile()
@@ -48,19 +48,8 @@ void ASProjectile::Tick(float DeltaTime)
 void ASProjectile::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
-
+	
 	if (OtherActor == GetOwner())
 		return;
-	
-	auto Player = Cast<ACharacter>(OtherActor);
-	if (Player != nullptr)
-	{
-		FDamageEvent DamageEvent;
-		Player->TakeDamage(AttackDamage, DamageEvent, nullptr, GetOwner());
-		UE_LOG(LogTemp, Log, TEXT("Projectile Overlap %s Damage : %f"), *OtherActor->GetName(), AttackDamage);
-	}
-
-	SphereComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	SetActorHiddenInGame(true);
 }
 
