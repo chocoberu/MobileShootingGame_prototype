@@ -10,6 +10,7 @@
 #include "Components/SHealthComponent.h"
 #include "SCharacterAnimInstance.h"
 #include "SPlayerController.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -79,19 +80,15 @@ void ASCharacter::BeginPlay()
 		MainWeapon->OnReloadMontageDelegate.AddUObject(this, &ASCharacter::ReloadMainWeapon);
 	}
 
-	GetController();
 }
 
 void ASCharacter::MoveForward(float Value)
 {
-	//AddMovementInput(GetActorForwardVector() * Value);
-
 	DirectionToMove.X = Value;
 }
 
 void ASCharacter::MoveRight(float Value)
 {
-	//AddMovementInput(GetActorRightVector() * Value);
 	DirectionToMove.Y = Value;
 }
 
@@ -115,8 +112,14 @@ void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Hea
 		GetMovementComponent()->StopMovementImmediately();
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-		DetachFromControllerPendingDestroy();
-		SetLifeSpan(10.0f);
+		//DetachFromControllerPendingDestroy();
+		//SetLifeSpan(10.0f);
+
+		// TODO : Character를 5초 후에 리스폰 or 시작 위치로 조정
+
+		//GetController()->Rest
+		//AGameModeBase* gameMode = UGameplayStatics::GetGameMode(GetWorld());
+		
 	}
 }
 
@@ -142,8 +145,6 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &ASCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ASCharacter::MoveRight);
-	//PlayerInputComponent->BindAxis("LookUp", this, &ACharacter::AddControllerPitchInput);
-	//PlayerInputComponent->BindAxis("Turn", this, &ACharacter::AddControllerYawInput);
 
 	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("MainAttack", EInputEvent::IE_Pressed, this, &ASCharacter::StartMainAttack);
