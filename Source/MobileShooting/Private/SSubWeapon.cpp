@@ -2,6 +2,8 @@
 
 
 #include "SSubWeapon.h"
+#include "Components/SphereComponent.h"
+#include "Components/StaticMeshComponent.h"
 
 // Sets default values
 ASSubWeapon::ASSubWeapon()
@@ -9,6 +11,13 @@ ASSubWeapon::ASSubWeapon()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	SphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
+	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComop"));
+
+	RootComponent = SphereComp;
+	MeshComp->SetupAttachment(RootComponent);
+
+	MeshComp->SetCollisionProfileName(TEXT("Projectile"));
 }
 
 // Called when the game starts or when spawned

@@ -21,8 +21,16 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
 	float BombDamage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
+	float BombAttackRadius;
+
+	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
+	float  BombTime;
+
+	FTimerHandle BombTimer;
 
 public:
 	// Called every frame

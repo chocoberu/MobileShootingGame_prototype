@@ -2,6 +2,8 @@
 
 
 #include "SBombSubWeapon.h"
+#include "Kismet/GameplayStatics.h"
+#include "DrawDebugHelpers.h"
 
 ASBombSubWeapon::ASBombSubWeapon()
 {
@@ -11,6 +13,8 @@ ASBombSubWeapon::ASBombSubWeapon()
 void ASBombSubWeapon::BeginPlay()
 {
 	Super::BeginPlay();
+
+	GetWorldTimerManager().SetTimer(BombTimer,this, &ASSubWeapon::SubWeaponAttack, BombTime, false);
 }
 
 void ASBombSubWeapon::Tick(float DeltaTime)
@@ -20,5 +24,10 @@ void ASBombSubWeapon::Tick(float DeltaTime)
 
 void ASBombSubWeapon::SubWeaponAttack()
 {
+	TArray<AActor*> IgnoredActors;
+	IgnoredActors.Add(this);
 
+	UGameplayStatics::ApplyRadialDamage(this, BombDamage, GetActorLocation(), BombAttackRadius, nullptr, IgnoredActors, this, GetInstigatorController(), true);
+	DrawDebugSphere(GetWorld(), GetActorLocation(), BombAttackRadius, 12, FColor::Yellow, false, 1.0f, 0, 1.0f);
+	Destroy();
 }
