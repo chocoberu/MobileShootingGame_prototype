@@ -29,5 +29,7 @@ void ASBombSubWeapon::SubWeaponAttack()
 
 	UGameplayStatics::ApplyRadialDamage(this, BombDamage, GetActorLocation(), BombAttackRadius, nullptr, IgnoredActors, this, GetInstigatorController(), true);
 	DrawDebugSphere(GetWorld(), GetActorLocation(), BombAttackRadius, 12, FColor::Yellow, false, 1.0f, 0, 1.0f);
+
+	GetWorldTimerManager().ClearTimer(BombTimer);
 	Destroy();
 }
