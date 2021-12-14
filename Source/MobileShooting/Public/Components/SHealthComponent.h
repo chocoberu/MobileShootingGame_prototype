@@ -41,6 +41,7 @@ public:
 	float GetDefaultHealth() const;
 
 	void SetHealth(float NewHealth);
+	void RestoreHealth(void);
 
 	FOnHealthChangedDelegate OnHealthChanged;
 		

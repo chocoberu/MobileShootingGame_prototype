@@ -26,8 +26,7 @@ void USHealthComponent::BeginPlay()
 		Owner->OnTakeAnyDamage.AddDynamic(this, &USHealthComponent::HandleTakeAnyDamage);
 	}
 
-	Health = DefaultHealth;
-	
+	RestoreHealth();
 }
 
 void USHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
@@ -75,5 +74,10 @@ void USHealthComponent::SetHealth(float NewHealth)
 {
 	Health = FMath::Clamp(NewHealth, 0.0f, DefaultHealth);
 	OnHealthChanged.Broadcast(this, Health, 0.0f, nullptr, nullptr, nullptr);
+}
+
+void USHealthComponent::RestoreHealth(void)
+{
+	Health = DefaultHealth;
 }
 

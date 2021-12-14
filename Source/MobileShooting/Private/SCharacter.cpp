@@ -44,7 +44,7 @@ ASCharacter::ASCharacter()
 		bUseControllerRotationYaw = true;
 	}
 
-	
+	RespawnTime = 5.0f;
 }
 
 // Called when the game starts or when spawned
@@ -116,6 +116,8 @@ void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Hea
 
 		// TODO : Character를 5초 후에 리스폰 or 시작 위치로 조정
 
+		GetWorldTimerManager().SetTimer(RespawnTimer, this, &ASCharacter::RespawnCharacter, RespawnTime, false);
+
 		//GetController()->Rest
 		//AGameModeBase* gameMode = UGameplayStatics::GetGameMode(GetWorld());
 		
@@ -183,4 +185,13 @@ void ASCharacter::ReloadMainWeapon()
 	}
 
 	AnimInstance->PlayReload();
+}
+
+void ASCharacter::RespawnCharacter(void)
+{
+	HealthComp->RestoreHealth();
+	AnimInstance->SetDeadAnim(false);
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics); // 임시로 설정, TODO : 수정 필요
+
+	// TODO : Respawn 할 때 필요한 작업 추가
 }

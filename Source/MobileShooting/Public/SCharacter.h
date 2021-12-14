@@ -17,7 +17,7 @@ public:
 
 protected:
 	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	virtual void BeginPlay(void) override;
 
 	// Input Func
 	void MoveForward(float Value);
@@ -71,9 +71,14 @@ protected:
 	UPROPERTY()
 	class ASPlayerController* PlayerController;
 	
-
+	// HP
 	UPROPERTY(BlueprintReadOnly, Category = "Player")
 	bool bDied;
+
+	UPROPERTY(EditDefaultsOnly, Category = "HealthComponent")
+	float RespawnTime;
+
+	FTimerHandle RespawnTimer;
 
 
 public:	
@@ -83,10 +88,11 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	virtual void StartMainAttack();
+	virtual void StartMainAttack(void);
 
-	virtual void StopMainAttack();
+	virtual void StopMainAttack(void);
 
-	virtual void ReloadMainWeapon();
+	virtual void ReloadMainWeapon(void);
 
+	void RespawnCharacter(void);
 };
