@@ -31,8 +31,10 @@ void USHealthComponent::BeginPlay()
 
 void USHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
-	if (Damage <= 0.0f || bIsDead)
+	if (Damage <= 0.0f || bIsDead == true)
+	{
 		return;
+	}
 	// TODO : 같은 팀에게 받은 데미지 무시
 
 	Health = FMath::Clamp(Health - Damage, 0.0f, DefaultHealth);
@@ -42,10 +44,10 @@ void USHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, 
 
 	OnHealthChanged.Broadcast(this, Health, Damage, DamageType, InstigatedBy, DamageCauser);
 
-	if (bIsDead)
+	/*if (bIsDead == true)
 	{
 		// TODO : 처리
-	}
+	}*/
 }
 
 
@@ -78,6 +80,7 @@ void USHealthComponent::SetHealth(float NewHealth)
 
 void USHealthComponent::RestoreHealth(void)
 {
+	UE_LOG(LogTemp, Log, TEXT("%s Restore Health"), *GetOwner()->GetName());
 	Health = DefaultHealth;
+	bIsDead = false;
 }
-

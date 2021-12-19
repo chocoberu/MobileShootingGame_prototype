@@ -6,6 +6,7 @@
 #include "GameFramework/PawnMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "SWeapon.h"
+#include "SSubWeapon.h"
 #include "Components/SHealthComponent.h"
 #include "SCharacterAnimInstance.h"
 #include "SPlayerController.h"
@@ -98,7 +99,7 @@ void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Hea
 		if (MainWeapon != nullptr)
 		{
 			MainWeapon->StopNormalAttack();
-			MainWeapon->SetLifeSpan(10.0f);
+			//MainWeapon->SetLifeSpan(10.0f);
 		}
 
 		if (AnimInstance != nullptr)
@@ -118,9 +119,6 @@ void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Hea
 
 		GetWorldTimerManager().SetTimer(RespawnTimer, this, &ASCharacter::RespawnCharacter, RespawnTime, false);
 
-		//GetController()->Rest
-		//AGameModeBase* gameMode = UGameplayStatics::GetGameMode(GetWorld());
-		
 	}
 }
 
@@ -150,6 +148,8 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("MainAttack", EInputEvent::IE_Pressed, this, &ASCharacter::StartMainAttack);
 	PlayerInputComponent->BindAction("MainAttack", EInputEvent::IE_Released, this, &ASCharacter::StopMainAttack);
+	PlayerInputComponent->BindAction("SubAttack", EInputEvent::IE_Pressed, this, &ASCharacter::StartSubAttack);
+	PlayerInputComponent->BindAction("SubAttack", EInputEvent::IE_Released, this, &ASCharacter::StopSubAttack);
 
 }
 
@@ -187,11 +187,31 @@ void ASCharacter::ReloadMainWeapon()
 	AnimInstance->PlayReload();
 }
 
+void ASCharacter::StartSubAttack(void)
+{
+	if (bDied == false)
+	{
+		FActorSpawnParameters SpawnParams;
+		SubWeapon = GetWorld()->SpawnActor<ASSubWeapon>(SubWeaponClass, GetActorLocation() + GetActorForwardVector() * 10.0f, FRotator::ZeroRotator, SpawnParams);
+
+		if(SubWeapon != nullptr)
+		{
+
+		}
+	}
+}
+
+void ASCharacter::StopSubAttack(void)
+{
+
+}
+
 void ASCharacter::RespawnCharacter(void)
 {
 	HealthComp->RestoreHealth();
 	AnimInstance->SetDeadAnim(false);
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics); // 임시로 설정, TODO : 수정 필요
 
+	bDied = false;
 	// TODO : Respawn 할 때 필요한 작업 추가
 }

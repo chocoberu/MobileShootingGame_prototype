@@ -65,6 +65,12 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Player")
 	FName WeaponAttachSocketName;
 
+	UPROPERTY()
+	class ASSubWeapon* SubWeapon;
+
+	UPROPERTY(EditAnywhere, Category = "Player")
+	TSubclassOf<class ASSubWeapon> SubWeaponClass;
+
 	// UI, HUD
 	
 	// Controller
@@ -93,6 +99,10 @@ public:
 	virtual void StopMainAttack(void);
 
 	virtual void ReloadMainWeapon(void);
+
+	virtual void StartSubAttack(void);
+
+	virtual void StopSubAttack(void);
 
 	void RespawnCharacter(void);
 };
