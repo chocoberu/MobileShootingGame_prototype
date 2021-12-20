@@ -192,11 +192,11 @@ void ASCharacter::StartSubAttack(void)
 	if (bDied == false)
 	{
 		FActorSpawnParameters SpawnParams;
-		SubWeapon = GetWorld()->SpawnActor<ASSubWeapon>(SubWeaponClass, GetActorLocation() + GetActorForwardVector() * 10.0f, FRotator::ZeroRotator, SpawnParams);
+		SubWeapon = GetWorld()->SpawnActor<ASSubWeapon>(SubWeaponClass, GetActorLocation() + GetActorForwardVector() * 50.0f, GetActorRotation(), SpawnParams);
 
 		if(SubWeapon != nullptr)
 		{
-
+			
 		}
 	}
 }

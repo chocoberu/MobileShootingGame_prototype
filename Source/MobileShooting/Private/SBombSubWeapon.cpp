@@ -2,19 +2,27 @@
 
 
 #include "SBombSubWeapon.h"
+#include "Components/SphereComponent.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
 
 ASBombSubWeapon::ASBombSubWeapon()
 {
+	ProjectileMovemetComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComp"));
 
+	ProjectileMovemetComp->InitialSpeed = 500.0f;
+	ProjectileMovemetComp->MaxSpeed = 1000.0f;
+	ProjectileMovemetComp->bRotationFollowsVelocity = true;
+	ProjectileMovemetComp->bShouldBounce = true;
+	ProjectileMovemetComp->Bounciness = 0.3f;
 }
 
 void ASBombSubWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetWorldTimerManager().SetTimer(BombTimer,this, &ASSubWeapon::SubWeaponAttack, BombTime, false);
+	GetWorldTimerManager().SetTimer(BombTimer,this, &ASSubWeapon::SubWeaponAttack, BombTime, false);	
 }
 
 void ASBombSubWeapon::Tick(float DeltaTime)

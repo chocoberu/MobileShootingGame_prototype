@@ -39,4 +39,7 @@ protected:
 	// Dead
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Attack", Meta = (AllowPrivateAccess = true))
 	bool bDead = false;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Attack", Meta = (AllowPrivateAccess = true))
+	float DeadAnimStartPosition;
 };

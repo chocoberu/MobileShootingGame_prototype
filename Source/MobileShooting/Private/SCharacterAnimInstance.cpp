@@ -34,5 +34,6 @@ void USCharacterAnimInstance::PlayReload()
 
 void USCharacterAnimInstance::SetDeadAnim(bool Value)
 {
+	DeadAnimStartPosition = 0.0f;
 	bDead = Value;
 }
