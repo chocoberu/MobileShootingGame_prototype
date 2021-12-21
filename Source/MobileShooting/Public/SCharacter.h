@@ -71,6 +71,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Player")
 	TSubclassOf<class ASSubWeapon> SubWeaponClass;
 
+	UPROPERTY(VisibleDefaultsOnly, Category = "Player")
+	FName SubWeaponAttachSocketName;
+
 	// UI, HUD
 	
 	// Controller

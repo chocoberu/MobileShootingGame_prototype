@@ -34,8 +34,12 @@ void ASSubWeapon::Tick(float DeltaTime)
 
 }
 
-void ASSubWeapon::SubWeaponAttack()
+void ASSubWeapon::StartSubWeaponAttack()
 {
 	// 하위 클래스에서 구현
 }
 
+void ASSubWeapon::StopSubWeaponAttack()
+{
+	// 하위 클래스에서 구현
+}

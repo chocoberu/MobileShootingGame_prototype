@@ -2,6 +2,7 @@
 
 
 #include "SBombSubWeapon.h"
+#include "SBombSubWeaponProjectile.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -9,20 +10,14 @@
 
 ASBombSubWeapon::ASBombSubWeapon()
 {
-	ProjectileMovemetComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComp"));
-
-	ProjectileMovemetComp->InitialSpeed = 500.0f;
-	ProjectileMovemetComp->MaxSpeed = 1000.0f;
-	ProjectileMovemetComp->bRotationFollowsVelocity = true;
-	ProjectileMovemetComp->bShouldBounce = true;
-	ProjectileMovemetComp->Bounciness = 0.3f;
+	
 }
 
 void ASBombSubWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetWorldTimerManager().SetTimer(BombTimer,this, &ASSubWeapon::SubWeaponAttack, BombTime, false);	
+	CurrentBombCount = DefaultBombCount;
 }
 
 void ASBombSubWeapon::Tick(float DeltaTime)
@@ -30,14 +25,39 @@ void ASBombSubWeapon::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void ASBombSubWeapon::SubWeaponAttack()
+void ASBombSubWeapon::StartSubWeaponAttack()
 {
-	TArray<AActor*> IgnoredActors;
-	IgnoredActors.Add(this);
+	// TODO : Start 부터 Stop까지 시간을 기록
 
-	UGameplayStatics::ApplyRadialDamage(this, BombDamage, GetActorLocation(), BombAttackRadius, nullptr, IgnoredActors, this, GetInstigatorController(), true);
-	DrawDebugSphere(GetWorld(), GetActorLocation(), BombAttackRadius, 12, FColor::Yellow, false, 1.0f, 0, 1.0f);
+	// 테스트 코드
+	GetWorldTimerManager().SetTimer(BombChargingTimer, FTimerDelegate::CreateLambda([&]() {
+		UE_LOG(LogTemp, Log, TEXT("MAX TIME !"));
+		}), BombMaxChargingTime, false);
+}
 
-	GetWorldTimerManager().ClearTimer(BombTimer);
-	Destroy();
+void ASBombSubWeapon::StopSubWeaponAttack()
+{
+	// Stop일 때 폭탄을 던지는 방식
+
+	// 테스트 코드
+	GetWorldTimerManager().PauseTimer(BombChargingTimer);
+	float RemainTime = GetWorldTimerManager().GetTimerRemaining(BombChargingTimer);
+
+	UE_LOG(LogTemp, Log, TEXT("%f Time Left"), RemainTime);
+
+	GetWorldTimerManager().ClearTimer(BombChargingTimer);
+
+	if (CurrentBombCount == 0)
+	{
+		GetWorldTimerManager().SetTimer(BombReloadTimer, this, &ASBombSubWeapon::ReloadBomb, BombReloadTime, false);
+	}
+
+	
+}
+
+void ASBombSubWeapon::ReloadBomb()
+{
+	CurrentBombCount = DefaultBombCount;
+
+	GetWorldTimerManager().ClearTimer(BombReloadTimer);
 }

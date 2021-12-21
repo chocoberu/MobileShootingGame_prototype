@@ -40,16 +40,9 @@ void ASRifleWeapon::NormalAttack()
 		return;
 	}
 
-	FVector EyeLocation;
-	FRotator EyeRotation;
-	MyOwner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
-
-	FVector ShotDirection = EyeRotation.Vector();
-
-	FVector TraceEnd = EyeLocation + EyeRotation.Vector() * 1200.0f;
-
 	ASProjectile* Bullet = GetWorld()->SpawnActor<ASProjectile>(ProjectileClass,
-		MeshComp->GetSocketLocation(WeaponMuzzleSocketName), MeshComp->GetSocketRotation(WeaponMuzzleSocketName));
+																MeshComp->GetSocketLocation(WeaponMuzzleSocketName), 
+																MeshComp->GetSocketRotation(WeaponMuzzleSocketName));
 	if (Bullet != nullptr)
 	{
 		Bullet->SetOwner(MyOwner);

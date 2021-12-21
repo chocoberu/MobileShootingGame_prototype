@@ -33,6 +33,7 @@ ASCharacter::ASCharacter()
 	// UI
 
 	WeaponAttachSocketName = TEXT("hand_r_weapon");
+	SubWeaponAttachSocketName = TEXT("thigh_r_SubWeapon");
 	bDied = false;
 
 	// 카메라 설정
@@ -70,6 +71,7 @@ void ASCharacter::BeginPlay()
 	// Spawn a default weapon
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParams.Owner = this;
 
 	MainWeapon = GetWorld()->SpawnActor<ASWeapon>(MainWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
 	if (MainWeapon != nullptr)
@@ -80,6 +82,11 @@ void ASCharacter::BeginPlay()
 		MainWeapon->OnReloadMontageDelegate.AddUObject(this, &ASCharacter::ReloadMainWeapon);
 	}
 
+	SubWeapon = GetWorld()->SpawnActor<ASSubWeapon>(SubWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+	if (SubWeapon != nullptr)
+	{
+		SubWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, SubWeaponAttachSocketName);
+	}
 }
 
 void ASCharacter::MoveForward(float Value)
@@ -189,21 +196,18 @@ void ASCharacter::ReloadMainWeapon()
 
 void ASCharacter::StartSubAttack(void)
 {
-	if (bDied == false)
+	if (SubWeapon != nullptr && bDied == false)
 	{
-		FActorSpawnParameters SpawnParams;
-		SubWeapon = GetWorld()->SpawnActor<ASSubWeapon>(SubWeaponClass, GetActorLocation() + GetActorForwardVector() * 50.0f, GetActorRotation(), SpawnParams);
-
-		if(SubWeapon != nullptr)
-		{
-			
-		}
+		SubWeapon->StartSubWeaponAttack();
 	}
 }
 
 void ASCharacter::StopSubAttack(void)
 {
-
+	if (SubWeapon != nullptr && bDied == false)
+	{
+		SubWeapon->StopSubWeaponAttack();
+	}
 }
 
 void ASCharacter::RespawnCharacter(void)

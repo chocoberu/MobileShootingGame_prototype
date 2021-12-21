@@ -21,23 +21,34 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	class UProjectileMovementComponent* ProjectileMovemetComp;
+	UPROPERTY(EditAnywhere, Category = "Weapon")
+	TSubclassOf<class ASProjectile> ProjectileClass;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Weapon")
+	FName WeaponeSocketName;
 
 	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
-	float BombDamage;
+	int32 CurrentBombCount;
 
 	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
-	float BombAttackRadius;
+	int32 DefaultBombCount;
 
 	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
-	float  BombTime;
+	float  BombMaxChargingTime;
 
-	FTimerHandle BombTimer;
+	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
+	float  BombReloadTime;
+
+	FTimerHandle BombChargingTimer;
+	FTimerHandle BombReloadTimer;
 
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void SubWeaponAttack() override;
+	virtual void StartSubWeaponAttack() override;
+
+	virtual void StopSubWeaponAttack() override;
+
+	void ReloadBomb();
 };
