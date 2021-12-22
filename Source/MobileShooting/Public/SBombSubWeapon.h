@@ -42,6 +42,8 @@ protected:
 	FTimerHandle BombChargingTimer;
 	FTimerHandle BombReloadTimer;
 
+	bool bIsReload;
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

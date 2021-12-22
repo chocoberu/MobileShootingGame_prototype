@@ -13,7 +13,7 @@ ASBombSubWeaponProjectile::ASBombSubWeaponProjectile()
 void ASBombSubWeaponProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	GetWorldTimerManager().SetTimer(BombTimer, this, &ASBombSubWeaponProjectile::BombAttack, BombTime, false);
+	//GetWorldTimerManager().SetTimer(BombTimer, this, &ASBombSubWeaponProjectile::BombAttack, BombTime, false);
 
 }
 
@@ -27,6 +27,7 @@ void ASBombSubWeaponProjectile::NotifyActorBeginOverlap(AActor* OtherActor)
 	Super::NotifyActorBeginOverlap(OtherActor);
 
 	// TODO : Overlap 할 때 폭탄을 터트릴지 말지 결정
+	BombAttack();
 }
 
 void ASBombSubWeaponProjectile::BombAttack()

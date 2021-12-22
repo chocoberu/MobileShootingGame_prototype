@@ -18,6 +18,7 @@ void ASBombSubWeapon::BeginPlay()
 	Super::BeginPlay();
 
 	CurrentBombCount = DefaultBombCount;
+	bIsReload = false;
 }
 
 void ASBombSubWeapon::Tick(float DeltaTime)
@@ -27,9 +28,12 @@ void ASBombSubWeapon::Tick(float DeltaTime)
 
 void ASBombSubWeapon::StartSubWeaponAttack()
 {
-	// TODO : Start 부터 Stop까지 시간을 기록
+	if (bIsReload == true)
+	{
+		UE_LOG(LogTemp, Log, TEXT("BombSubWeapon Reloading!"));
+		return;
+	}
 
-	// 테스트 코드
 	GetWorldTimerManager().SetTimer(BombChargingTimer, FTimerDelegate::CreateLambda([&]() {
 		UE_LOG(LogTemp, Log, TEXT("MAX TIME !"));
 		}), BombMaxChargingTime, false);
@@ -39,16 +43,32 @@ void ASBombSubWeapon::StopSubWeaponAttack()
 {
 	// Stop일 때 폭탄을 던지는 방식
 
-	// 테스트 코드
+	if (GetWorldTimerManager().IsTimerActive(BombChargingTimer) == false)
+	{
+		return;
+	}
+
 	GetWorldTimerManager().PauseTimer(BombChargingTimer);
-	float RemainTime = GetWorldTimerManager().GetTimerRemaining(BombChargingTimer);
+	float RemainTime = BombMaxChargingTime - GetWorldTimerManager().GetTimerRemaining(BombChargingTimer);
 
 	UE_LOG(LogTemp, Log, TEXT("%f Time Left"), RemainTime);
 
 	GetWorldTimerManager().ClearTimer(BombChargingTimer);
 
+	auto SubWeaponOwner = GetOwner();
+
+	auto Bomb = GetWorld()->SpawnActor<ASProjectile>(ProjectileClass,
+		SubWeaponOwner->GetActorLocation() + SubWeaponOwner->GetActorForwardVector() * 100.0f,
+		SubWeaponOwner->GetActorRotation());
+
+	if (Bomb != nullptr)
+	{
+		CurrentBombCount--;
+	}
+
 	if (CurrentBombCount == 0)
 	{
+		bIsReload = true;
 		GetWorldTimerManager().SetTimer(BombReloadTimer, this, &ASBombSubWeapon::ReloadBomb, BombReloadTime, false);
 	}
 
@@ -58,6 +78,8 @@ void ASBombSubWeapon::StopSubWeaponAttack()
 void ASBombSubWeapon::ReloadBomb()
 {
 	CurrentBombCount = DefaultBombCount;
-
+	bIsReload = false;
 	GetWorldTimerManager().ClearTimer(BombReloadTimer);
+
+	UE_LOG(LogTemp, Log, TEXT("BombSubWeapon Reload Complete"));
 }
