@@ -2,6 +2,7 @@
 
 
 #include "STurretSubWeapon.h"
+#include "STurret.h"
 
 ASTurretSubWeapon::ASTurretSubWeapon()
 {
@@ -22,6 +23,13 @@ void ASTurretSubWeapon::Tick(float DeltaTime)
 void ASTurretSubWeapon::StartSubWeaponAttack()
 {
 	// TODO : Turret을 Owner 위치에 Spawn
+
+	auto TurretObject = GetWorld()->SpawnActor<ASTurret>(TurretClass, GetOwner()->GetActorLocation() + GetOwner()->GetActorForwardVector() * 100.0f, GetOwner()->GetActorRotation());
+
+	if (TurretObject != nullptr)
+	{
+		TurretObject->SetOwner(GetOwner());
+	}
 }
 
 void ASTurretSubWeapon::StopSubWeaponAttack()
