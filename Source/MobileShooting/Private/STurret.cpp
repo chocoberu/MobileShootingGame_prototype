@@ -4,6 +4,7 @@
 #include "STurret.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "AI/STurretAIController.h"
 
 // Sets default values
 ASTurret::ASTurret()
@@ -18,6 +19,8 @@ ASTurret::ASTurret()
 	
 	RootComponent = CapsuleComp;
 	MeshComp->SetupAttachment(RootComponent);
+
+	AIControllerClass = TurretAIControllerClass;
 }
 
 // Called when the game starts or when spawned
