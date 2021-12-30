@@ -28,7 +28,6 @@ void ASTurret::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	
 	auto AIController = Cast<ASTurretAIController>(GetController());
 
 	if (AIController != nullptr)
