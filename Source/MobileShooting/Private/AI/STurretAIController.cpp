@@ -2,8 +2,41 @@
 
 
 #include "AI/STurretAIController.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BlackboardData.h"
 
 ASTurretAIController::ASTurretAIController()
 {
 
+}
+
+void ASTurretAIController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+
+	UE_LOG(LogTemp, Log, TEXT("TurretAIController OnPossess"));
+}
+
+void ASTurretAIController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	//RunAI();
+}
+
+void ASTurretAIController::RunAI()
+{
+	UseBlackboard(BBAsset, Blackboard);
+	RunBehaviorTree(BTAsset);
+
+	UE_LOG(LogTemp, Log, TEXT("TurretAiController Run"));
+}
+
+void ASTurretAIController::StopAI()
+{
+	auto BehaviorTreeComponent = Cast<UBehaviorTreeComponent>(BrainComponent);
+	if (BehaviorTreeComponent != nullptr)
+	{
+		BehaviorTreeComponent->StopTree(EBTStopMode::Safe);
+	}
 }

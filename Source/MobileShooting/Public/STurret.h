@@ -32,6 +32,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UCapsuleComponent* CapsuleComp;
 
-	UPROPERTY(EditAnywhere, Category = "AI")
+	UPROPERTY(EditAnywhere, Category = "AI", Meta = (AllowPrivateAccess = true))
 	TSubclassOf<class ASTurretAIController> TurretAIControllerClass;
 };

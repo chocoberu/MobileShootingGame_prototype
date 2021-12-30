@@ -20,13 +20,27 @@ ASTurret::ASTurret()
 	RootComponent = CapsuleComp;
 	MeshComp->SetupAttachment(RootComponent);
 
-	AIControllerClass = TurretAIControllerClass;
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
 // Called when the game starts or when spawned
 void ASTurret::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	
+	auto AIController = Cast<ASTurretAIController>(GetController());
+
+	if (AIController != nullptr)
+	{
+		AIController->RunAI();
+
+		//UE_LOG(LogTemp, Log, TEXT("Turret AI Run"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("AI Controller is nullptr"));
+	}
 	
 }
 
