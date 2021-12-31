@@ -32,6 +32,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UCapsuleComponent* CapsuleComp;
 
-	UPROPERTY(EditAnywhere, Category = "AI", Meta = (AllowPrivateAccess = true))
-	TSubclassOf<class ASTurretAIController> TurretAIControllerClass;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", Meta = (AllowPrivateAccess = true))
+	class UAIPerceptionComponent* AIPerceptionComp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = true))
+	class UAISenseConfig_Sight* SightConfig;
 };

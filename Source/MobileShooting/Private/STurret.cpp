@@ -5,6 +5,8 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "AI/STurretAIController.h"
+#include "Perception/AIPerceptionComponent.h"
+#include "Perception/AISenseConfig_Sight.h"
 
 // Sets default values
 ASTurret::ASTurret()
@@ -14,8 +16,14 @@ ASTurret::ASTurret()
 
 	CapsuleComp = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComp"));
 
-	MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MeshComop"));
+	MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MeshComp"));
 	MeshComp->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
+
+	AIPerceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerceptionComp"));
+
+	SightConfig = CreateOptionalDefaultSubobject<UAISenseConfig_Sight>(TEXT("Sight Config"));
+	AIPerceptionComp->ConfigureSense(*SightConfig);
+	AIPerceptionComp->SetDominantSense(SightConfig->GetSenseImplementation());
 	
 	RootComponent = CapsuleComp;
 	MeshComp->SetupAttachment(RootComponent);
@@ -33,8 +41,6 @@ void ASTurret::BeginPlay()
 	if (AIController != nullptr)
 	{
 		AIController->RunAI();
-
-		//UE_LOG(LogTemp, Log, TEXT("Turret AI Run"));
 	}
 	else
 	{
