@@ -20,7 +20,7 @@ void ASPlayerController::BeginPlay()
 
 	UE_LOG(LogTemp, Log, TEXT("CreateWidget"));
 	RightButtonHUD = CreateWidget<URightButtonHUDWidget>(this, RightPadButtonHUDClass);
-	if (RightButtonHUD == nullptr)
+	if (nullptr == RightButtonHUD)
 	{
 		UE_LOG(LogTemp, Error, TEXT("RightButtonHUD is nullptr"));
 		return;

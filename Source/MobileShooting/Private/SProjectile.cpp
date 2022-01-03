@@ -6,7 +6,6 @@
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 
-
 // Sets default values
 ASProjectile::ASProjectile()
 {
@@ -50,6 +49,9 @@ void ASProjectile::NotifyActorBeginOverlap(AActor* OtherActor)
 	Super::NotifyActorBeginOverlap(OtherActor);
 	
 	if (OtherActor == GetOwner())
+	{
 		return;
+	}
+
 }
 

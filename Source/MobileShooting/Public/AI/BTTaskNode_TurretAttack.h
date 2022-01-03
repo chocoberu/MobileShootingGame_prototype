@@ -24,4 +24,20 @@ protected:
 
 	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	int32 DefaultAttackCount;
+
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	float AttackCoolTime;
+
+	int32 CurrentAttackCount;
+
+private:
+
+	FTimerHandle TurretAttackTimer;
+
+	class ASTurret* TurretActor;
+
+	UFUNCTION()
+	void TurretAttack();
 };

@@ -23,6 +23,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void TurretAttack();
+
 protected:
 	
 	// Components
@@ -35,6 +37,24 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", Meta = (AllowPrivateAccess = true))
 	class UAIPerceptionComponent* AIPerceptionComp;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	class USHealthComponent* HealthComp;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = true))
 	class UAISenseConfig_Sight* SightConfig;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Turret")
+	FName WeaponMuzzleSocketName;
+
+	UPROPERTY(EditAnywhere, Category = "Turret")
+	TSubclassOf<class ASProjectile> TurretProjectileClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Turret")
+	float TurretLifeSpan;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Turret")
+	bool bDied;
+
+	UFUNCTION()
+	void OnHealthChanged(class USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
 };

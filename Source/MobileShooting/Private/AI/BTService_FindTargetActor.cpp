@@ -22,19 +22,23 @@ void UBTService_FindTargetActor::TickNode(UBehaviorTreeComponent& OwnerComp, uin
 
 	APawn* ControllingPawn = OwnerComp.GetAIOwner()->GetPawn();
 
-	if (ControllingPawn == nullptr)
+	if (nullptr == ControllingPawn)
+	{
 		return;
+	}
 
 	auto AIPerceptionComp = ControllingPawn->FindComponentByClass<UAIPerceptionComponent>();
-	if (AIPerceptionComp == nullptr)
+	if (nullptr == AIPerceptionComp)
+	{
 		return;
+	}
 
 	UE_LOG(LogTemp, Log, TEXT("AIPerception Comp Owner : %s"), *AIPerceptionComp->GetOwner()->GetName());
 
 	TArray<AActor*> ActorArray;
 	AIPerceptionComp->GetKnownPerceivedActors(nullptr, ActorArray);
 
-	//UE_LOG(LogTemp, Log, TEXT("Perceived Actors : %d"), ActorArray.Num());
+	UE_LOG(LogTemp, Log, TEXT("Perceived Actors : %d"), ActorArray.Num());
 	OwnerComp.GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), nullptr);
 
 	float Length = 100000.0f;
@@ -43,10 +47,10 @@ void UBTService_FindTargetActor::TickNode(UBehaviorTreeComponent& OwnerComp, uin
 
 	for (auto TargetActor : ActorArray)
 	{
-		if (TargetActor != nullptr)
+		if (nullptr != TargetActor)
 		{
 			auto PlayerCharacter = Cast<ASCharacter>(TargetActor);
-			if (PlayerCharacter == nullptr)
+			if (nullptr == PlayerCharacter)
 				continue;
 
 			if (Length > (ControllingPawn->GetActorLocation() - TargetActor->GetActorLocation()).Size())

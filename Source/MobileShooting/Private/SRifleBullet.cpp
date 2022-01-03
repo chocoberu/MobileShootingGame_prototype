@@ -5,6 +5,7 @@
 #include "GameFramework/Character.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/SHealthComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
 ASRifleBullet::ASRifleBullet()
@@ -28,14 +29,31 @@ void ASRifleBullet::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
 
-	auto Player = Cast<ACharacter>(OtherActor);
-	if (Player != nullptr)
+	// HealthComp를 가진 액터에만 데미지 처리
+	const TSet<UActorComponent*> ComponentArray = OtherActor->GetComponents();
+	bool QueryResult = false;
+
+	for (auto OtherActorComponent : ComponentArray)
 	{
-		FDamageEvent DamageEvent;
-		Player->TakeDamage(AttackDamage, DamageEvent, nullptr, GetOwner());
-		UE_LOG(LogTemp, Log, TEXT("Projectile Overlap %s Damage : %f"), *OtherActor->GetName(), AttackDamage);
+		FString ComponentName;
+		OtherActorComponent->GetName(ComponentName);
+
+		if (true == ComponentName.Equals(TEXT("HealthComp")))
+		{
+			QueryResult = true;
+			break;
+		}
 	}
 
+	if (false == QueryResult)
+	{
+		return;
+	}
+	
+	FDamageEvent DamageEvent;
+	OtherActor->TakeDamage(AttackDamage, DamageEvent, nullptr, GetOwner());
+	UE_LOG(LogTemp, Log, TEXT("Projectile Overlap %s Damage : %f"), *OtherActor->GetName(), AttackDamage);
+	
 	//UE_LOG(LogTemp, Log, TEXT("%s overlap"), *OtherActor->GetName());
 	SphereComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	ProjectileMovemetComp->SetVelocityInLocalSpace(FVector::ZeroVector);

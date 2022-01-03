@@ -28,7 +28,7 @@ void ASBombSubWeapon::Tick(float DeltaTime)
 
 void ASBombSubWeapon::StartSubWeaponAttack()
 {
-	if (bIsReload == true)
+	if (true == bIsReload)
 	{
 		UE_LOG(LogTemp, Log, TEXT("BombSubWeapon Reloading!"));
 		return;
@@ -43,7 +43,7 @@ void ASBombSubWeapon::StopSubWeaponAttack()
 {
 	// Stop老 锭 气藕阑 带瘤绰 规侥
 
-	if (GetWorldTimerManager().IsTimerActive(BombChargingTimer) == false)
+	if (false == GetWorldTimerManager().IsTimerActive(BombChargingTimer))
 	{
 		return;
 	}
@@ -61,18 +61,16 @@ void ASBombSubWeapon::StopSubWeaponAttack()
 		SubWeaponOwner->GetActorLocation() + SubWeaponOwner->GetActorForwardVector() * 100.0f,
 		SubWeaponOwner->GetActorRotation());
 
-	if (Bomb != nullptr)
+	if (nullptr != Bomb)
 	{
 		CurrentBombCount--;
 	}
 
-	if (CurrentBombCount == 0)
+	if (0 == CurrentBombCount)
 	{
 		bIsReload = true;
 		GetWorldTimerManager().SetTimer(BombReloadTimer, this, &ASBombSubWeapon::ReloadBomb, BombReloadTime, false);
-	}
-
-	
+	}	
 }
 
 void ASBombSubWeapon::ReloadBomb()

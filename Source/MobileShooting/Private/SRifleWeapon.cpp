@@ -18,7 +18,7 @@ void ASRifleWeapon::BeginPlay()
 
 void ASRifleWeapon::StartNormalAttack()
 {
-	if (bReloading == true)
+	if (true == bReloading)
 	{
 		return;
 	}
@@ -35,7 +35,7 @@ void ASRifleWeapon::StopNormalAttack()
 void ASRifleWeapon::NormalAttack()
 {
 	AActor* MyOwner = GetOwner();
-	if (MyOwner == nullptr)
+	if (nullptr == MyOwner)
 	{
 		return;
 	}
@@ -43,7 +43,7 @@ void ASRifleWeapon::NormalAttack()
 	ASProjectile* Bullet = GetWorld()->SpawnActor<ASProjectile>(ProjectileClass,
 																MeshComp->GetSocketLocation(WeaponMuzzleSocketName), 
 																MeshComp->GetSocketRotation(WeaponMuzzleSocketName));
-	if (Bullet != nullptr)
+	if (nullptr != Bullet)
 	{
 		Bullet->SetOwner(MyOwner);
 	}
@@ -54,7 +54,7 @@ void ASRifleWeapon::NormalAttack()
 
 	UE_LOG(LogTemp, Log, TEXT("Current Bullet : %d"), CurrentBulletCount);
 
-	if (CurrentBulletCount == 0)
+	if (0 == CurrentBulletCount)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Reloading"));
 		bReloading = true;

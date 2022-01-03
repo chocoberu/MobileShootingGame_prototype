@@ -23,7 +23,7 @@ void ASTurretSubWeapon::Tick(float DeltaTime)
 
 void ASTurretSubWeapon::StartSubWeaponAttack()
 {
-	if (bIsReload == true)
+	if (true == bIsReload)
 	{
 		return;
 	}
@@ -32,7 +32,7 @@ void ASTurretSubWeapon::StartSubWeaponAttack()
 
 	auto TurretObject = GetWorld()->SpawnActor<ASTurret>(TurretClass, GetOwner()->GetActorLocation() + GetOwner()->GetActorForwardVector() * 100.0f, GetOwner()->GetActorRotation());
 
-	if (TurretObject != nullptr)
+	if (nullptr != TurretObject)
 	{
 		TurretObject->SetOwner(GetOwner());
 

@@ -56,14 +56,14 @@ void ASCharacter::BeginPlay()
 	
 	AnimInstance = Cast<USCharacterAnimInstance>(GetMesh()->GetAnimInstance());
 
-	if (AnimInstance == nullptr)
+	if (nullptr == AnimInstance)
 	{
 		UE_LOG(LogTemp, Error, TEXT("AnimInstance is nullptr"));
 	}
 
 	PlayerController = Cast<ASPlayerController>(GetController());
 
-	if (PlayerController == nullptr)
+	if (nullptr == PlayerController)
 	{
 		UE_LOG(LogTemp, Error, TEXT("PlayerController is nullptr"));
 	}
@@ -74,7 +74,7 @@ void ASCharacter::BeginPlay()
 	SpawnParams.Owner = this;
 
 	MainWeapon = GetWorld()->SpawnActor<ASWeapon>(MainWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
-	if (MainWeapon != nullptr)
+	if (nullptr != MainWeapon)
 	{
 		MainWeapon->SetOwner(this);
 		MainWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponAttachSocketName);
@@ -83,7 +83,7 @@ void ASCharacter::BeginPlay()
 	}
 
 	SubWeapon = GetWorld()->SpawnActor<ASSubWeapon>(SubWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
-	if (SubWeapon != nullptr)
+	if (nullptr != SubWeapon)
 	{
 		SubWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, SubWeaponAttachSocketName);
 	}
@@ -103,13 +103,13 @@ void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Hea
 {
 	if (Health <= 0.0f && !bDied)
 	{
-		if (MainWeapon != nullptr)
+		if (nullptr != MainWeapon)
 		{
 			MainWeapon->StopNormalAttack();
 			//MainWeapon->SetLifeSpan(10.0f);
 		}
 
-		if (AnimInstance != nullptr)
+		if (nullptr != AnimInstance)
 		{
 			AnimInstance->SetDeadAnim(true);
 		}
@@ -118,9 +118,6 @@ void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Hea
 
 		GetMovementComponent()->StopMovementImmediately();
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
-		//DetachFromControllerPendingDestroy();
-		//SetLifeSpan(10.0f);
 
 		// TODO : Character를 5초 후에 리스폰 or 시작 위치로 조정
 
@@ -162,7 +159,7 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 void ASCharacter::StartMainAttack()
 {
-	if (MainWeapon != nullptr && bDied == false)
+	if (nullptr != MainWeapon && false == bDied)
 	{
 		AnimInstance->PlayNormalAttack();
 		MainWeapon->StartNormalAttack();
@@ -171,7 +168,7 @@ void ASCharacter::StartMainAttack()
 
 void ASCharacter::StopMainAttack()
 {
-	if (MainWeapon != nullptr && bDied == false)
+	if (nullptr != MainWeapon && false == bDied)
 	{
 		MainWeapon->StopNormalAttack();
 	}
@@ -179,13 +176,13 @@ void ASCharacter::StopMainAttack()
 
 void ASCharacter::ReloadMainWeapon()
 {
-	if (MainWeapon == nullptr)
+	if (nullptr == MainWeapon)
 	{
 		UE_LOG(LogTemp, Error, TEXT("MainWeapon is nullptr"));
 		return;
 	}
 
-	if (AnimInstance == nullptr)
+	if (nullptr == AnimInstance)
 	{
 		UE_LOG(LogTemp, Error, TEXT("AnimInstance is nullptr"));
 		return;
@@ -196,7 +193,7 @@ void ASCharacter::ReloadMainWeapon()
 
 void ASCharacter::StartSubAttack(void)
 {
-	if (SubWeapon != nullptr && bDied == false)
+	if (nullptr != SubWeapon && false == bDied)
 	{
 		SubWeapon->StartSubWeaponAttack();
 	}
@@ -204,7 +201,7 @@ void ASCharacter::StartSubAttack(void)
 
 void ASCharacter::StopSubAttack(void)
 {
-	if (SubWeapon != nullptr && bDied == false)
+	if (nullptr != SubWeapon && false == bDied)
 	{
 		SubWeapon->StopSubWeaponAttack();
 	}

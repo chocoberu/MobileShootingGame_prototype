@@ -4,15 +4,18 @@
 #include "STurret.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/SHealthComponent.h"
 #include "AI/STurretAIController.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
+#include "SProjectile.h"
 
 // Sets default values
 ASTurret::ASTurret()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	//PrimaryActorTick.bCanEverTick = true;
+	WeaponMuzzleSocketName = TEXT("Muzzle");
 
 	CapsuleComp = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComp"));
 
@@ -24,11 +27,15 @@ ASTurret::ASTurret()
 	SightConfig = CreateOptionalDefaultSubobject<UAISenseConfig_Sight>(TEXT("Sight Config"));
 	AIPerceptionComp->ConfigureSense(*SightConfig);
 	AIPerceptionComp->SetDominantSense(SightConfig->GetSenseImplementation());
+
+	HealthComp = CreateDefaultSubobject<USHealthComponent>(TEXT("HealthComp"));
+	HealthComp->OnHealthChanged.AddUObject(this, &ASTurret::OnHealthChanged);
 	
 	RootComponent = CapsuleComp;
 	MeshComp->SetupAttachment(RootComponent);
 
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
 }
 
 // Called when the game starts or when spawned
@@ -38,7 +45,7 @@ void ASTurret::BeginPlay()
 	
 	auto AIController = Cast<ASTurretAIController>(GetController());
 
-	if (AIController != nullptr)
+	if (nullptr != AIController)
 	{
 		AIController->RunAI();
 	}
@@ -46,7 +53,8 @@ void ASTurret::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("AI Controller is nullptr"));
 	}
-	
+
+	SetLifeSpan(TurretLifeSpan);
 }
 
 // Called every frame
@@ -54,4 +62,28 @@ void ASTurret::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ASTurret::TurretAttack()
+{
+	ASProjectile* Bullet = GetWorld()->SpawnActor<ASProjectile>(TurretProjectileClass,
+		MeshComp->GetSocketLocation(WeaponMuzzleSocketName),
+		MeshComp->GetSocketRotation(WeaponMuzzleSocketName));
+	
+}
+
+void ASTurret::OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
+{
+	if (Health <= 0.0f && !bDied)
+	{
+		bDied = true;
+
+		auto AIController = Cast<ASTurretAIController>(GetController());
+		if (nullptr != AIController)
+		{
+			AIController->StopAI();
+		}
+
+		Destroy();
+	}
 }
