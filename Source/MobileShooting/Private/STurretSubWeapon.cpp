@@ -28,15 +28,13 @@ void ASTurretSubWeapon::StartSubWeaponAttack()
 		return;
 	}
 
-	// TODO : Turret을 Owner 위치에 Spawn
-
 	auto TurretObject = GetWorld()->SpawnActor<ASTurret>(TurretClass, GetOwner()->GetActorLocation() + GetOwner()->GetActorForwardVector() * 100.0f, GetOwner()->GetActorRotation());
 
 	if (nullptr != TurretObject)
 	{
 		TurretObject->SetOwner(GetOwner());
 
-		CurrentTurretCount--;
+		--CurrentTurretCount;
 	}
 
 	if (CurrentTurretCount <= 0)

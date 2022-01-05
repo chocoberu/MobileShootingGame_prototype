@@ -33,7 +33,12 @@ void ASBarrier::BeginPlay()
 
 void ASBarrier::OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
+	if (Health <= 0.0f && !bDied)
+	{
+		bDied = true;
 
+		Destroy();
+	}
 }
 
 // Called every frame

@@ -45,4 +45,6 @@ public:
 	virtual void StartSubWeaponAttack() override;
 
 	virtual void StopSubWeaponAttack() override;
+
+	void ReloadBarrier();
 };
