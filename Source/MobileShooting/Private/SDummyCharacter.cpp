@@ -3,6 +3,9 @@
 
 #include "SDummyCharacter.h"
 #include "Components/SHealthComponent.h"
+#include "Components/WidgetComponent.h"
+#include "UI/SHPBarWidget.h"
+#include "UI/SDamageTextWidgetComponent.h"
 
 // Sets default values
 ASDummyCharacter::ASDummyCharacter()
@@ -16,6 +19,10 @@ ASDummyCharacter::ASDummyCharacter()
 	GetMesh()->SetRelativeLocation(FVector(0.0f, 0.0f, -88.0f));
 	GetMesh()->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
 
+	HPBarWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HPBarWidgetComp"));
+	HPBarWidgetComp->SetupAttachment(GetMesh());
+	HPBarWidgetComp->SetRelativeLocation(FVector(0.0f, 0.0f, 200.0f));
+	HPBarWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
 
 }
 
@@ -28,7 +35,26 @@ void ASDummyCharacter::BeginPlay()
 
 void ASDummyCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
-	// TODO : HealthComponent에 데미지 UI 처리를 할지, OnHealthChanged()에서 UI 처리를 할지 결정 필요
+	auto HPBarWidget = Cast<USHPBarWidget>(HPBarWidgetComp->GetUserWidgetObject());
+	if (nullptr == HPBarWidget)
+	{
+		UE_LOG(LogTemp, Error, TEXT("HPBarWidget is nullptr"));
+		return;
+	}
+	HPBarWidget->UpdateHPWidget();
+
+	if (nullptr == DamageTextWidgetCompClass)
+	{
+		return;
+	}
+	auto DamageTextWidgetComp = Cast<USDamageTextWidgetComponent>(AddComponentByClass(DamageTextWidgetCompClass, true, GetActorTransform(), false));
+	if (nullptr == DamageTextWidgetComp)
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s DamageTextWidgetComponent is nullptr"), *GetName());
+		return;
+	}
+
+	DamageTextWidgetComp->SetDamageText(HealthDelta);
 }
 
 // Called every frame
@@ -38,10 +64,15 @@ void ASDummyCharacter::Tick(float DeltaTime)
 
 }
 
-// Called to bind functionality to input
-void ASDummyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ASDummyCharacter::PostInitializeComponents()
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	Super::PostInitializeComponents();
 
+	HPBarWidgetComp->InitWidget();
+	auto HPBarWidget = Cast<USHPBarWidget>(HPBarWidgetComp->GetUserWidgetObject());
+	if (nullptr != HPBarWidget)
+	{
+		HPBarWidget->BindCharacterHealthComponent(HealthComp);
+	}
 }
 
