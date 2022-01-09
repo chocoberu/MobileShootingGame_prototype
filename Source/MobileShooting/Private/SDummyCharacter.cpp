@@ -35,6 +35,7 @@ void ASDummyCharacter::BeginPlay()
 
 void ASDummyCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
+	// HP Bar Update
 	auto HPBarWidget = Cast<USHPBarWidget>(HPBarWidgetComp->GetUserWidgetObject());
 	if (nullptr == HPBarWidget)
 	{
@@ -43,6 +44,7 @@ void ASDummyCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, floa
 	}
 	HPBarWidget->UpdateHPWidget();
 
+	// DamageText Widget Update
 	if (nullptr == DamageTextWidgetCompClass)
 	{
 		return;
@@ -58,6 +60,27 @@ void ASDummyCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, floa
 	DamageTextWidgetComp->SetRelativeLocation(DamageTextWidgetComp->GetRelativeLocation() + FVector(RandomValue, 0.0f, RandomValue));
 	DamageTextWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
 	DamageTextWidgetComp->SetDamageText(HealthDelta);
+
+	// Restore Health Set
+	if (true == GetWorldTimerManager().IsTimerActive(RestoreHealthTimer))
+	{
+		GetWorldTimerManager().ClearTimer(RestoreHealthTimer);
+	}
+
+	GetWorldTimerManager().SetTimer(RestoreHealthTimer, this, &ASDummyCharacter::RestoreHealth, RestoreTime, false);
+}
+
+void ASDummyCharacter::RestoreHealth()
+{
+	HealthComp->RestoreHealth();
+
+	auto HPBarWidget = Cast<USHPBarWidget>(HPBarWidgetComp->GetUserWidgetObject());
+	if (nullptr == HPBarWidget)
+	{
+		UE_LOG(LogTemp, Error, TEXT("HPBarWidget is nullptr"));
+		return;
+	}
+	HPBarWidget->UpdateHPWidget();
 }
 
 // Called every frame
