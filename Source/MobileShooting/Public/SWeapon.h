@@ -25,13 +25,15 @@ public:
 	
 	// Virtual fuunc 
 	// 하위 클래스에서 구현
-	virtual void StartNormalAttack();
+	virtual void StartNormalAttack(void);
 
-	virtual void StopNormalAttack();
+	virtual void StopNormalAttack(void);
 
-	virtual void NormalAttack();
+	virtual void NormalAttack(void);
 
-	virtual void SkillAttack();
+	virtual void SkillAttack(void);
+
+	bool IsReloading(void) const { return bReloading; }
 
 protected:
 	
@@ -73,7 +75,6 @@ protected:
 	FTimerHandle NormalAttackTimer;
 
 public:
-	// 델리게이트
-
+	// Delegate
 	FOnReloadMontageDelegate OnReloadMontageDelegate;
 };

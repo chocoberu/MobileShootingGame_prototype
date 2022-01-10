@@ -15,7 +15,7 @@ void USCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 void USCharacterAnimInstance::PlayNormalAttack()
 {
-	// TODO
+	// TODO : 애님 노티파이로 Character Attack 하도록 수정 필요
 	if (nullptr != NormalAttackMontage)
 	{
 		Montage_Play(NormalAttackMontage, 1.0f);
@@ -36,4 +36,9 @@ void USCharacterAnimInstance::SetDeadAnim(bool Value)
 {
 	DeadAnimStartPosition = 0.0f;
 	bDead = Value;
+}
+
+void USCharacterAnimInstance::AnimNotify_NormalAttack()
+{
+	OnNormalAttack.Broadcast();
 }

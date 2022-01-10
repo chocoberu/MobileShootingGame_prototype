@@ -42,7 +42,7 @@ void ASRifleWeapon::NormalAttack()
 
 	ASProjectile* Bullet = GetWorld()->SpawnActor<ASProjectile>(ProjectileClass,
 																MeshComp->GetSocketLocation(WeaponMuzzleSocketName), 
-																MeshComp->GetSocketRotation(WeaponMuzzleSocketName));
+																GetOwner()->GetActorRotation());
 	if (nullptr != Bullet)
 	{
 		Bullet->SetOwner(MyOwner);

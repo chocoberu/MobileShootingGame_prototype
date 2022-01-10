@@ -90,6 +90,20 @@ void ASCharacter::BeginPlay()
 	}
 }
 
+void ASCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	AnimInstance = Cast<USCharacterAnimInstance>(GetMesh()->GetAnimInstance());
+
+	if (nullptr == AnimInstance)
+	{
+		UE_LOG(LogTemp, Error, TEXT("AnimInstance is nullptr"));
+	}
+
+	AnimInstance->OnNormalAttack.AddUObject(this, &ASCharacter::MainAttack);
+}
+
 void ASCharacter::MoveForward(float Value)
 {
 	DirectionToMove.X = Value;
@@ -107,7 +121,6 @@ void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Hea
 		if (nullptr != MainWeapon)
 		{
 			MainWeapon->StopNormalAttack();
-			//MainWeapon->SetLifeSpan(10.0f);
 		}
 
 		if (nullptr != AnimInstance)
@@ -160,9 +173,16 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 void ASCharacter::StartMainAttack()
 {
-	if (nullptr != MainWeapon && false == bDied)
+	if (nullptr != MainWeapon && false == bDied && false == MainWeapon->IsReloading())
 	{
 		AnimInstance->PlayNormalAttack();
+	}
+}
+
+void ASCharacter::MainAttack(void)
+{
+	if (nullptr != MainWeapon && false == bDied)
+	{
 		MainWeapon->StartNormalAttack();
 	}
 }

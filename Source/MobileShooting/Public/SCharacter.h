@@ -19,6 +19,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay(void) override;
 
+	virtual void PostInitializeComponents() override;
+
 	// Input Func
 	void MoveForward(float Value);
 	void MoveRight(float Value);
@@ -98,6 +100,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void StartMainAttack(void);
+
+	virtual void MainAttack(void);
 
 	virtual void StopMainAttack(void);
 
