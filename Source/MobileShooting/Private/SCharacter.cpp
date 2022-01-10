@@ -85,6 +85,7 @@ void ASCharacter::BeginPlay()
 	SubWeapon = GetWorld()->SpawnActor<ASSubWeapon>(SubWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
 	if (nullptr != SubWeapon)
 	{
+		SubWeapon->SetOwner(this);
 		SubWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, SubWeaponAttachSocketName);
 	}
 }

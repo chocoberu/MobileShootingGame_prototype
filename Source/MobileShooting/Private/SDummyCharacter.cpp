@@ -55,7 +55,7 @@ void ASDummyCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, floa
 		UE_LOG(LogTemp, Error, TEXT("%s DamageTextWidgetComponent is nullptr"), *GetName());
 		return;
 	}
-	DamageTextWidgetComp->SetupAttachment(GetMesh());
+	
 	float RandomValue = FMath::RandRange(-50.0f, 50.0f);
 	DamageTextWidgetComp->SetRelativeLocation(DamageTextWidgetComp->GetRelativeLocation() + FVector(RandomValue, 0.0f, RandomValue));
 	DamageTextWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);

@@ -21,8 +21,13 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void Heal();
+
 	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
 	float HealTick;
+
+	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
+	float HealAmount;
 
 	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
 	int32 DefaultHealCount;
@@ -35,6 +40,8 @@ protected:
 	FTimerHandle HealCoolTimer;
 
 	FTimerHandle HealTickTimer;
+
+	bool bIsCoolTime;
 	
 public:
 	// Called every frame
@@ -43,4 +50,6 @@ public:
 	virtual void StartSubWeaponAttack() override;
 
 	virtual void StopSubWeaponAttack() override;
+
+	void ReloadHealSubWeapon();
 };

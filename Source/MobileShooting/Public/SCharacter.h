@@ -108,4 +108,6 @@ public:
 	virtual void StopSubAttack(void);
 
 	void RespawnCharacter(void);
+
+	class USHealthComponent* GetHealthComponent() { return HealthComp; }
 };
