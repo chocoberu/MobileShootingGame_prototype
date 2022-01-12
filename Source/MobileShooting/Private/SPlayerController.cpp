@@ -18,7 +18,7 @@ void ASPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UE_LOG(LogTemp, Log, TEXT("CreateWidget"));
+	//UE_LOG(LogTemp, Log, TEXT("CreateWidget"));
 	RightButtonHUD = CreateWidget<URightButtonHUDWidget>(this, RightPadButtonHUDClass);
 	if (nullptr == RightButtonHUD)
 	{

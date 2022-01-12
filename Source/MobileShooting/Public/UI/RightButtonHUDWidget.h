@@ -24,11 +24,20 @@ private:
 	UPROPERTY()
 	class UButton* MainAttackButton;
 
+	UPROPERTY()
+	class UButton* SubAttackButton;
+
 	UFUNCTION()
 	void OnMainAttackPressed();
 
 	UFUNCTION()
 	void OnMainAttackReleased();
+
+	UFUNCTION()
+	void OnSubAttackPressed();
+
+	UFUNCTION()
+	void OnSubAttackReleased();
 
 	UPROPERTY()
 	class ASPlayerController* PlayerController;

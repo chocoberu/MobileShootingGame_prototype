@@ -232,7 +232,7 @@ void ASCharacter::RespawnCharacter(void)
 {
 	HealthComp->RestoreHealth();
 	AnimInstance->SetDeadAnim(false);
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics); // 임시로 설정, TODO : 수정 필요
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 
 	bDied = false;
 	// TODO : Respawn 할 때 필요한 작업 추가

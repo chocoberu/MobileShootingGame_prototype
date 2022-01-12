@@ -74,5 +74,5 @@ void ASRifleWeapon::NormalAttack()
 
 void ASRifleWeapon::SkillAttack()
 {
-
+	// TODO
 }

@@ -13,22 +13,28 @@ void URightButtonHUDWidget::NativeConstruct()
 	PlayerController = Cast<ASPlayerController>(GetOwningPlayer());
 	PlayerCharacter = Cast<ASCharacter>(GetOwningPlayerPawn());
 
-	if (PlayerController == nullptr)
+	if (nullptr == PlayerController)
 	{
 		UE_LOG(LogTemp, Error, TEXT("RightButtonHUDWidget : PlayerController is nullptr"));
 	}
 
 	MainAttackButton = Cast<UButton>(GetWidgetFromName(TEXT("MainAttack")));
-	if (MainAttackButton != nullptr)
+	if (nullptr != MainAttackButton)
 	{
 		MainAttackButton->OnPressed.AddDynamic(this, &URightButtonHUDWidget::OnMainAttackPressed);
 		MainAttackButton->OnReleased.AddDynamic(this, &URightButtonHUDWidget::OnMainAttackReleased);
+	}
+	SubAttackButton = Cast<UButton>(GetWidgetFromName(TEXT("SubAttack")));
+	if (nullptr != SubAttackButton)
+	{
+		SubAttackButton->OnPressed.AddDynamic(this, &URightButtonHUDWidget::OnSubAttackPressed);
+		SubAttackButton->OnReleased.AddDynamic(this, &URightButtonHUDWidget::OnSubAttackReleased);
 	}
 }
 
 void URightButtonHUDWidget::OnMainAttackPressed()
 {
-	if (PlayerCharacter == nullptr)
+	if (nullptr == PlayerCharacter)
 	{
 		return;
 	}
@@ -37,9 +43,27 @@ void URightButtonHUDWidget::OnMainAttackPressed()
 
 void URightButtonHUDWidget::OnMainAttackReleased()
 {
-	if (PlayerCharacter == nullptr)
+	if (nullptr == PlayerCharacter)
 	{
 		return;
 	}
 	PlayerCharacter->StopMainAttack();
+}
+
+void URightButtonHUDWidget::OnSubAttackPressed()
+{
+	if (nullptr == PlayerCharacter)
+	{
+		return;
+	}
+	PlayerCharacter->StartSubAttack();
+}
+
+void URightButtonHUDWidget::OnSubAttackReleased()
+{
+	if (nullptr == PlayerCharacter)
+	{
+		return;
+	}
+	PlayerCharacter->StopSubAttack();
 }
