@@ -3,6 +3,7 @@
 
 #include "SWeapon.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "SPlayerController.h"
 
 // Sets default values
 ASWeapon::ASWeapon()
@@ -19,8 +20,15 @@ void ASWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 	
-
 	CurrentBulletCount = DefaultBulletCount;
+
+	auto PlayerController = Cast<ASPlayerController>(GetOwner()->GetInstigatorController());
+	if (nullptr == PlayerController)
+	{
+		return;
+	}
+
+	PlayerController->BindMainWeaponStatusWidget(this);
 }
 
 void ASWeapon::StartNormalAttack()

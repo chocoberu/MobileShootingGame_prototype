@@ -30,19 +30,10 @@ protected:
 	float HealAmount;
 
 	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
-	int32 DefaultHealCount;
-
-	int32 CurrentHealCount;
-
-	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
 	float HealCoolTime;
-
-	FTimerHandle HealCoolTimer;
 
 	FTimerHandle HealTickTimer;
 
-	bool bIsCoolTime;
-	
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -51,5 +42,4 @@ public:
 
 	virtual void StopSubWeaponAttack() override;
 
-	void ReloadHealSubWeapon();
 };

@@ -116,7 +116,11 @@ public:
 
 	void RespawnCharacter(void);
 
-	void UpdateHPBarWidget();
+	void UpdateHPBarWidget(void);
 
-	class USHealthComponent* GetHealthComponent() { return HealthComp; }
+	class USHealthComponent* GetHealthComponent(void) { return HealthComp; }
+
+	class ASWeapon* GetWeapon(void) { return MainWeapon; }
+
+	class ASSubWeapon* GetSubWeapon(void) { return SubWeapon; }
 };

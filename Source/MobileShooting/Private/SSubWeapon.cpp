@@ -4,6 +4,7 @@
 #include "SSubWeapon.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "SPlayerController.h"
 
 // Sets default values
 ASSubWeapon::ASSubWeapon()
@@ -18,6 +19,7 @@ ASSubWeapon::ASSubWeapon()
 	MeshComp->SetupAttachment(RootComponent);
 
 	MeshComp->SetCollisionProfileName(TEXT("Projectile"));
+
 }
 
 // Called when the game starts or when spawned
@@ -25,6 +27,15 @@ void ASSubWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	ReloadSubWeapon();
+
+	auto PlayerController = Cast<ASPlayerController>(GetOwner()->GetInstigatorController());
+	if (nullptr == PlayerController)
+	{
+		return;
+	}
+
+	PlayerController->BindSubWeaponStatusWidget(this);
 }
 
 // Called every frame
@@ -42,4 +53,19 @@ void ASSubWeapon::StartSubWeaponAttack()
 void ASSubWeapon::StopSubWeaponAttack()
 {
 	// 하위 클래스에서 구현
+}
+
+void ASSubWeapon::SubtrackCurrentSubWeaponCount(void)
+{
+	--CurrentSubWeaponCount;
+	OnAttackDelegate.Broadcast();
+}
+
+void ASSubWeapon::ReloadSubWeapon(void)
+{
+	CurrentSubWeaponCount = DefaultSubWeaponCount;
+	bReload = false;
+	GetWorldTimerManager().ClearTimer(ReloadTimer);
+
+	UE_LOG(LogTemp, Log, TEXT("SubWeapon Reload Complete!"));
 }

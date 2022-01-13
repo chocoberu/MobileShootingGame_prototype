@@ -13,6 +13,6 @@ void USDamageFontWidget::NativeConstruct()
 
 void USDamageFontWidget::SetDamageText(float Damage)
 {
-	FString DamageStr = FString::SanitizeFloat(Damage);
+	FString DamageStr = FString::SanitizeFloat(Damage, 0);
 	DamageText->SetText(FText::FromString(DamageStr));
 }

@@ -16,6 +16,7 @@ void URightButtonHUDWidget::NativeConstruct()
 	if (nullptr == PlayerController)
 	{
 		UE_LOG(LogTemp, Error, TEXT("RightButtonHUDWidget : PlayerController is nullptr"));
+		return;
 	}
 
 	MainAttackButton = Cast<UButton>(GetWidgetFromName(TEXT("MainAttack")));

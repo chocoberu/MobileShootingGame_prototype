@@ -21,7 +21,7 @@ void ASBarrierSubWeapon::Tick(float DeltaTime)
 
 void ASBarrierSubWeapon::StartSubWeaponAttack()
 {
-	if (true == bIsReload)
+	if (true == bReload)
 	{
 		return;
 	}
@@ -31,13 +31,13 @@ void ASBarrierSubWeapon::StartSubWeaponAttack()
 	if (nullptr != BarrierObject)
 	{
 		BarrierObject->SetOwner(GetOwner());
-		--CurrentBarrierCount;
+		SubtrackCurrentSubWeaponCount();
 	}
 
-	if (CurrentBarrierCount <= 0)
+	if (CurrentSubWeaponCount <= 0)
 	{
-		bIsReload = true;
-		GetWorldTimerManager().SetTimer(BarrierReloadTimer, this, &ASBarrierSubWeapon::ReloadBarrier, BarrierReloadTime, false);
+		bReload = true;
+		GetWorldTimerManager().SetTimer(ReloadTimer, this, &ASSubWeapon::ReloadSubWeapon, ReloadTime, false);
 	}
 	else
 	{
@@ -48,15 +48,4 @@ void ASBarrierSubWeapon::StartSubWeaponAttack()
 void ASBarrierSubWeapon::StopSubWeaponAttack()
 {
 
-}
-
-void ASBarrierSubWeapon::ReloadBarrier()
-{
-	// TODO : SubWeapon 공통 코드를 상위 클래스로 옮길 수 있는지 확인 필요
-
-	bIsReload = false;
-	CurrentBarrierCount = DefaultBarrierCount;
-	GetWorldTimerManager().ClearTimer(BarrierReloadTimer);
-
-	//UE_LOG(LogTemp, Log, TEXT("BarrierSubWeapon Reload Complete"));
 }

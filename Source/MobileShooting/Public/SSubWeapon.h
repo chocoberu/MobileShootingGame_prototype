@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "SSubWeapon.generated.h"
 
+using FOnAttackDelegate = TMulticastDelegate<void()>;
+
 UCLASS()
 class MOBILESHOOTING_API ASSubWeapon : public AActor
 {
@@ -26,11 +28,32 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class USphereComponent* SphereComp;
 
+	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
+	int32 DefaultSubWeaponCount;
+
+	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
+	float  ReloadTime;
+
+	int32 CurrentSubWeaponCount;
+
+	FTimerHandle ReloadTimer;
+
+	bool bReload;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void StartSubWeaponAttack();
+	virtual void StartSubWeaponAttack(void);
 
-	virtual void StopSubWeaponAttack();
+	virtual void StopSubWeaponAttack(void);
+
+	void SubtrackCurrentSubWeaponCount(void);
+
+	void ReloadSubWeapon(void);
+
+	int32 GetCurrentSubWeaponCount(void) const { return CurrentSubWeaponCount; }
+
+	// Delegate
+	FOnAttackDelegate OnAttackDelegate;
 };

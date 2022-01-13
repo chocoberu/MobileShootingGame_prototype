@@ -28,22 +28,10 @@ protected:
 	FName WeaponeSocketName;
 
 	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
-	int32 CurrentBombCount;
-
-	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
-	int32 DefaultBombCount;
-
-	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
 	float  BombMaxChargingTime;
 
-	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
-	float  BombReloadTime;
-
 	FTimerHandle BombChargingTimer;
-	FTimerHandle BombReloadTimer;
-
-	bool bIsReload;
-
+	
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -52,5 +40,4 @@ public:
 
 	virtual void StopSubWeaponAttack() override;
 
-	void ReloadBomb();
 };

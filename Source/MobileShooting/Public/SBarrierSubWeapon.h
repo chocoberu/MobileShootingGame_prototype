@@ -25,19 +25,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "SubWeapon")
 	TSubclassOf<class ASBarrier> BarrierClass;
 
-	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
-	float BarrierReloadTime;
-
-	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
-	int32 CurrentBarrierCount;
-
-	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
-	int32 DefaultBarrierCount;
-
-	FTimerHandle BarrierReloadTimer;
-
-	bool bIsReload;
-
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -46,5 +33,4 @@ public:
 
 	virtual void StopSubWeaponAttack() override;
 
-	void ReloadBarrier();
 };

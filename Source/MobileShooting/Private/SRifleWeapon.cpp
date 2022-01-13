@@ -53,6 +53,7 @@ void ASRifleWeapon::NormalAttack()
 	CurrentBulletCount--;
 
 	UE_LOG(LogTemp, Log, TEXT("Current Bullet : %d"), CurrentBulletCount);
+	OnAttackDelegate.Broadcast();
 
 	if (0 == CurrentBulletCount)
 	{
@@ -67,6 +68,7 @@ void ASRifleWeapon::NormalAttack()
 		GetWorldTimerManager().SetTimer(ReloadTimer, FTimerDelegate::CreateLambda([&]() {
 			bReloading = false;
 			CurrentBulletCount = DefaultBulletCount;
+			OnAttackDelegate.Broadcast();
 			}), ReloadCoolTime, false);
 
 	}

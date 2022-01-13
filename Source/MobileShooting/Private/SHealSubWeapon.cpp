@@ -13,17 +13,15 @@ ASHealSubWeapon::ASHealSubWeapon()
 void ASHealSubWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-
-	ReloadHealSubWeapon();
 }
 
 void ASHealSubWeapon::Heal()
 {
-	--CurrentHealCount;
+	SubtrackCurrentSubWeaponCount();
 
-	if (0 > CurrentHealCount)
+	if (0 > CurrentSubWeaponCount)
 	{
-		GetWorldTimerManager().SetTimer(HealCoolTimer, this, &ASHealSubWeapon::ReloadHealSubWeapon, HealCoolTime, false);
+		GetWorldTimerManager().SetTimer(ReloadTimer, this, &ASSubWeapon::ReloadSubWeapon, ReloadTime, false);
 		return;
 	}
 
@@ -41,7 +39,7 @@ void ASHealSubWeapon::Heal()
 	}
 
 	HealthComp->SetHealth(HealthComp->GetHealth() + HealAmount);
-	UE_LOG(LogTemp, Log, TEXT("HealSubWeapon Count : %d, Current HP : %f"), CurrentHealCount, HealthComp->GetHealth());
+	UE_LOG(LogTemp, Log, TEXT("HealSubWeapon Count : %d, Current HP : %f"), CurrentSubWeaponCount, HealthComp->GetHealth());
 	GetWorldTimerManager().SetTimer(HealTickTimer, this, &ASHealSubWeapon::Heal, HealTick, false);
 }
 
@@ -52,22 +50,16 @@ void ASHealSubWeapon::Tick(float DeltaTime)
 
 void ASHealSubWeapon::StartSubWeaponAttack()
 {
-	if (true == bIsCoolTime)
+	if (true == bReload)
 	{
 		return;
 	}
 
 	Heal();
-	bIsCoolTime = true;
+	bReload = true;
 }
 
 void ASHealSubWeapon::StopSubWeaponAttack()
 {
 
-}
-
-void ASHealSubWeapon::ReloadHealSubWeapon()
-{
-	bIsCoolTime = false;
-	CurrentHealCount = DefaultHealCount;
 }

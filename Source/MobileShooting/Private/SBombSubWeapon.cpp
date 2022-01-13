@@ -16,9 +16,6 @@ ASBombSubWeapon::ASBombSubWeapon()
 void ASBombSubWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-
-	CurrentBombCount = DefaultBombCount;
-	bIsReload = false;
 }
 
 void ASBombSubWeapon::Tick(float DeltaTime)
@@ -28,7 +25,7 @@ void ASBombSubWeapon::Tick(float DeltaTime)
 
 void ASBombSubWeapon::StartSubWeaponAttack()
 {
-	if (true == bIsReload)
+	if (true == bReload)
 	{
 		UE_LOG(LogTemp, Log, TEXT("BombSubWeapon Reloading!"));
 		return;
@@ -63,21 +60,12 @@ void ASBombSubWeapon::StopSubWeaponAttack()
 
 	if (nullptr != Bomb)
 	{
-		CurrentBombCount--;
+		SubtrackCurrentSubWeaponCount();
 	}
 
-	if (0 == CurrentBombCount)
+	if (0 >= CurrentSubWeaponCount)
 	{
-		bIsReload = true;
-		GetWorldTimerManager().SetTimer(BombReloadTimer, this, &ASBombSubWeapon::ReloadBomb, BombReloadTime, false);
+		bReload = true;
+		GetWorldTimerManager().SetTimer(ReloadTimer, this, &ASSubWeapon::ReloadSubWeapon, ReloadTime, false);
 	}	
-}
-
-void ASBombSubWeapon::ReloadBomb()
-{
-	CurrentBombCount = DefaultBombCount;
-	bIsReload = false;
-	GetWorldTimerManager().ClearTimer(BombReloadTimer);
-
-	UE_LOG(LogTemp, Log, TEXT("BombSubWeapon Reload Complete"));
 }

@@ -20,6 +20,10 @@ public:
 
 	virtual void OnPossess(class APawn* aPawn) override;
 
+	void BindMainWeaponStatusWidget(class ASWeapon* MainWeapon);
+
+	void BindSubWeaponStatusWidget(class ASSubWeapon* SubWeapon);
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -27,6 +31,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI", Meta = (AllowPrivateAccess = true))
 	TSubclassOf<class URightButtonHUDWidget> RightPadButtonHUDClass;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI", Meta = (AllowPrivateAccess = true))
+	TSubclassOf<class USWeaponStatusWidget> WeaponStatusWidgetClass;
+
 	UPROPERTY() 
 	class URightButtonHUDWidget* RightButtonHUD;
+
+	UPROPERTY()
+	class USWeaponStatusWidget* WeaponStatusWidget;
+	
 };

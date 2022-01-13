@@ -7,6 +7,7 @@
 #include "SWeapon.generated.h"
 
 using FOnReloadMontageDelegate = TMulticastDelegate<void()>;
+using FOnAttackDelegate = TMulticastDelegate<void()>;
 
 UCLASS()
 class MOBILESHOOTING_API ASWeapon : public AActor
@@ -34,6 +35,8 @@ public:
 	virtual void SkillAttack(void);
 
 	bool IsReloading(void) const { return bReloading; }
+
+	int32 GetCurrentBulletCount(void) { return CurrentBulletCount; }
 
 protected:
 	
@@ -77,4 +80,5 @@ protected:
 public:
 	// Delegate
 	FOnReloadMontageDelegate OnReloadMontageDelegate;
+	FOnAttackDelegate OnAttackDelegate;
 };
