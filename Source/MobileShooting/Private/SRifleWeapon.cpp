@@ -65,12 +65,7 @@ void ASRifleWeapon::NormalAttack()
 		OnReloadMontageDelegate.Broadcast();
 
 		// 쿨타임 처리
-		GetWorldTimerManager().SetTimer(ReloadTimer, FTimerDelegate::CreateLambda([&]() {
-			bReloading = false;
-			CurrentBulletCount = DefaultBulletCount;
-			OnAttackDelegate.Broadcast();
-			}), ReloadCoolTime, false);
-
+		GetWorldTimerManager().SetTimer(ReloadTimer, this, &ASRifleWeapon::ReloadWeapon, ReloadCoolTime, false);
 	}
 }
 

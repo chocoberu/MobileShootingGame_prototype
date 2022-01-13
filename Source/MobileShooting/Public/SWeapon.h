@@ -38,6 +38,8 @@ public:
 
 	int32 GetCurrentBulletCount(void) { return CurrentBulletCount; }
 
+	void ReloadWeapon(void);
+
 protected:
 	
 	// Components

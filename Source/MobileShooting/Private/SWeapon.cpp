@@ -52,3 +52,12 @@ void ASWeapon::SkillAttack()
 	// 하위 클래스에서 구현
 }
 
+void ASWeapon::ReloadWeapon(void)
+{
+	bReloading = false;
+	CurrentBulletCount = DefaultBulletCount;
+	GetWorldTimerManager().ClearTimer(ReloadTimer);
+
+	OnAttackDelegate.Broadcast();
+}
+

@@ -67,5 +67,7 @@ void ASSubWeapon::ReloadSubWeapon(void)
 	bReload = false;
 	GetWorldTimerManager().ClearTimer(ReloadTimer);
 
+	OnAttackDelegate.Broadcast();
+
 	UE_LOG(LogTemp, Log, TEXT("SubWeapon Reload Complete!"));
 }
