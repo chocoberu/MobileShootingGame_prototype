@@ -47,7 +47,7 @@ void ASBarrierSubWeapon::StartSubWeaponAttack()
 
 void ASBarrierSubWeapon::StopSubWeaponAttack()
 {
-	__noop;
+
 }
 
 void ASBarrierSubWeapon::ReloadBarrier()

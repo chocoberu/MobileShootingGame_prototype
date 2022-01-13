@@ -11,6 +11,8 @@
 #include "SCharacterAnimInstance.h"
 #include "SPlayerController.h"
 #include "Kismet/GameplayStatics.h"
+#include "UI/SHPBarWidget.h"
+#include "Components/WidgetComponent.h"
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -30,11 +32,17 @@ ASCharacter::ASCharacter()
 	HealthComp = CreateDefaultSubobject<USHealthComponent>(TEXT("HealthComp"));
 	HealthComp->OnHealthChanged.AddUObject(this, &ASCharacter::OnHealthChanged);
 
-	// UI
-
+	
 	WeaponAttachSocketName = TEXT("hand_r_weapon");
 	SubWeaponAttachSocketName = TEXT("thigh_r_SubWeapon");
 	bDied = false;
+
+	// UI
+	// HP Bar
+	HPBarWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HPBarWidgetComp"));
+	HPBarWidgetComp->SetupAttachment(GetMesh());
+	HPBarWidgetComp->SetRelativeLocation(FVector(0.0f, 0.0f, 200.0f));
+	HPBarWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
 
 	// 카메라 설정
 	{
@@ -102,6 +110,13 @@ void ASCharacter::PostInitializeComponents()
 	}
 
 	AnimInstance->OnNormalAttack.AddUObject(this, &ASCharacter::MainAttack);
+
+	HPBarWidgetComp->InitWidget();
+	auto HPBarWidget = Cast<USHPBarWidget>(HPBarWidgetComp->GetUserWidgetObject());
+	if (nullptr != HPBarWidget)
+	{
+		HPBarWidget->BindCharacterHealthComponent(HealthComp);
+	}
 }
 
 void ASCharacter::MoveForward(float Value)
@@ -116,6 +131,8 @@ void ASCharacter::MoveRight(float Value)
 
 void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
+	UpdateHPBarWidget();
+
 	if (Health <= 0.0f && !bDied)
 	{
 		if (nullptr != MainWeapon)
@@ -132,6 +149,7 @@ void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Hea
 
 		GetMovementComponent()->StopMovementImmediately();
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		HPBarWidgetComp->SetHiddenInGame(true);
 
 		// TODO : Character를 5초 후에 리스폰 or 시작 위치로 조정
 
@@ -233,7 +251,21 @@ void ASCharacter::RespawnCharacter(void)
 	HealthComp->RestoreHealth();
 	AnimInstance->SetDeadAnim(false);
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	HPBarWidgetComp->SetHiddenInGame(false);
+
+	UpdateHPBarWidget();
 
 	bDied = false;
 	// TODO : Respawn 할 때 필요한 작업 추가
+}
+
+void ASCharacter::UpdateHPBarWidget()
+{
+	auto HPBarWidget = Cast<USHPBarWidget>(HPBarWidgetComp->GetUserWidgetObject());
+	if (nullptr == HPBarWidget)
+	{
+		UE_LOG(LogTemp, Error, TEXT("HPBarWidget is nullptr"));
+		return;
+	}
+	HPBarWidget->UpdateHPWidget();
 }

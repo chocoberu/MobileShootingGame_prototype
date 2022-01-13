@@ -14,7 +14,6 @@ void USHPBarWidget::NativeConstruct()
 
 void USHPBarWidget::BindCharacterHealthComponent(USHealthComponent* NewHealthComponent)
 {
-	UE_LOG(LogTemp, Log, TEXT("BindCharacterHealthComponent() Call"));
 	if (nullptr == NewHealthComponent)
 	{
 		return;
@@ -26,14 +25,8 @@ void USHPBarWidget::BindCharacterHealthComponent(USHealthComponent* NewHealthCom
 
 void USHPBarWidget::UpdateHPWidget()
 {
-	UE_LOG(LogTemp, Log, TEXT("UpdateHPWidget() Call"));
 	if (true == HealthCompWeakPtr.IsValid())
 	{
-		UE_LOG(LogTemp, Log, TEXT("%f HP Ratio"), HealthCompWeakPtr->GetHPRatio());
 		HPProgressBar->SetPercent(HealthCompWeakPtr->GetHPRatio());
-	}
-	else
-	{
-
 	}
 }

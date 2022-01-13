@@ -35,14 +35,7 @@ void ASDummyCharacter::BeginPlay()
 
 void ASDummyCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
-	// HP Bar Update
-	auto HPBarWidget = Cast<USHPBarWidget>(HPBarWidgetComp->GetUserWidgetObject());
-	if (nullptr == HPBarWidget)
-	{
-		UE_LOG(LogTemp, Error, TEXT("HPBarWidget is nullptr"));
-		return;
-	}
-	HPBarWidget->UpdateHPWidget();
+	UpdateHPBarWidget();
 
 	// DamageText Widget Update
 	if (nullptr == DamageTextWidgetCompClass)
@@ -74,13 +67,7 @@ void ASDummyCharacter::RestoreHealth()
 {
 	HealthComp->RestoreHealth();
 
-	auto HPBarWidget = Cast<USHPBarWidget>(HPBarWidgetComp->GetUserWidgetObject());
-	if (nullptr == HPBarWidget)
-	{
-		UE_LOG(LogTemp, Error, TEXT("HPBarWidget is nullptr"));
-		return;
-	}
-	HPBarWidget->UpdateHPWidget();
+	UpdateHPBarWidget();
 }
 
 // Called every frame
@@ -100,5 +87,16 @@ void ASDummyCharacter::PostInitializeComponents()
 	{
 		HPBarWidget->BindCharacterHealthComponent(HealthComp);
 	}
+}
+
+void ASDummyCharacter::UpdateHPBarWidget()
+{
+	auto HPBarWidget = Cast<USHPBarWidget>(HPBarWidgetComp->GetUserWidgetObject());
+	if (nullptr == HPBarWidget)
+	{
+		UE_LOG(LogTemp, Error, TEXT("HPBarWidget is nullptr"));
+		return;
+	}
+	HPBarWidget->UpdateHPWidget();
 }
 

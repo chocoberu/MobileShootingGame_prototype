@@ -57,6 +57,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	class USHealthComponent* HealthComp;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	class UWidgetComponent* HPBarWidgetComp;
+
 	// Weapon
 	UPROPERTY()
 	class ASWeapon* MainWeapon;
@@ -112,6 +115,8 @@ public:
 	virtual void StopSubAttack(void);
 
 	void RespawnCharacter(void);
+
+	void UpdateHPBarWidget();
 
 	class USHealthComponent* GetHealthComponent() { return HealthComp; }
 };
