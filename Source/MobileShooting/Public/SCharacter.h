@@ -94,7 +94,6 @@ protected:
 
 	FTimerHandle RespawnTimer;
 
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -103,8 +102,6 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void StartMainAttack(void);
-
-	virtual void MainAttack(void);
 
 	virtual void StopMainAttack(void);
 

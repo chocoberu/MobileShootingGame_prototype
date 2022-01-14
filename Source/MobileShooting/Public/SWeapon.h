@@ -40,6 +40,12 @@ public:
 
 	void ReloadWeapon(void);
 
+	float GetFirstDelay(void) const;
+
+	float GetNormalAttackCoolTime(void) const { return NormalAttackCoolTime; }
+
+	void SetOwnerAnimInstance(class USCharacterAnimInstance* NewAnimInstance);
+
 protected:
 	
 	// Components
@@ -78,6 +84,8 @@ protected:
 	FTimerHandle ReloadTimer;
 
 	FTimerHandle NormalAttackTimer;
+
+	class USCharacterAnimInstance* OwnerAnimInstance;
 
 public:
 	// Delegate

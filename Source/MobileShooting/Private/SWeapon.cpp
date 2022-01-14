@@ -61,3 +61,18 @@ void ASWeapon::ReloadWeapon(void)
 	OnAttackDelegate.Broadcast();
 }
 
+float ASWeapon::GetFirstDelay(void) const
+{
+	return FMath::Max(LastNormalAttackTime + NormalAttackCoolTime - GetWorld()->TimeSeconds, 0.0f);
+}
+
+void ASWeapon::SetOwnerAnimInstance(USCharacterAnimInstance* NewAnimInstance)
+{
+	if (nullptr == NewAnimInstance)
+	{
+		return;
+	}
+	OwnerAnimInstance = NewAnimInstance;
+}
+
+

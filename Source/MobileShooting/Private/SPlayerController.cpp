@@ -8,26 +8,43 @@
 void ASPlayerController::OnPossess(APawn* aPawn)
 {
 	Super::OnPossess(aPawn);
+
+	RightButtonHUD = CreateWidget<URightButtonHUDWidget>(this, RightPadButtonHUDClass);
+	if (nullptr == RightButtonHUD)
+	{
+		UE_LOG(LogTemp, Error, TEXT("RightButtonHUD is nullptr"));
+		return;
+	}
+	WeaponStatusWidget = CreateWidget<USWeaponStatusWidget>(this, WeaponStatusWidgetClass);
+	if (nullptr == WeaponStatusWidget)
+	{
+		UE_LOG(LogTemp, Error, TEXT("WeaponStatusWidget is nullptr"));
+		return;
+	}
 }
 
 void ASPlayerController::BindMainWeaponStatusWidget(ASWeapon* MainWeapon)
 {
+	UE_LOG(LogTemp, Log, TEXT("BindMainWeaponStatusWidget() Call"));
 	if (nullptr == WeaponStatusWidget)
 	{
 		return;
 	}
 
 	WeaponStatusWidget->BindMainWeapon(MainWeapon);
+	UE_LOG(LogTemp, Log, TEXT("BindMainWeaponStatusWidget() Complete"));
 }
 
 void ASPlayerController::BindSubWeaponStatusWidget(ASSubWeapon* SubWeapon)
 {
+	UE_LOG(LogTemp, Log, TEXT("BindSubWeaponStatusWidget() Call"));
 	if (nullptr == WeaponStatusWidget)
 	{
 		return;
 	}
 
 	WeaponStatusWidget->BindSubWeapon(SubWeapon);
+	UE_LOG(LogTemp, Log, TEXT("BindSubWeaponStatusWidget() Complete"));
 }
 
 void ASPlayerController::PostInitializeComponents()
@@ -39,22 +56,6 @@ void ASPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//UE_LOG(LogTemp, Log, TEXT("CreateWidget"));
-	RightButtonHUD = CreateWidget<URightButtonHUDWidget>(this, RightPadButtonHUDClass);
-	if (nullptr == RightButtonHUD)
-	{
-		UE_LOG(LogTemp, Error, TEXT("RightButtonHUD is nullptr"));
-		return;
-	}
-
 	RightButtonHUD->AddToViewport();
-	
-	WeaponStatusWidget = CreateWidget<USWeaponStatusWidget>(this, WeaponStatusWidgetClass);
-	if (nullptr == WeaponStatusWidget)
-	{
-		UE_LOG(LogTemp, Error, TEXT("WeaponStatusWidget is nullptr"));
-		return;
-	}
-
 	WeaponStatusWidget->AddToViewport();
 }

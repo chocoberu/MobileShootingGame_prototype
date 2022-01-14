@@ -6,7 +6,6 @@
 #include "Animation/AnimInstance.h"
 #include "SCharacterAnimInstance.generated.h"
 
-using FOnNormalAttackDelegate = TMulticastDelegate<void()>;
 /**
  * 
  */
@@ -27,8 +26,6 @@ public:
 
 	void SetDeadAnim(bool Value);
 
-	FOnNormalAttackDelegate OnNormalAttack;
-
 protected:
 
 	// Montage
@@ -44,7 +41,4 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Attack", Meta = (AllowPrivateAccess = true))
 	float DeadAnimStartPosition;
-
-	UFUNCTION()
-	void AnimNotify_NormalAttack();
 };

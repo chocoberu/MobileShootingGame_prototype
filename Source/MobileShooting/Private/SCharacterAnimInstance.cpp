@@ -37,8 +37,3 @@ void USCharacterAnimInstance::SetDeadAnim(bool Value)
 	DeadAnimStartPosition = 0.0f;
 	bDead = Value;
 }
-
-void USCharacterAnimInstance::AnimNotify_NormalAttack()
-{
-	OnNormalAttack.Broadcast();
-}

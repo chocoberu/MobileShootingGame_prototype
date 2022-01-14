@@ -3,6 +3,7 @@
 
 #include "SRifleWeapon.h"
 #include "SProjectile.h"
+#include "SCharacterAnimInstance.h"
 
 ASRifleWeapon::ASRifleWeapon()
 {
@@ -23,7 +24,7 @@ void ASRifleWeapon::StartNormalAttack()
 		return;
 	}
 
-	float FirstDelay = FMath::Max(LastNormalAttackTime + NormalAttackCoolTime - GetWorld()->TimeSeconds, 0.0f);
+	float FirstDelay = GetFirstDelay();
 	GetWorldTimerManager().SetTimer(NormalAttackTimer, this, &ASRifleWeapon::NormalAttack, NormalAttackCoolTime, true, FirstDelay);
 }
 
@@ -40,22 +41,27 @@ void ASRifleWeapon::NormalAttack()
 		return;
 	}
 
+	if (nullptr != OwnerAnimInstance)
+	{
+		OwnerAnimInstance->PlayNormalAttack();
+	}
+
 	ASProjectile* Bullet = GetWorld()->SpawnActor<ASProjectile>(ProjectileClass,
 																MeshComp->GetSocketLocation(WeaponMuzzleSocketName), 
 																GetOwner()->GetActorRotation());
-	if (nullptr != Bullet)
+	if (nullptr == Bullet)
 	{
-		Bullet->SetOwner(MyOwner);
+		return;
 	}
+	Bullet->SetOwner(MyOwner);
 
 	// ÃÑ¾Ë ¼ö Ã³¸®
-
-	CurrentBulletCount--;
+	--CurrentBulletCount;
 
 	UE_LOG(LogTemp, Log, TEXT("Current Bullet : %d"), CurrentBulletCount);
 	OnAttackDelegate.Broadcast();
 
-	if (0 == CurrentBulletCount)
+	if (0 >= CurrentBulletCount)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Reloading"));
 		bReloading = true;

@@ -86,6 +86,7 @@ void ASCharacter::BeginPlay()
 	{
 		MainWeapon->SetOwner(this);
 		MainWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponAttachSocketName);
+		MainWeapon->SetOwnerAnimInstance(AnimInstance);
 
 		MainWeapon->OnReloadMontageDelegate.AddUObject(this, &ASCharacter::ReloadMainWeapon);
 	}
@@ -108,8 +109,6 @@ void ASCharacter::PostInitializeComponents()
 	{
 		UE_LOG(LogTemp, Error, TEXT("AnimInstance is nullptr"));
 	}
-
-	AnimInstance->OnNormalAttack.AddUObject(this, &ASCharacter::MainAttack);
 
 	HPBarWidgetComp->InitWidget();
 	auto HPBarWidget = Cast<USHPBarWidget>(HPBarWidgetComp->GetUserWidgetObject());
@@ -193,14 +192,6 @@ void ASCharacter::StartMainAttack()
 {
 	if (nullptr != MainWeapon && false == bDied && false == MainWeapon->IsReloading())
 	{
-		AnimInstance->PlayNormalAttack();
-	}
-}
-
-void ASCharacter::MainAttack(void)
-{
-	if (nullptr != MainWeapon && false == bDied)
-	{
 		MainWeapon->StartNormalAttack();
 	}
 }
@@ -209,6 +200,7 @@ void ASCharacter::StopMainAttack()
 {
 	if (nullptr != MainWeapon && false == bDied)
 	{
+		//GetWorldTimerManager().ClearTimer(NormalAttackTimer);
 		MainWeapon->StopNormalAttack();
 	}
 }
