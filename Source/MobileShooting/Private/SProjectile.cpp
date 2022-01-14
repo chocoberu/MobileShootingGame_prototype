@@ -55,3 +55,9 @@ void ASProjectile::NotifyActorBeginOverlap(AActor* OtherActor)
 
 }
 
+void ASProjectile::SetInitialSpeed(float NewSpeed)
+{
+	ProjectileMovemetComp->InitialSpeed = NewSpeed;
+	ProjectileMovemetComp->MaxSpeed = NewSpeed;
+}
+

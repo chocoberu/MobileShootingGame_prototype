@@ -27,6 +27,8 @@ public:
 
 	float GetAttackDamage() const { return AttackDamage; }
 
+	void SetInitialSpeed(float NewSpeed);
+
 protected:
 
 	// Components

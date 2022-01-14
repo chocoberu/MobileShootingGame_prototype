@@ -53,15 +53,19 @@ void ASBombSubWeapon::StopSubWeaponAttack()
 	GetWorldTimerManager().ClearTimer(BombChargingTimer);
 
 	auto SubWeaponOwner = GetOwner();
+	FRotator Rot = SubWeaponOwner->GetActorRotation();
+	Rot.Pitch += 30.0f;
 
 	auto Bomb = GetWorld()->SpawnActor<ASProjectile>(ProjectileClass,
 		SubWeaponOwner->GetActorLocation() + SubWeaponOwner->GetActorForwardVector() * 100.0f,
-		SubWeaponOwner->GetActorRotation());
+		Rot);
 
 	if (nullptr != Bomb)
 	{
+		Bomb->SetInitialSpeed(1000.0f + 2000.0f * RemainTime / BombMaxChargingTime);
 		SubtrackCurrentSubWeaponCount();
 	}
+	
 
 	if (0 >= CurrentSubWeaponCount)
 	{
