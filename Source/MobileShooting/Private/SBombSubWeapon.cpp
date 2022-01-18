@@ -62,7 +62,7 @@ void ASBombSubWeapon::StopSubWeaponAttack()
 
 	if (nullptr != Bomb)
 	{
-		Bomb->SetInitialSpeed(1000.0f + 2000.0f * RemainTime / BombMaxChargingTime);
+		Bomb->SetInitialSpeed(1000.0f + 3000.0f * RemainTime / BombMaxChargingTime);
 		SubtrackCurrentSubWeaponCount();
 	}
 	
