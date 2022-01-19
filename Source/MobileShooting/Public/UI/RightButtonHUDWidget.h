@@ -42,6 +42,9 @@ private:
 	UFUNCTION()
 	void OnSubAttackReleased();
 
+	UFUNCTION()
+	void OnMenuButtonPressed();
+
 	UPROPERTY()
 	class ASPlayerController* PlayerController;
 

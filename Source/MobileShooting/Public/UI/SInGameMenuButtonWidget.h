@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "SInGameMenuButtonWidget.generated.h"
 
+using FOnClickedMenuButton = TMulticastDelegate<void()>;
 /**
  * 
  */
@@ -17,8 +18,10 @@ class MOBILESHOOTING_API USInGameMenuButtonWidget : public UUserWidget
 public:
 
 	UFUNCTION()
-	void OnClickedMenuButton();
-	
+	void OnMenuButtonPressed();
+
+	FOnClickedMenuButton OnClickedMenuButtonDelegate;
+
 protected:
 	virtual void NativeConstruct() override;
 

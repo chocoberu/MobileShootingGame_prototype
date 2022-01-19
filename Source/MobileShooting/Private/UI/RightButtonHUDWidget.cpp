@@ -32,6 +32,8 @@ void URightButtonHUDWidget::NativeConstruct()
 		SubAttackButton->OnPressed.AddDynamic(this, &URightButtonHUDWidget::OnSubAttackPressed);
 		SubAttackButton->OnReleased.AddDynamic(this, &URightButtonHUDWidget::OnSubAttackReleased);
 	}
+
+	MenuButton->OnClickedMenuButtonDelegate.AddUObject(this, &URightButtonHUDWidget::OnMenuButtonPressed);
 }
 
 void URightButtonHUDWidget::OnMainAttackPressed()
@@ -68,4 +70,9 @@ void URightButtonHUDWidget::OnSubAttackReleased()
 		return;
 	}
 	PlayerCharacter->StopSubAttack();
+}
+
+void URightButtonHUDWidget::OnMenuButtonPressed()
+{
+	
 }
