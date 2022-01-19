@@ -2,6 +2,7 @@
 
 
 #include "UI/RightButtonHUDWidget.h"
+#include "UI/SInGameMenuButtonWidget.h"
 #include "Components/Button.h"
 #include "SPlayerController.h"
 #include "SCharacter.h"

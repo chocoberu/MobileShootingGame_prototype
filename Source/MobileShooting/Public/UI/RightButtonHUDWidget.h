@@ -27,6 +27,9 @@ private:
 	UPROPERTY()
 	class UButton* SubAttackButton;
 
+	UPROPERTY(meta = (BindWidget))
+	class USInGameMenuButtonWidget* MenuButton;
+
 	UFUNCTION()
 	void OnMainAttackPressed();
 
