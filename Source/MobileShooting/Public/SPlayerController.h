@@ -24,6 +24,10 @@ public:
 
 	void BindSubWeaponStatusWidget(class ASSubWeapon* SubWeapon);
 
+	void OnGamePause();
+
+	void OnGameResume();
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -34,10 +38,15 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI", Meta = (AllowPrivateAccess = true))
 	TSubclassOf<class USWeaponStatusWidget> WeaponStatusWidgetClass;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI", Meta = (AllowPrivateAccess = true))
+	TSubclassOf<class USPraticeMenuWidget> MenuWidgetClass;
+
 	UPROPERTY() 
 	class URightButtonHUDWidget* RightButtonHUD;
 
 	UPROPERTY()
 	class USWeaponStatusWidget* WeaponStatusWidget;
 	
+	UPROPERTY()
+	class USPraticeMenuWidget* MenuWidget;
 };

@@ -4,6 +4,8 @@
 #include "SPlayerController.h"
 #include "UI/RightButtonHUDWidget.h"
 #include "UI/SWeaponStatusWidget.h"
+#include "UI/SPraticeMenuWidget.h"
+#include "Kismet/GameplayStatics.h"
 
 void ASPlayerController::OnPossess(APawn* aPawn)
 {
@@ -20,6 +22,11 @@ void ASPlayerController::OnPossess(APawn* aPawn)
 	{
 		UE_LOG(LogTemp, Error, TEXT("WeaponStatusWidget is nullptr"));
 		return;
+	}
+	MenuWidget = CreateWidget<USPraticeMenuWidget>(this, MenuWidgetClass);
+	if (nullptr != MenuWidget)
+	{
+		MenuWidget->OnResumeDelegate.AddUObject(this, &ASPlayerController::OnGameResume);
 	}
 }
 
@@ -47,6 +54,32 @@ void ASPlayerController::BindSubWeaponStatusWidget(ASSubWeapon* SubWeapon)
 	UE_LOG(LogTemp, Log, TEXT("BindSubWeaponStatusWidget() Complete"));
 }
 
+void ASPlayerController::OnGamePause()
+{
+	if (nullptr == MenuWidget)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Menu Widget is nullptr"));
+		return;
+	}
+	SetPause(true);
+
+	MenuWidget->AddToViewport();
+	bShowMouseCursor = true;
+}
+
+void ASPlayerController::OnGameResume()
+{
+	if (nullptr == MenuWidget)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Menu Widget is nullptr"));
+		return;
+	}
+	SetPause(false);
+
+	MenuWidget->RemoveFromViewport();
+	bShowMouseCursor = false;
+}
+
 void ASPlayerController::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
@@ -56,6 +89,11 @@ void ASPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	RightButtonHUD->AddToViewport();
+	FString CurrentPlatform = UGameplayStatics::GetPlatformName();
+
+	//if (0 == CurrentPlatform.Compare(TEXT("IOS")) || 0 == CurrentPlatform.Compare(TEXT("Android")))
+	{
+		RightButtonHUD->AddToViewport();
+	}
 	WeaponStatusWidget->AddToViewport();
 }

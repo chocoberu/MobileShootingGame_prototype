@@ -74,5 +74,5 @@ void URightButtonHUDWidget::OnSubAttackReleased()
 
 void URightButtonHUDWidget::OnMenuButtonPressed()
 {
-	PlayerController->SetPause(true);
+	PlayerController->OnGamePause();
 }
