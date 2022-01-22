@@ -13,6 +13,14 @@ void USPraticeMenuWidget::NativeConstruct()
 	ReturnMainMenuButton->OnPressed.AddDynamic(this, &USPraticeMenuWidget::OnReturnMainMenuButtonPressed);
 }
 
+void USPraticeMenuWidget::NativeDestruct()
+{
+	Super::NativeDestruct();
+
+	ResumeButton->OnPressed.RemoveDynamic(this, &USPraticeMenuWidget::OnResumeButtonPressed);
+	ReturnMainMenuButton->OnPressed.RemoveDynamic(this, &USPraticeMenuWidget::OnReturnMainMenuButtonPressed);
+}
+
 void USPraticeMenuWidget::OnResumeButtonPressed()
 {
 	OnResumeDelegate.Broadcast();

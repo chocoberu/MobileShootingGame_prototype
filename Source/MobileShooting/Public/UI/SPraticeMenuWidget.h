@@ -28,6 +28,8 @@ public:
 protected:
 	virtual void NativeConstruct() override;
 
+	virtual void NativeDestruct() override;
+
 	UPROPERTY(meta = (BindWidget))
 	class UButton* ResumeButton;
 
