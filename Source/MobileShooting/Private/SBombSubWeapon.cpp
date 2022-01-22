@@ -62,7 +62,9 @@ void ASBombSubWeapon::StopSubWeaponAttack()
 
 	if (nullptr != Bomb)
 	{
-		Bomb->SetInitialSpeed(1000.0f + 3000.0f * RemainTime / BombMaxChargingTime);
+		float InitialSpeed = 700.0f + 5000.0f * RemainTime / BombMaxChargingTime;
+		UE_LOG(LogTemp, Log, TEXT("Bomb Initial Speed : %f"), InitialSpeed);
+		Bomb->SetInitialSpeed(InitialSpeed);
 		SubtrackCurrentSubWeaponCount();
 	}
 	

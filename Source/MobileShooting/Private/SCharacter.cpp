@@ -32,7 +32,6 @@ ASCharacter::ASCharacter()
 	HealthComp = CreateDefaultSubobject<USHealthComponent>(TEXT("HealthComp"));
 	HealthComp->OnHealthChanged.AddUObject(this, &ASCharacter::OnHealthChanged);
 
-	
 	WeaponAttachSocketName = TEXT("hand_r_weapon");
 	SubWeaponAttachSocketName = TEXT("thigh_r_SubWeapon");
 	bDied = false;
