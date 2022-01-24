@@ -29,6 +29,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	class UWidgetComponent* HPBarWidgetComp;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", Meta = (AllowPrivateAccess = true))
+	class UAIPerceptionComponent* AIPerceptionComp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = true))
+	class UAISenseConfig_Sight* SightConfig;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

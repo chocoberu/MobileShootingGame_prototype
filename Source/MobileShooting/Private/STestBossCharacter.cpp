@@ -7,6 +7,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "UI/SHPBarWidget.h"
 #include "Components/WidgetComponent.h"
+#include "Perception/AIPerceptionComponent.h"
+#include "Perception/AISenseConfig_Sight.h"
 
 // Sets default values
 ASTestBossCharacter::ASTestBossCharacter()
@@ -28,6 +30,11 @@ ASTestBossCharacter::ASTestBossCharacter()
 	GetCapsuleComponent()->SetRelativeScale3D(FVector(1.5f, 1.5f, 1.5f));
 
 	// AI
+	AIPerceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerceptionComp"));
+
+	SightConfig = CreateOptionalDefaultSubobject<UAISenseConfig_Sight>(TEXT("Sight Config"));
+	AIPerceptionComp->ConfigureSense(*SightConfig);
+	AIPerceptionComp->SetDominantSense(SightConfig->GetSenseImplementation());
 	
 }
 
