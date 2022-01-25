@@ -13,7 +13,6 @@ void ASTurretSubWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 
-	ReloadTurret();
 }
 
 void ASTurretSubWeapon::Tick(float DeltaTime)
@@ -23,7 +22,7 @@ void ASTurretSubWeapon::Tick(float DeltaTime)
 
 void ASTurretSubWeapon::StartSubWeaponAttack()
 {
-	if (true == bIsReload || CurrentTurretCount <= 0)
+	if (true == bReload || CurrentSubWeaponCount <= 0)
 	{
 		return;
 	}
@@ -37,23 +36,14 @@ void ASTurretSubWeapon::StartSubWeaponAttack()
 		SubtrackCurrentSubWeaponCount();
 	}
 
-	if (CurrentTurretCount <= 0)
+	if (CurrentSubWeaponCount <= 0)
 	{
-		bIsReload = true;
-		GetWorldTimerManager().SetTimer(ReloadTimer, this, &ASTurretSubWeapon::ReloadSubWeapon, ReloadTime, false);
+		bReload = true;
+		GetWorldTimerManager().SetTimer(ReloadTimer, this, &ASSubWeapon::ReloadSubWeapon, ReloadTime, false);
 	}
 }
 
 void ASTurretSubWeapon::StopSubWeaponAttack()
 {
 	// Stop에서는 수행 X
-}
-
-void ASTurretSubWeapon::ReloadTurret()
-{
-	bIsReload = false;
-	CurrentTurretCount = DefaultTurretCount;
-	GetWorldTimerManager().ClearTimer(TurretReloadTimer);
-
-	UE_LOG(LogTemp, Log, TEXT("TurretSubWeapon Reload Complete"));
 }

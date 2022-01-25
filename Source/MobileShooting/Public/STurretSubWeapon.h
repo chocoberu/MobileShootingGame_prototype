@@ -25,19 +25,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Weapon")
 	TSubclassOf<class ASTurret> TurretClass;
 
-	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
-	float TurretReloadTime;
-
-	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
-	int32 CurrentTurretCount;
-
-	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
-	int32 DefaultTurretCount;
-
-	FTimerHandle TurretReloadTimer;
-
-	bool bIsReload;
-
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -45,6 +32,4 @@ public:
 	virtual void StartSubWeaponAttack() override;
 
 	virtual void StopSubWeaponAttack() override;
-
-	void ReloadTurret();
 };
