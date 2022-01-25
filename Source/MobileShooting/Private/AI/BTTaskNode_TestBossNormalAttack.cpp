@@ -24,15 +24,13 @@ EBTNodeResult::Type UBTTaskNode_TestBossNormalAttack::ExecuteTask(UBehaviorTreeC
 	}
 	
 	auto TestBossCharacter = Cast<ASTestBossCharacter>(OwnerComp.GetAIOwner()->GetPawn());
-	if (nullptr == TestBossCharacter)
-	{
-		return EBTNodeResult::Failed;
-	}
 	auto TargetActor = Cast<ASCharacter>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
-	if (nullptr == TargetActor)
+	if (nullptr == TargetActor || nullptr == TestBossCharacter)
 	{
 		return EBTNodeResult::Failed;
 	}
+
+	TestBossCharacter->NormalAttack();
 
 	return Result;
 }

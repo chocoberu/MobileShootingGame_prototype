@@ -25,7 +25,7 @@ void ASBombSubWeapon::Tick(float DeltaTime)
 
 void ASBombSubWeapon::StartSubWeaponAttack()
 {
-	if (true == bReload)
+	if (true == bReload || CurrentSubWeaponCount <= 0)
 	{
 		UE_LOG(LogTemp, Log, TEXT("BombSubWeapon Reloading!"));
 		return;
@@ -69,7 +69,7 @@ void ASBombSubWeapon::StopSubWeaponAttack()
 	}
 	
 
-	if (0 >= CurrentSubWeaponCount)
+	if (CurrentSubWeaponCount <= 0)
 	{
 		bReload = true;
 		GetWorldTimerManager().SetTimer(ReloadTimer, this, &ASSubWeapon::ReloadSubWeapon, ReloadTime, false);

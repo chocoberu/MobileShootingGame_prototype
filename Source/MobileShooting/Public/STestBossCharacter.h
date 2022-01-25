@@ -41,4 +41,7 @@ public:
 
 	virtual void PostInitializeComponents() override;
 
+	void UpdateHPBarWidget(void);
+
+	void NormalAttack(void);
 };

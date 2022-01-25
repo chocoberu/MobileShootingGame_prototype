@@ -47,7 +47,7 @@ void ASTestBossCharacter::BeginPlay()
 
 void ASTestBossCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
-
+	UpdateHPBarWidget();
 }
 
 // Called every frame
@@ -61,6 +61,28 @@ void ASTestBossCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
+	HPBarWidgetComp->InitWidget();
+	auto HPBarWidget = Cast<USHPBarWidget>(HPBarWidgetComp->GetUserWidgetObject());
+	if (nullptr != HPBarWidget)
+	{
+		HPBarWidget->BindCharacterHealthComponent(HealthComp);
+	}
+}
+
+void ASTestBossCharacter::UpdateHPBarWidget()
+{
+	auto HPBarWidget = Cast<USHPBarWidget>(HPBarWidgetComp->GetUserWidgetObject());
+	if (nullptr == HPBarWidget)
+	{
+		UE_LOG(LogTemp, Error, TEXT("HPBarWidget is nullptr"));
+		return;
+	}
+	HPBarWidget->UpdateHPWidget();
+}
+
+void ASTestBossCharacter::NormalAttack()
+{
+	UE_LOG(LogTemp, Log, TEXT("TODO : Boss Normal Attack"));
 }
 
 
