@@ -49,7 +49,7 @@ void UBTService_FindTargetActor::TickNode(UBehaviorTreeComponent& OwnerComp, uin
 	{
 		if (nullptr != TargetActor)
 		{
-			auto PlayerCharacter = Cast<ASCharacter>(TargetActor);
+			auto PlayerCharacter = Cast<ACharacter>(TargetActor);
 			if (nullptr == PlayerCharacter)
 				continue;
 

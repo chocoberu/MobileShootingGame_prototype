@@ -23,7 +23,7 @@ void ASTurretSubWeapon::Tick(float DeltaTime)
 
 void ASTurretSubWeapon::StartSubWeaponAttack()
 {
-	if (true == bIsReload)
+	if (true == bIsReload || CurrentTurretCount <= 0)
 	{
 		return;
 	}
@@ -34,13 +34,13 @@ void ASTurretSubWeapon::StartSubWeaponAttack()
 	{
 		TurretObject->SetOwner(GetOwner());
 
-		--CurrentTurretCount;
+		SubtrackCurrentSubWeaponCount();
 	}
 
 	if (CurrentTurretCount <= 0)
 	{
 		bIsReload = true;
-		GetWorldTimerManager().SetTimer(TurretReloadTimer, this, &ASTurretSubWeapon::ReloadTurret, TurretReloadTime, false);
+		GetWorldTimerManager().SetTimer(ReloadTimer, this, &ASTurretSubWeapon::ReloadSubWeapon, ReloadTime, false);
 	}
 }
 

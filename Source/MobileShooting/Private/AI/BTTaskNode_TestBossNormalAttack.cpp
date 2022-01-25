@@ -2,8 +2,11 @@
 
 
 #include "AI/BTTaskNode_TestBossNormalAttack.h"
+#include "AIController.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "STestBossCharacter.h"
+#include "SCharacter.h"
 
 UBTTaskNode_TestBossNormalAttack::UBTTaskNode_TestBossNormalAttack()
 {
@@ -13,5 +16,23 @@ UBTTaskNode_TestBossNormalAttack::UBTTaskNode_TestBossNormalAttack()
 
 EBTNodeResult::Type UBTTaskNode_TestBossNormalAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	return Super::ExecuteTask(OwnerComp, NodeMemory);
+	EBTNodeResult::Type Result = Super::ExecuteTask(OwnerComp, NodeMemory);
+
+	if (EBTNodeResult::Failed == Result)
+	{
+		return Result;
+	}
+	
+	auto TestBossCharacter = Cast<ASTestBossCharacter>(OwnerComp.GetAIOwner()->GetPawn());
+	if (nullptr == TestBossCharacter)
+	{
+		return EBTNodeResult::Failed;
+	}
+	auto TargetActor = Cast<ASCharacter>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
+	if (nullptr == TargetActor)
+	{
+		return EBTNodeResult::Failed;
+	}
+
+	return Result;
 }

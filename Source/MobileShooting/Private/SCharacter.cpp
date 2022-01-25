@@ -163,9 +163,12 @@ void ASCharacter::Tick(float DeltaTime)
 
 	SpringArmComp->TargetArmLength = FMath::FInterpTo(SpringArmComp->TargetArmLength, ArmLengthTo, DeltaTime, ArmLengthSpeed);
 	SpringArmComp->SetRelativeRotation(FMath::RInterpTo(SpringArmComp->GetRelativeRotation(), ArmRotationTo, DeltaTime, ArmRotationSpeed));
+
+	//UE_LOG(LogTemp, Log, TEXT("DirectionToMove : %s"), *DirectionToMove.ToString());
 	if (DirectionToMove.SizeSquared() > 0.0f)
 	{
 		GetController()->SetControlRotation(FRotationMatrix::MakeFromX(DirectionToMove).Rotator());
+		//UE_LOG(LogTemp, Log, TEXT("FRotationMatrix::MakeFromX(DirectionToMove) : %s"), *FRotationMatrix::MakeFromX(DirectionToMove).Rotator().ToString());
 		AddMovementInput(DirectionToMove);
 	}
 }

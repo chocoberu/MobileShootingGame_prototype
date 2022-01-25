@@ -31,13 +31,16 @@ EBTNodeResult::Type UBTTaskNode_TurretAttack::ExecuteTask(UBehaviorTreeComponent
 		return EBTNodeResult::Failed;
 	}
 
-	auto TargetActor = Cast<ASCharacter>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
+	auto TargetActor = Cast<ACharacter>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
 	if (nullptr == TargetActor)
 	{
 		return EBTNodeResult::Failed;
 	}
 
-	// TODO : Turret 회전 구현
+	// Target 방향으로 Turret 회전
+	FVector Direction = TargetActor->GetActorLocation() - TurretActor->GetActorLocation();
+	Direction = Direction.GetSafeNormal();
+	TurretActor->SetActorRotation(FRotationMatrix::MakeFromX(Direction).Rotator());
 
 	TurretAttack();
 	
