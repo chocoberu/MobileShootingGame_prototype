@@ -50,4 +50,8 @@ private:
 
 	UPROPERTY()
 	class ASCharacter* PlayerCharacter;
+
+public:
+	
+	void SetHiddenMenuButton(bool NewValue);
 };

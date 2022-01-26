@@ -20,6 +20,8 @@ public:
 	UFUNCTION()
 	void OnMenuButtonPressed();
 
+	void SetHiddenWidget(bool NewValue);
+
 	FOnClickedMenuButton OnClickedMenuButtonDelegate;
 
 protected:

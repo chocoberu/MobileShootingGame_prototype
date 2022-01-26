@@ -4,6 +4,18 @@
 #include "UI/SInGameMenuButtonWidget.h"
 #include "Components/Button.h"
 
+void USInGameMenuButtonWidget::SetHiddenWidget(bool NewValue)
+{
+	if (true == NewValue)
+	{
+		MenuButton->SetVisibility(ESlateVisibility::Hidden);
+	}
+	else
+	{
+		MenuButton->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
 void USInGameMenuButtonWidget::NativeConstruct()
 {
 	Super::NativeConstruct();

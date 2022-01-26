@@ -23,6 +23,12 @@ void ASPlayerController::OnPossess(APawn* aPawn)
 		UE_LOG(LogTemp, Error, TEXT("WeaponStatusWidget is nullptr"));
 		return;
 	}
+	
+	if (nullptr == MenuWidgetClass)
+	{
+		return;
+	}
+
 	MenuWidget = CreateWidget<USPraticeMenuWidget>(this, MenuWidgetClass);
 	if (nullptr != MenuWidget)
 	{
@@ -94,6 +100,10 @@ void ASPlayerController::BeginPlay()
 	//if (0 == CurrentPlatform.Compare(TEXT("IOS")) || 0 == CurrentPlatform.Compare(TEXT("Android")))
 	{
 		RightButtonHUD->AddToViewport();
+		if (nullptr == MenuWidget)
+		{
+			RightButtonHUD->SetHiddenMenuButton(true);
+		}
 	}
 	WeaponStatusWidget->AddToViewport();
 }

@@ -76,3 +76,8 @@ void URightButtonHUDWidget::OnMenuButtonPressed()
 {
 	PlayerController->OnGamePause();
 }
+
+void URightButtonHUDWidget::SetHiddenMenuButton(bool NewValue)
+{
+	MenuButton->SetHiddenWidget(NewValue);
+}
