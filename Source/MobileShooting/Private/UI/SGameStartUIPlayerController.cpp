@@ -27,4 +27,6 @@ void ASGameStartUIPlayerController::BeginPlay()
 
 	GameStartUI->AddToViewport();
 	bShowMouseCursor = true;
+
+	SetVirtualJoystickVisibility(false);
 }
