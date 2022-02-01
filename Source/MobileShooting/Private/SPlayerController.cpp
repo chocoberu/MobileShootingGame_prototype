@@ -45,6 +45,7 @@ void ASPlayerController::BindMainWeaponStatusWidget(ASWeapon* MainWeapon)
 	}
 
 	WeaponStatusWidget->BindMainWeapon(MainWeapon);
+	RightButtonHUD->BindMainWeapon(MainWeapon);
 	UE_LOG(LogTemp, Log, TEXT("BindMainWeaponStatusWidget() Complete"));
 }
 
@@ -57,6 +58,7 @@ void ASPlayerController::BindSubWeaponStatusWidget(ASSubWeapon* SubWeapon)
 	}
 
 	WeaponStatusWidget->BindSubWeapon(SubWeapon);
+	RightButtonHUD->BindSubWeapon(SubWeapon);
 	UE_LOG(LogTemp, Log, TEXT("BindSubWeaponStatusWidget() Complete"));
 }
 

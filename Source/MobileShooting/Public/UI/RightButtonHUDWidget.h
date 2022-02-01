@@ -19,6 +19,9 @@ public:
 protected:
 	virtual void NativeConstruct() override;
 
+	TWeakObjectPtr<class ASWeapon> MainWeaponWeakPtr;
+	TWeakObjectPtr<class ASSubWeapon> SubWeaponWeakPtr;
+
 private:
 
 	UPROPERTY()
@@ -29,6 +32,12 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class USInGameMenuButtonWidget* MenuButton;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* MainWeaponStatus;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* SubWeaponStatus;
 
 	UFUNCTION()
 	void OnMainAttackPressed();
@@ -54,4 +63,14 @@ private:
 public:
 	
 	void SetHiddenMenuButton(bool NewValue);
+
+	void BindMainWeapon(class ASWeapon* MainWeapon);
+
+	void BindSubWeapon(class ASSubWeapon* SubWeapon);
+
+	UFUNCTION()
+	void SetMainWeaponText();
+
+	UFUNCTION()
+	void SetSubWeaponText();
 };

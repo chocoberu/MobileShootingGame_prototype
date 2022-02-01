@@ -35,6 +35,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = true))
 	class UAISenseConfig_Sight* SightConfig;
 
+	// Weapon
+	UPROPERTY(EditAnywhere, Category = "Weapon")
+	TSubclassOf<class ASProjectile> ProjectileClass;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
