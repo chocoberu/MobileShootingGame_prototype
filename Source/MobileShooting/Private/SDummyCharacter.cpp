@@ -37,23 +37,6 @@ void ASDummyCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, floa
 {
 	UpdateHPBarWidget();
 
-	// DamageText Widget Update
-	if (nullptr == DamageTextWidgetCompClass)
-	{
-		return;
-	}
-	auto DamageTextWidgetComp = Cast<USDamageTextWidgetComponent>(AddComponentByClass(DamageTextWidgetCompClass, true, GetActorTransform(), false));
-	if (nullptr == DamageTextWidgetComp)
-	{
-		UE_LOG(LogTemp, Error, TEXT("%s DamageTextWidgetComponent is nullptr"), *GetName());
-		return;
-	}
-	
-	float RandomValue = FMath::RandRange(-50.0f, 50.0f);
-	DamageTextWidgetComp->SetRelativeLocation(DamageTextWidgetComp->GetRelativeLocation() + FVector(RandomValue, 0.0f, RandomValue));
-	DamageTextWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
-	DamageTextWidgetComp->SetDamageText(HealthDelta);
-
 	// Restore Health Set
 	if (true == GetWorldTimerManager().IsTimerActive(RestoreHealthTimer))
 	{

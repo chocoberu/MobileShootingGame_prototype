@@ -21,6 +21,8 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	void UpdateDamageText(const float Damage);
+
 	UFUNCTION()
 	void HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType,
 		AController* InstigatedBy, AActor* DamageCauser);
@@ -32,6 +34,10 @@ protected:
 	float DefaultHealth;
 
 	bool bIsDead;
+
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<class USDamageTextWidgetComponent> DamageTextWidgetCompClass;
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

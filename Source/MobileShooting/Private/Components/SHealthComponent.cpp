@@ -2,6 +2,7 @@
 
 
 #include "Components/SHealthComponent.h"
+#include "UI/SDamageTextWidgetComponent.h"
 
 // Sets default values for this component's properties
 USHealthComponent::USHealthComponent()
@@ -11,6 +12,12 @@ USHealthComponent::USHealthComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	DefaultHealth = 100.0f;
+
+	static ConstructorHelpers::FClassFinder<USDamageTextWidgetComponent> WC_DamageText(TEXT("/Game/UI/WC_DamageTextComponent.WC_DamageTextComponent_C"));
+	if (true == WC_DamageText.Succeeded())
+	{
+		DamageTextWidgetCompClass = WC_DamageText.Class;
+	}
 }
 
 
@@ -29,6 +36,33 @@ void USHealthComponent::BeginPlay()
 	RestoreHealth();
 }
 
+void USHealthComponent::UpdateDamageText(const float Damage)
+{
+	// DamageText Widget Update
+	if (nullptr == DamageTextWidgetCompClass)
+	{
+		return;
+	}
+	auto DamageTextWidgetComp = NewObject<USDamageTextWidgetComponent>(this, DamageTextWidgetCompClass);
+	//auto DamageTextWidgetComp = Cast<USDamageTextWidgetComponent>(AddComponentByClass(DamageTextWidgetCompClass, true, GetActorTransform(), false));
+	if (nullptr == DamageTextWidgetComp)
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s DamageTextWidgetComponent is nullptr"), *GetName());
+		return;
+	}
+	DamageTextWidgetComp->RegisterComponent();
+	DamageTextWidgetComp->InitWidget();
+
+	float RandomValue = FMath::RandRange(-30.0f, 30.0f);
+	DamageTextWidgetComp->SetRelativeLocation(GetOwner()->GetActorLocation() + FVector(RandomValue, RandomValue, 0.0f));
+	DamageTextWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
+	DamageTextWidgetComp->SetDamageText(Damage);
+
+	// DamageText Destroy
+	FTimerHandle DamageTextCompDestroyTimer;
+	GetWorld()->GetTimerManager().SetTimer(DamageTextCompDestroyTimer, FTimerDelegate::CreateUObject(DamageTextWidgetComp, &UWidgetComponent::DestroyComponent, false), 2.0f, false);
+}
+
 void USHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
 	if (Damage <= 0.0f || bIsDead == true)
@@ -41,6 +75,7 @@ void USHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, 
 	UE_LOG(LogTemp, Log, TEXT("Health Changed : %s"), *FString::SanitizeFloat(Health));
 
 	bIsDead = Health <= 0.0f;
+	UpdateDamageText(Damage);
 
 	OnHealthChanged.Broadcast(this, Health, Damage, DamageType, InstigatedBy, DamageCauser);
 
