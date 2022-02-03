@@ -43,7 +43,13 @@ private:
 	class UProgressBar* SubWeaponProgressBar;
 
 	UPROPERTY(meta = (BindWidgetAnim), Transient)
-	class UWidgetAnimation* SubWeaponCoolTime;
+	class UWidgetAnimation* SubWeaponCoolTimeAnimation;
+
+	UPROPERTY(meta = (BindWidget))
+	class UProgressBar* MainWeaponProgressBar;
+
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	class UWidgetAnimation* MainWeaponCoolTimeAnimation;
 
 	UFUNCTION()
 	void OnMainAttackPressed();

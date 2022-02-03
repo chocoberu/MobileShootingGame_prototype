@@ -44,6 +44,8 @@ public:
 
 	float GetNormalAttackCoolTime(void) const { return NormalAttackCoolTime; }
 
+	float GetReloadTime(void) const { return ReloadCoolTime; }
+
 	void SetOwnerAnimInstance(class USCharacterAnimInstance* NewAnimInstance);
 
 protected:

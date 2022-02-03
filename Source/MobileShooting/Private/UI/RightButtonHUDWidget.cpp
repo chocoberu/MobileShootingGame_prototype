@@ -121,6 +121,12 @@ void URightButtonHUDWidget::SetMainWeaponText()
 	FString MainWeaponStr = FString::FromInt(MainWeaponCount);
 
 	MainWeaponStatus->SetText(FText::FromString(MainWeaponStr));
+
+	if (MainWeaponCount <= 0)
+	{
+		float PlaySpeed = 1.0f / MainWeaponWeakPtr->GetReloadTime();
+		PlayAnimation(MainWeaponCoolTimeAnimation, 0.0f, 1, EUMGSequencePlayMode::Forward, PlaySpeed, false);
+	}
 }
 
 void URightButtonHUDWidget::SetSubWeaponText()
@@ -138,6 +144,6 @@ void URightButtonHUDWidget::SetSubWeaponText()
 	if (SubWeaponCount <= 0)
 	{
 		float PlaySpeed = 1.0f / SubWeaponWeakPtr->GetReloadTime();
-		PlayAnimation(SubWeaponCoolTime, 0.0f, 1, EUMGSequencePlayMode::Forward, PlaySpeed, false);
+		PlayAnimation(SubWeaponCoolTimeAnimation, 0.0f, 1, EUMGSequencePlayMode::Forward, PlaySpeed, false);
 	}
 }
