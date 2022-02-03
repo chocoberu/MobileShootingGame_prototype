@@ -54,6 +54,8 @@ public:
 
 	int32 GetCurrentSubWeaponCount(void) const { return CurrentSubWeaponCount; }
 
+	float GetReloadTime(void) const { return ReloadTime; }
+
 	// Delegate
 	FOnAttackDelegate OnAttackDelegate;
 };

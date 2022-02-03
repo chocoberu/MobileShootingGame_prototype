@@ -39,6 +39,12 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* SubWeaponStatus;
 
+	UPROPERTY(meta = (BindWidget))
+	class UProgressBar* SubWeaponProgressBar;
+
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	class UWidgetAnimation* SubWeaponCoolTime;
+
 	UFUNCTION()
 	void OnMainAttackPressed();
 
