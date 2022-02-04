@@ -30,7 +30,9 @@ protected:
 	float HealAmount;
 
 	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
-	float HealCoolTime;
+	int32 DefaultHealCount;
+
+	int32 CurrentHealCount;
 
 	FTimerHandle HealTickTimer;
 

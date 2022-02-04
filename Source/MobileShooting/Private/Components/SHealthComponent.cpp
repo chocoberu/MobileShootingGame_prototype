@@ -59,13 +59,13 @@ void USHealthComponent::UpdateDamageText(const float Damage)
 	DamageTextWidgetComp->SetDamageText(Damage);
 
 	// DamageText Destroy
-	FTimerHandle DamageTextCompDestroyTimer;
-	GetWorld()->GetTimerManager().SetTimer(DamageTextCompDestroyTimer, FTimerDelegate::CreateUObject(DamageTextWidgetComp, &UWidgetComponent::DestroyComponent, false), 2.0f, false);
+	//FTimerHandle DamageTextCompDestroyTimer;
+	//GetWorld()->GetTimerManager().SetTimer(DamageTextCompDestroyTimer, FTimerDelegate::CreateUObject(DamageTextWidgetComp, &UWidgetComponent::DestroyComponent, false), 2.0f, false);
 }
 
 void USHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
-	if (Damage <= 0.0f || bIsDead == true)
+	if (bIsDead == true)
 	{
 		return;
 	}

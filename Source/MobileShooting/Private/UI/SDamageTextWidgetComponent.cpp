@@ -11,6 +11,15 @@ void USDamageTextWidgetComponent::SetDamageText(float Damage)
 	{
 		return;
 	}
+	if (0.0f < Damage)
+	{
+		DamageWidget->SetColorAndOpacity(FLinearColor::Yellow);
+	}
+	else if (0.0f > Damage)
+	{
+		DamageWidget->SetColorAndOpacity(FLinearColor::Green);
+	}
+	
 	DamageWidget->SetDamageText(Damage);
 
 	FTimerHandle WidgetDelayTimer;

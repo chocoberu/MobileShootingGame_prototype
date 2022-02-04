@@ -7,23 +7,22 @@
 
 ASHealSubWeapon::ASHealSubWeapon()
 {
-
+	
 }
 
 void ASHealSubWeapon::BeginPlay()
 {
 	Super::BeginPlay();
+	CurrentHealCount = DefaultHealCount;
 }
 
 void ASHealSubWeapon::Heal()
 {
-	SubtrackCurrentSubWeaponCount();
-
-	if (0 > CurrentSubWeaponCount)
+	if (0 >= CurrentHealCount)
 	{
-		GetWorldTimerManager().SetTimer(ReloadTimer, this, &ASSubWeapon::ReloadSubWeapon, ReloadTime, false);
 		return;
 	}
+	--CurrentHealCount;
 
 	auto SubWeaponOwner = Cast<ASCharacter>(GetOwner());
 	if (nullptr == SubWeaponOwner)
@@ -37,9 +36,11 @@ void ASHealSubWeapon::Heal()
 		UE_LOG(LogTemp, Error, TEXT("HealthComp is nullptr"));
 		return;
 	}
+	FDamageEvent DamageEvent;
+	SubWeaponOwner->TakeDamage(-HealAmount, DamageEvent, nullptr, this);
 
-	HealthComp->SetHealth(HealthComp->GetHealth() + HealAmount);
-	UE_LOG(LogTemp, Log, TEXT("HealSubWeapon Count : %d, Current HP : %f"), CurrentSubWeaponCount, HealthComp->GetHealth());
+	//HealthComp->SetHealth(HealthComp->GetHealth() + HealAmount);
+	UE_LOG(LogTemp, Log, TEXT("Heal Count : %d, Current HP : %f"), CurrentHealCount, HealthComp->GetHealth());
 	GetWorldTimerManager().SetTimer(HealTickTimer, this, &ASHealSubWeapon::Heal, HealTick, false);
 }
 
@@ -50,13 +51,24 @@ void ASHealSubWeapon::Tick(float DeltaTime)
 
 void ASHealSubWeapon::StartSubWeaponAttack()
 {
-	if (true == bReload)
+	if (true == bReload || CurrentSubWeaponCount <= 0)
 	{
 		return;
 	}
 
 	Heal();
-	bReload = true;
+	SubtrackCurrentSubWeaponCount();
+
+	if (CurrentSubWeaponCount <= 0)
+	{
+		bReload = true;
+		//GetWorldTimerManager().SetTimer(ReloadTimer, this, &ASSubWeapon::ReloadSubWeapon, ReloadTime, false);
+		GetWorldTimerManager().SetTimer(ReloadTimer, FTimerDelegate::CreateLambda([&]() 
+			{
+				ReloadSubWeapon();
+				CurrentHealCount = DefaultHealCount;
+			}), ReloadTime, false);
+	}
 }
 
 void ASHealSubWeapon::StopSubWeaponAttack()
