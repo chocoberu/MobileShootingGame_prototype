@@ -37,6 +37,9 @@ void URightButtonHUDWidget::NativeConstruct()
 	}
 
 	MenuButton->OnClickedMenuButtonDelegate.AddUObject(this, &URightButtonHUDWidget::OnMenuButtonPressed);
+
+	MainWeaponCoolTimeAnimationPauseTime = 0.0f;
+	SubWeaponCoolTimeAnimationPauseTime = 0.0f;
 }
 
 void URightButtonHUDWidget::OnMainAttackPressed()
@@ -108,6 +111,40 @@ void URightButtonHUDWidget::BindSubWeapon(ASSubWeapon* SubWeapon)
 	SubWeaponWeakPtr->OnAttackDelegate.AddUObject(this, &URightButtonHUDWidget::SetSubWeaponText);
 
 	SetSubWeaponText();
+}
+
+void URightButtonHUDWidget::SetVisibleWeaponStatusAnimation(bool NewValue)
+{
+	// NewValue == true 이면 Pause Widget Animation  
+	if (true == NewValue)
+	{
+		if (true == IsAnimationPlaying(MainWeaponCoolTimeAnimation))
+		{
+			MainWeaponCoolTimeAnimationPauseTime = PauseAnimation(MainWeaponCoolTimeAnimation);
+		}
+		if (true == IsAnimationPlaying(SubWeaponCoolTimeAnimation))
+		{
+			SubWeaponCoolTimeAnimationPauseTime = PauseAnimation(SubWeaponCoolTimeAnimation);
+		}
+	}
+	// false 이면 Restart Widget Animation
+	else
+	{
+		if (0.0f != MainWeaponCoolTimeAnimationPauseTime)
+		{
+			float PlaySpeed = 1.0f / MainWeaponWeakPtr->GetReloadTime();
+			PlayAnimation(MainWeaponCoolTimeAnimation, MainWeaponCoolTimeAnimationPauseTime, 1, EUMGSequencePlayMode::Forward, PlaySpeed, false);
+		}
+
+		if (0.0f != SubWeaponCoolTimeAnimationPauseTime)
+		{
+			float PlaySpeed = 1.0f / SubWeaponWeakPtr->GetReloadTime();
+			PlayAnimation(SubWeaponCoolTimeAnimation, SubWeaponCoolTimeAnimationPauseTime, 1, EUMGSequencePlayMode::Forward, PlaySpeed, false);
+		}
+
+		MainWeaponCoolTimeAnimationPauseTime = 0.0f;
+		SubWeaponCoolTimeAnimationPauseTime = 0.0f;
+	}
 }
 
 void URightButtonHUDWidget::SetMainWeaponText()

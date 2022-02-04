@@ -72,6 +72,10 @@ private:
 	UPROPERTY()
 	class ASCharacter* PlayerCharacter;
 
+	float MainWeaponCoolTimeAnimationPauseTime;
+
+	float SubWeaponCoolTimeAnimationPauseTime;
+
 public:
 	
 	void SetHiddenMenuButton(bool NewValue);
@@ -79,6 +83,8 @@ public:
 	void BindMainWeapon(class ASWeapon* MainWeapon);
 
 	void BindSubWeapon(class ASSubWeapon* SubWeapon);
+
+	void SetVisibleWeaponStatusAnimation(bool NewValue);
 
 	UFUNCTION()
 	void SetMainWeaponText();

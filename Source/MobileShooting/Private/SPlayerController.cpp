@@ -70,6 +70,7 @@ void ASPlayerController::OnGamePause()
 		return;
 	}
 	SetPause(true);
+	RightButtonHUD->SetVisibleWeaponStatusAnimation(true);
 
 	MenuWidget->AddToViewport();
 	bShowMouseCursor = true;
@@ -83,6 +84,7 @@ void ASPlayerController::OnGameResume()
 		return;
 	}
 	SetPause(false);
+	RightButtonHUD->SetVisibleWeaponStatusAnimation(false);
 
 	MenuWidget->RemoveFromViewport();
 	bShowMouseCursor = false;
