@@ -140,13 +140,29 @@ void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Hea
 
 		if (nullptr != AnimInstance)
 		{
-			AnimInstance->SetDeadAnim(true);
+			//AnimInstance->SetDeadAnim(true);
 		}
 
-		bDied = true;
+		FVector ImpulseDireciton;
+		if (nullptr != DamageCauser)
+		{
+			UE_LOG(LogTemp, Log, TEXT("Damage Causer : %s"), *DamageCauser->GetName());
+			ImpulseDireciton = DamageCauser->GetActorForwardVector();
+			ImpulseDireciton.Normalize();
+		}
 
-		GetMovementComponent()->StopMovementImmediately();
+		ImpulseDireciton = ImpulseDireciton * 1000.0f;
+
+		bDied = true;
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
+		GetMesh()->SetSimulatePhysics(true);
+
+		GetMesh()->SetPhysicsLinearVelocity(FVector::ZeroVector);
+		GetMesh()->AddImpulseToAllBodiesBelow(ImpulseDireciton, NAME_None);
+
+		//GetMovementComponent()->StopMovementImmediately();
 		HPBarWidgetComp->SetHiddenInGame(true);
 
 		// TODO : Character를 5초 후에 리스폰 or 시작 위치로 조정
@@ -243,7 +259,14 @@ void ASCharacter::StopSubAttack(void)
 void ASCharacter::RespawnCharacter(void)
 {
 	HealthComp->RestoreHealth();
-	AnimInstance->SetDeadAnim(false);
+	//AnimInstance->SetDeadAnim(false);
+	
+	GetMesh()->SetSimulatePhysics(false);
+	GetMesh()->SetCollisionProfileName(TEXT("CharacterMesh"));
+	
+	// TEST CODE
+	GetMesh()->SetRelativeTransform(FTransform(FRotator(0.0f, -90.0f, 0.0f), GetActorLocation() + FVector(0.0f, 0.0f, -88.0f)));
+
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	HPBarWidgetComp->SetHiddenInGame(false);
 
