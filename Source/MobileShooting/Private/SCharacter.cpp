@@ -13,6 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "UI/SHPBarWidget.h"
 #include "Components/WidgetComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -150,14 +151,28 @@ void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Hea
 			ImpulseDireciton = DamageCauser->GetActorForwardVector();
 			ImpulseDireciton.Normalize();
 		}
+		else
+		{
+			ImpulseDireciton = -GetActorForwardVector();
+			ImpulseDireciton.Normalize();
+		}
 
-		ImpulseDireciton = ImpulseDireciton * 1000.0f;
+		ImpulseDireciton = ImpulseDireciton * 1500.0f;
 
 		bDied = true;
+		if (true == GetMesh()->IsUsingAbsoluteLocation())
+		{
+			UE_LOG(LogTemp, Log, TEXT("Using Absolute Location"));
+		}
+		else
+		{
+			UE_LOG(LogTemp, Log, TEXT("Using Relative Location"));
+		}
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 		GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
 		GetMesh()->SetSimulatePhysics(true);
+		GetCharacterMovement()->DisableMovement();
 
 		GetMesh()->SetPhysicsLinearVelocity(FVector::ZeroVector);
 		GetMesh()->AddImpulseToAllBodiesBelow(ImpulseDireciton, NAME_None);
@@ -263,9 +278,12 @@ void ASCharacter::RespawnCharacter(void)
 	
 	GetMesh()->SetSimulatePhysics(false);
 	GetMesh()->SetCollisionProfileName(TEXT("CharacterMesh"));
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Pawn"));
 	
-	// TEST CODE
-	GetMesh()->SetRelativeTransform(FTransform(FRotator(0.0f, -90.0f, 0.0f), GetActorLocation() + FVector(0.0f, 0.0f, -88.0f)));
+	GetMesh()->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	GetMesh()->SetRelativeTransform(FTransform(FRotator(0.0f, -90.0f, 0.0f), FVector(0.0f, 0.0f, -88.0f)));
+	
+	GetCharacterMovement()->SetDefaultMovementMode();
 
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	HPBarWidgetComp->SetHiddenInGame(false);
@@ -274,6 +292,7 @@ void ASCharacter::RespawnCharacter(void)
 
 	bDied = false;
 	// TODO : Respawn 할 때 필요한 작업 추가
+
 }
 
 void ASCharacter::UpdateHPBarWidget()

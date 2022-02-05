@@ -35,7 +35,7 @@ void ASTurretAIController::RunAI()
 void ASTurretAIController::StopAI()
 {
 	auto BehaviorTreeComponent = Cast<UBehaviorTreeComponent>(BrainComponent);
-	if (BehaviorTreeComponent != nullptr)
+	if (nullptr != BehaviorTreeComponent)
 	{
 		BehaviorTreeComponent->StopTree(EBTStopMode::Safe);
 	}

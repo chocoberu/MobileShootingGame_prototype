@@ -6,6 +6,14 @@
 #include "GameFramework/Character.h"
 #include "STestBossCharacter.generated.h"
 
+UENUM(BlueprintType)
+enum class EBossPhase : uint8
+{
+	E_Phase1 = 0 UMETA(DisplayName = "Phase1"),
+	E_Phase2 UMETA(DisplayName = "Phase2"),
+	E_Phase3 UMETA(DisplayName = "Phase3"),
+};
+
 UCLASS()
 class MOBILESHOOTING_API ASTestBossCharacter : public ACharacter
 {
@@ -38,6 +46,13 @@ protected:
 	// Weapon
 	UPROPERTY(EditAnywhere, Category = "Weapon")
 	TSubclassOf<class ASProjectile> ProjectileClass;
+	
+	// BossPhase
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Boss")
+	float Phase2Percent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Boss")
+	float Phase3Percent;
 
 public:	
 	// Called every frame

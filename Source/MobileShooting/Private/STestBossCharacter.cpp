@@ -9,6 +9,8 @@
 #include "Components/WidgetComponent.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
+#include "SProjectile.h"
+#include "AI/STestBossAIController.h"
 
 // Sets default values
 ASTestBossCharacter::ASTestBossCharacter()
@@ -43,6 +45,16 @@ void ASTestBossCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	auto AIController = Cast<ASTestBossAIController>(GetController());
+
+	if (nullptr != AIController)
+	{
+		AIController->RunAI();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("AI Controller is nullptr"));
+	}
 }
 
 void ASTestBossCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
@@ -82,7 +94,16 @@ void ASTestBossCharacter::UpdateHPBarWidget()
 
 void ASTestBossCharacter::NormalAttack()
 {
-	UE_LOG(LogTemp, Log, TEXT("TODO : Boss Normal Attack"));
+	//UE_LOG(LogTemp, Log, TEXT("TODO : Boss Normal Attack"));
+
+	if (nullptr == ProjectileClass)
+	{
+		return;
+	}
+
+	ASProjectile* Bullet = GetWorld()->SpawnActor<ASProjectile>(ProjectileClass,
+		GetActorLocation() + GetActorForwardVector() * 100.0f,
+		GetActorRotation());
 }
 
 

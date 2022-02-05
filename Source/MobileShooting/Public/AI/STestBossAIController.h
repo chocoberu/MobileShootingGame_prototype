@@ -20,4 +20,15 @@ public:
 
 	virtual void OnPossess(APawn* InPawn) override;
 	virtual void BeginPlay() override;
+
+	void RunAI();
+	void StopAI();
+
+protected:
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	class UBehaviorTree* BTAsset;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	class UBlackboardData* BBAsset;
 };

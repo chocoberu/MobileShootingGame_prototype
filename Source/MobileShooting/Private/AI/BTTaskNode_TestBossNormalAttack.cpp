@@ -30,6 +30,10 @@ EBTNodeResult::Type UBTTaskNode_TestBossNormalAttack::ExecuteTask(UBehaviorTreeC
 		return EBTNodeResult::Failed;
 	}
 
+	FVector Direction = TargetActor->GetActorLocation() - TestBossCharacter->GetActorLocation();
+	Direction = Direction.GetSafeNormal();
+	TestBossCharacter->SetActorRotation(FRotationMatrix::MakeFromX(Direction).Rotator());
+
 	TestBossCharacter->NormalAttack();
 
 	return Result;
