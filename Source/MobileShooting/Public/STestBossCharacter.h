@@ -57,6 +57,8 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Boss")
 	bool bDied;
 
+	EBossPhase ECurrentBossPhase;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

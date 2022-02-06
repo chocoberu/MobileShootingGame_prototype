@@ -4,6 +4,8 @@
 #include "AI/STestBossAIController.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardData.h"
+#include "BehaviorTree/BlackboardComponent.h"
+#include "STestBossCharacter.h"
 
 ASTestBossAIController::ASTestBossAIController()
 {

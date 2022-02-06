@@ -11,6 +11,7 @@
 #include "Perception/AISenseConfig_Sight.h"
 #include "SProjectile.h"
 #include "AI/STestBossAIController.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 // Sets default values
 ASTestBossCharacter::ASTestBossCharacter()
@@ -55,12 +56,31 @@ void ASTestBossCharacter::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("AI Controller is nullptr"));
 	}
-	bDied = false;
+	bDied = false; 
+	ECurrentBossPhase = EBossPhase::E_Phase1;
 }
 
 void ASTestBossCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
 	UpdateHPBarWidget();
+
+	if (OwningHealthComp->GetHPRatio() <= Phase2Percent && ECurrentBossPhase == EBossPhase::E_Phase1)
+	{
+		auto AIController = Cast<ASTestBossAIController>(GetController());
+		auto BlackboardComp = AIController->GetBlackboardComponent();
+
+		BlackboardComp->SetValueAsEnum(TEXT("BossPhase"), (uint8)EBossPhase::E_Phase2);
+		ECurrentBossPhase = EBossPhase::E_Phase2;
+	}
+
+	if (OwningHealthComp->GetHPRatio() <= Phase3Percent && ECurrentBossPhase == EBossPhase::E_Phase2)
+	{
+		auto AIController = Cast<ASTestBossAIController>(GetController());
+		auto BlackboardComp = AIController->GetBlackboardComponent();
+
+		BlackboardComp->SetValueAsEnum(TEXT("BossPhase"), (uint8)EBossPhase::E_Phase3);
+		ECurrentBossPhase = EBossPhase::E_Phase3;
+	}
 
 	if (Health <= 0.0f && !bDied)
 	{
