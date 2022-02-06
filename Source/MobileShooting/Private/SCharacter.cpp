@@ -139,11 +139,6 @@ void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Hea
 			MainWeapon->StopNormalAttack();
 		}
 
-		if (nullptr != AnimInstance)
-		{
-			//AnimInstance->SetDeadAnim(true);
-		}
-
 		FVector ImpulseDireciton;
 		if (nullptr != DamageCauser)
 		{
@@ -180,9 +175,17 @@ void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Hea
 		//GetMovementComponent()->StopMovementImmediately();
 		HPBarWidgetComp->SetHiddenInGame(true);
 
-		// TODO : Character를 5초 후에 리스폰 or 시작 위치로 조정
-		// TODO : Weapon reload ui animation이 재생 중인 경우 stop
+		// Weapon Reload 관련 처리 
+		PlayerController = Cast<ASPlayerController>(GetController());
+		if (nullptr != PlayerController)
+		{
+			PlayerController->OnPlayerDead();
+			MainWeapon->StopReloadWeapon();
+			SubWeapon->StopReloadSubWeapon();
+		}
 
+		// TODO : Character를 5초 후에 리스폰 or 시작 위치로 조정
+		
 		GetWorldTimerManager().SetTimer(RespawnTimer, this, &ASCharacter::RespawnCharacter, RespawnTime, false);
 
 	}

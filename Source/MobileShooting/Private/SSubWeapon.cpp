@@ -71,3 +71,8 @@ void ASSubWeapon::ReloadSubWeapon(void)
 
 	UE_LOG(LogTemp, Log, TEXT("SubWeapon Reload Complete!"));
 }
+
+void ASSubWeapon::StopReloadSubWeapon(void)
+{
+	GetWorldTimerManager().ClearTimer(ReloadTimer);
+}

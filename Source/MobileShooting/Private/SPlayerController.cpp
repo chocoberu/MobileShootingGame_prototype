@@ -79,6 +79,14 @@ void ASPlayerController::OnGameResume()
 	bShowMouseCursor = false;
 }
 
+void ASPlayerController::OnPlayerDead()
+{
+	// Stop All Widget Animations
+	RightButtonHUD->StopAllWidgetAnimations();
+
+	// TODO : SCharacter 사망 시 작업 추가
+}
+
 void ASPlayerController::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();

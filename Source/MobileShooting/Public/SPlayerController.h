@@ -28,6 +28,8 @@ public:
 
 	void OnGameResume();
 
+	void OnPlayerDead();
+
 protected:
 
 	virtual void BeginPlay() override;

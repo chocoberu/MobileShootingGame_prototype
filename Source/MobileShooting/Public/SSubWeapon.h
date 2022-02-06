@@ -52,6 +52,8 @@ public:
 
 	void ReloadSubWeapon(void);
 
+	void StopReloadSubWeapon(void);
+
 	int32 GetCurrentSubWeaponCount(void) const { return CurrentSubWeaponCount; }
 
 	float GetReloadTime(void) const { return ReloadTime; }

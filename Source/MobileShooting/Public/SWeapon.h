@@ -40,6 +40,8 @@ public:
 
 	void ReloadWeapon(void);
 
+	void StopReloadWeapon(void);
+
 	float GetFirstDelay(void) const;
 
 	float GetNormalAttackCoolTime(void) const { return NormalAttackCoolTime; }

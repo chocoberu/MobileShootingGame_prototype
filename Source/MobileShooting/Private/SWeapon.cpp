@@ -61,6 +61,11 @@ void ASWeapon::ReloadWeapon(void)
 	OnAttackDelegate.Broadcast();
 }
 
+void ASWeapon::StopReloadWeapon(void)
+{
+	GetWorldTimerManager().ClearTimer(ReloadTimer);
+}
+
 float ASWeapon::GetFirstDelay(void) const
 {
 	return FMath::Max(LastNormalAttackTime + NormalAttackCoolTime - GetWorld()->TimeSeconds, 0.0f);

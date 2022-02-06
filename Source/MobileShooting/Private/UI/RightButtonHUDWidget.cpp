@@ -184,3 +184,10 @@ void URightButtonHUDWidget::SetSubWeaponText()
 		PlayAnimation(SubWeaponCoolTimeAnimation, 0.0f, 1, EUMGSequencePlayMode::Forward, PlaySpeed, false);
 	}
 }
+
+void URightButtonHUDWidget::StopAllWidgetAnimations()
+{
+	// StopAllAnimations()로 처리할 경우 WidgetAnimation의 Time이 0.0f로 고정되기 때문에 해당 방식으로 구현
+	SetAnimationCurrentTime(MainWeaponCoolTimeAnimation, 1.0f);
+	SetAnimationCurrentTime(SubWeaponCoolTimeAnimation, 1.0f);
+}

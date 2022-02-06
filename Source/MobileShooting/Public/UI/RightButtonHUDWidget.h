@@ -91,4 +91,6 @@ public:
 
 	UFUNCTION()
 	void SetSubWeaponText();
+
+	void StopAllWidgetAnimations();
 };
