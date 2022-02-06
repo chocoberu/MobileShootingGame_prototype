@@ -36,7 +36,7 @@ protected:
 	TSubclassOf<class URightButtonHUDWidget> RightPadButtonHUDClass;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI", Meta = (AllowPrivateAccess = true))
-	TSubclassOf<class USWeaponStatusWidget> WeaponStatusWidgetClass;
+	TSubclassOf<class USGameQuestTextWidget> GameQuestTextWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI", Meta = (AllowPrivateAccess = true))
 	TSubclassOf<class USPraticeMenuWidget> MenuWidgetClass;
@@ -45,8 +45,8 @@ protected:
 	class URightButtonHUDWidget* RightButtonHUD;
 
 	UPROPERTY()
-	class USWeaponStatusWidget* WeaponStatusWidget;
-	
+	class USGameQuestTextWidget* GameQuestTextWidget;
+
 	UPROPERTY()
 	class USPraticeMenuWidget* MenuWidget;
 };

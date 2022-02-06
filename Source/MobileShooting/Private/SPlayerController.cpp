@@ -3,7 +3,7 @@
 
 #include "SPlayerController.h"
 #include "UI/RightButtonHUDWidget.h"
-#include "UI/SWeaponStatusWidget.h"
+#include "UI/SGameQuestTextWidget.h"
 #include "UI/SPraticeMenuWidget.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -17,10 +17,10 @@ void ASPlayerController::OnPossess(APawn* aPawn)
 		UE_LOG(LogTemp, Error, TEXT("RightButtonHUD is nullptr"));
 		return;
 	}
-	WeaponStatusWidget = CreateWidget<USWeaponStatusWidget>(this, WeaponStatusWidgetClass);
-	if (nullptr == WeaponStatusWidget)
+	GameQuestTextWidget = CreateWidget<USGameQuestTextWidget>(this, GameQuestTextWidgetClass);
+	if (nullptr == GameQuestTextWidget)
 	{
-		UE_LOG(LogTemp, Error, TEXT("WeaponStatusWidget is nullptr"));
+		UE_LOG(LogTemp, Error, TEXT("GameQuestTextWidget is nullptr"));
 		return;
 	}
 	
@@ -38,28 +38,17 @@ void ASPlayerController::OnPossess(APawn* aPawn)
 
 void ASPlayerController::BindMainWeaponStatusWidget(ASWeapon* MainWeapon)
 {
-	UE_LOG(LogTemp, Log, TEXT("BindMainWeaponStatusWidget() Call"));
-	if (nullptr == WeaponStatusWidget)
-	{
-		return;
-	}
-
-	WeaponStatusWidget->BindMainWeapon(MainWeapon);
+	//UE_LOG(LogTemp, Log, TEXT("BindMainWeaponStatusWidget() Call"));
+	
 	RightButtonHUD->BindMainWeapon(MainWeapon);
-	UE_LOG(LogTemp, Log, TEXT("BindMainWeaponStatusWidget() Complete"));
+	//UE_LOG(LogTemp, Log, TEXT("BindMainWeaponStatusWidget() Complete"));
 }
 
 void ASPlayerController::BindSubWeaponStatusWidget(ASSubWeapon* SubWeapon)
 {
-	UE_LOG(LogTemp, Log, TEXT("BindSubWeaponStatusWidget() Call"));
-	if (nullptr == WeaponStatusWidget)
-	{
-		return;
-	}
-
-	WeaponStatusWidget->BindSubWeapon(SubWeapon);
+	//UE_LOG(LogTemp, Log, TEXT("BindSubWeaponStatusWidget() Call"));
 	RightButtonHUD->BindSubWeapon(SubWeapon);
-	UE_LOG(LogTemp, Log, TEXT("BindSubWeaponStatusWidget() Complete"));
+	//UE_LOG(LogTemp, Log, TEXT("BindSubWeaponStatusWidget() Complete"));
 }
 
 void ASPlayerController::OnGamePause()
@@ -99,8 +88,12 @@ void ASPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FString CurrentPlatform = UGameplayStatics::GetPlatformName();
+	if (nullptr != GameQuestTextWidget)
+	{
+		GameQuestTextWidget->AddToViewport();
+	}
 
+	FString CurrentPlatform = UGameplayStatics::GetPlatformName();
 	//if (0 == CurrentPlatform.Compare(TEXT("IOS")) || 0 == CurrentPlatform.Compare(TEXT("Android")))
 	{
 		RightButtonHUD->AddToViewport();
@@ -109,5 +102,4 @@ void ASPlayerController::BeginPlay()
 			RightButtonHUD->SetHiddenMenuButton(true);
 		}
 	}
-	WeaponStatusWidget->AddToViewport();
 }

@@ -55,11 +55,47 @@ void ASTestBossCharacter::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("AI Controller is nullptr"));
 	}
+	bDied = false;
 }
 
 void ASTestBossCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
 	UpdateHPBarWidget();
+
+	if (Health <= 0.0f && !bDied)
+	{
+		auto AIController = Cast<ASTestBossAIController>(GetController());
+		if (nullptr != AIController)
+		{
+			AIController->StopAI();
+		}
+
+		FVector ImpulseDireciton;
+		if (nullptr != DamageCauser)
+		{
+			UE_LOG(LogTemp, Log, TEXT("Damage Causer : %s"), *DamageCauser->GetName());
+			ImpulseDireciton = DamageCauser->GetActorForwardVector();
+			ImpulseDireciton.Normalize();
+		}
+		else
+		{
+			ImpulseDireciton = -GetActorForwardVector();
+			ImpulseDireciton.Normalize();
+		}
+
+		ImpulseDireciton = ImpulseDireciton * 5000.0f;
+
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
+		GetMesh()->SetSimulatePhysics(true);
+		
+		GetMesh()->SetPhysicsLinearVelocity(FVector::ZeroVector);
+		GetMesh()->AddImpulseToAllBodiesBelow(ImpulseDireciton, NAME_None);
+
+		HPBarWidgetComp->SetHiddenInGame(true);
+		bDied = true;
+	}
 }
 
 // Called every frame
