@@ -41,7 +41,6 @@ void ASProjectile::BeginPlay()
 void ASProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void ASProjectile::NotifyActorBeginOverlap(AActor* OtherActor)
@@ -59,5 +58,15 @@ void ASProjectile::SetInitialSpeed(float NewSpeed)
 {
 	ProjectileMovemetComp->InitialSpeed = NewSpeed;
 	ProjectileMovemetComp->MaxSpeed = NewSpeed;
+}
+
+void ASProjectile::SetLaunchVelocity(FVector Velocity)
+{
+	ProjectileMovemetComp->Velocity = Velocity;
+}
+
+float ASProjectile::GetProjectileRadius() const
+{
+	return SphereComp->GetScaledSphereRadius();
 }
 

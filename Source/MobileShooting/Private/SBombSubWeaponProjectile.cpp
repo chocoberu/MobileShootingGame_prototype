@@ -4,6 +4,7 @@
 #include "SBombSubWeaponProjectile.h"
 #include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 
 ASBombSubWeaponProjectile::ASBombSubWeaponProjectile()
 {
@@ -20,6 +21,8 @@ void ASBombSubWeaponProjectile::BeginPlay()
 void ASBombSubWeaponProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	UE_LOG(LogTemp, Log, TEXT("Curreunt Velocity : %s, len : %f"), *ProjectileMovemetComp->Velocity.ToString(), ProjectileMovemetComp->Velocity.Size());
 }
 
 void ASBombSubWeaponProjectile::NotifyActorBeginOverlap(AActor* OtherActor)

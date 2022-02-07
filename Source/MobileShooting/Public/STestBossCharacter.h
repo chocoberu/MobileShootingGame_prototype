@@ -54,6 +54,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Boss")
 	float Phase3Percent;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Boss")
+	TArray<float> PhaseToPercentArray;
+
+	int32 CurrentPhaseArrayIndex;
+
 	UPROPERTY(BlueprintReadOnly, Category = "Boss")
 	bool bDied;
 

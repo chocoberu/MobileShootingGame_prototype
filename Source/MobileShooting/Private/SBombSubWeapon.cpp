@@ -56,16 +56,32 @@ void ASBombSubWeapon::StopSubWeaponAttack()
 	FRotator Rot = SubWeaponOwner->GetActorRotation();
 	Rot.Pitch += 30.0f;
 
+	FVector StartLocation = SubWeaponOwner->GetActorLocation() + SubWeaponOwner->GetActorForwardVector() * 100.0f;
+
 	auto Bomb = GetWorld()->SpawnActor<ASProjectile>(ProjectileClass,
-		SubWeaponOwner->GetActorLocation() + SubWeaponOwner->GetActorForwardVector() * 100.0f,
+		StartLocation,
 		Rot);
 
 	if (nullptr != Bomb)
 	{
-		float InitialSpeed = 700.0f + 5000.0f * RemainTime / BombMaxChargingTime;
+		float InitialSpeed = 700.0f + 2000.0f * RemainTime / BombMaxChargingTime;
 		UE_LOG(LogTemp, Log, TEXT("Bomb Initial Speed : %f"), InitialSpeed);
 		Bomb->SetInitialSpeed(InitialSpeed);
+		Bomb->SetLaunchVelocity(Rot.Vector() * InitialSpeed);
+
 		SubtrackCurrentSubWeaponCount();
+
+		// TEST CODE
+		{
+			UE_LOG(LogTemp, Log, TEXT("Bomb Vector : %s"), *(Rot.Vector() * InitialSpeed).ToString());
+			FPredictProjectilePathParams PredictParams(Bomb->GetProjectileRadius(), StartLocation, Rot.Vector() * InitialSpeed, 10.0f);
+			PredictParams.DrawDebugTime = 3.0f;
+			PredictParams.DrawDebugType = EDrawDebugTrace::ForDuration;
+			PredictParams.OverrideGravityZ = GetWorld()->GetGravityZ();
+
+			FPredictProjectilePathResult PredictResult;
+			UGameplayStatics::PredictProjectilePath(Bomb, PredictParams, PredictResult);
+		}
 	}
 	
 

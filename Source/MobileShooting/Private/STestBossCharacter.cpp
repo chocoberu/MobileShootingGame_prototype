@@ -58,6 +58,7 @@ void ASTestBossCharacter::BeginPlay()
 	}
 	bDied = false; 
 	ECurrentBossPhase = EBossPhase::E_Phase1;
+	CurrentPhaseArrayIndex = 0;
 }
 
 void ASTestBossCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)

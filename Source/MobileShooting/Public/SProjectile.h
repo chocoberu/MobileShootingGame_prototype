@@ -29,6 +29,10 @@ public:
 
 	void SetInitialSpeed(float NewSpeed);
 
+	void SetLaunchVelocity(FVector Velocity);
+
+	float GetProjectileRadius() const;
+
 protected:
 
 	// Components
