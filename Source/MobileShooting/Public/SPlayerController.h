@@ -36,18 +36,12 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI", Meta = (AllowPrivateAccess = true))
 	TSubclassOf<class URightButtonHUDWidget> RightPadButtonHUDClass;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI", Meta = (AllowPrivateAccess = true))
-	TSubclassOf<class USGameQuestTextWidget> GameQuestTextWidgetClass;
-
+\
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI", Meta = (AllowPrivateAccess = true))
 	TSubclassOf<class USPraticeMenuWidget> MenuWidgetClass;
 
 	UPROPERTY() 
 	class URightButtonHUDWidget* RightButtonHUD;
-
-	UPROPERTY()
-	class USGameQuestTextWidget* GameQuestTextWidget;
 
 	UPROPERTY()
 	class USPraticeMenuWidget* MenuWidget;

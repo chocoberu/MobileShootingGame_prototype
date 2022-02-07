@@ -64,6 +64,7 @@ void ASTestBossCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, f
 {
 	UpdateHPBarWidget();
 
+	// TODO : 여기 코드 수정 필요 -> 깔끔하게 정리
 	if (OwningHealthComp->GetHPRatio() <= Phase2Percent && ECurrentBossPhase == EBossPhase::E_Phase1)
 	{
 		auto AIController = Cast<ASTestBossAIController>(GetController());

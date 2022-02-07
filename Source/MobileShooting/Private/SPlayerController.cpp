@@ -3,7 +3,6 @@
 
 #include "SPlayerController.h"
 #include "UI/RightButtonHUDWidget.h"
-#include "UI/SGameQuestTextWidget.h"
 #include "UI/SPraticeMenuWidget.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -11,16 +10,13 @@ void ASPlayerController::OnPossess(APawn* aPawn)
 {
 	Super::OnPossess(aPawn);
 
-	RightButtonHUD = CreateWidget<URightButtonHUDWidget>(this, RightPadButtonHUDClass);
+	if (nullptr != RightPadButtonHUDClass)
+	{
+		RightButtonHUD = CreateWidget<URightButtonHUDWidget>(this, RightPadButtonHUDClass);
+	}
 	if (nullptr == RightButtonHUD)
 	{
 		UE_LOG(LogTemp, Error, TEXT("RightButtonHUD is nullptr"));
-		return;
-	}
-	GameQuestTextWidget = CreateWidget<USGameQuestTextWidget>(this, GameQuestTextWidgetClass);
-	if (nullptr == GameQuestTextWidget)
-	{
-		UE_LOG(LogTemp, Error, TEXT("GameQuestTextWidget is nullptr"));
 		return;
 	}
 	
@@ -28,7 +24,6 @@ void ASPlayerController::OnPossess(APawn* aPawn)
 	{
 		return;
 	}
-
 	MenuWidget = CreateWidget<USPraticeMenuWidget>(this, MenuWidgetClass);
 	if (nullptr != MenuWidget)
 	{
@@ -96,12 +91,8 @@ void ASPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (nullptr != GameQuestTextWidget)
-	{
-		GameQuestTextWidget->AddToViewport();
-	}
-
 	FString CurrentPlatform = UGameplayStatics::GetPlatformName();
+	// 임시 주석 처리
 	//if (0 == CurrentPlatform.Compare(TEXT("IOS")) || 0 == CurrentPlatform.Compare(TEXT("Android")))
 	{
 		RightButtonHUD->AddToViewport();
