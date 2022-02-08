@@ -22,7 +22,7 @@ void ASBombSubWeaponProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	UE_LOG(LogTemp, Log, TEXT("Curreunt Velocity : %s, len : %f"), *ProjectileMovemetComp->Velocity.ToString(), ProjectileMovemetComp->Velocity.Size());
+	//UE_LOG(LogTemp, Log, TEXT("Curreunt Velocity : %s, len : %f"), *ProjectileMovemetComp->Velocity.ToString(), ProjectileMovemetComp->Velocity.Size());
 }
 
 void ASBombSubWeaponProjectile::NotifyActorBeginOverlap(AActor* OtherActor)

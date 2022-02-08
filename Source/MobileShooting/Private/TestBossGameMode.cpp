@@ -68,7 +68,7 @@ void ATestBossGameMode::StartTimer()
 void ATestBossGameMode::UpdateTimeCount()
 {
 	--CurrentRemainTime;
-	UE_LOG(LogTemp, Log, TEXT("Time : %d"), CurrentRemainTime);
+	//UE_LOG(LogTemp, Log, TEXT("Time : %d"), CurrentRemainTime);
 
 	GameTimerWidget->SetTimeText(CurrentRemainTime);
 	if (0 == CurrentRemainTime)

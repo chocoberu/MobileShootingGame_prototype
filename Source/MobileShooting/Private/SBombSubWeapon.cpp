@@ -21,6 +21,34 @@ void ASBombSubWeapon::BeginPlay()
 void ASBombSubWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	// TEST CODE
+	if (true == GetWorldTimerManager().IsTimerActive(BombChargingTimer))
+	{
+		FVector StartLocation = GetOwner()->GetActorLocation() + GetOwner()->GetActorForwardVector() * 100.0f;
+		float RemainTime = BombMaxChargingTime - GetWorldTimerManager().GetTimerRemaining(BombChargingTimer);
+		float InitialSpeed = 700.0f + 2000.0f * RemainTime / BombMaxChargingTime;
+		FRotator Rot = GetOwner()->GetActorRotation();
+		Rot.Pitch += 30.0f;
+
+		FPredictProjectilePathParams PredictParams(3.0f, StartLocation, Rot.Vector() * InitialSpeed, 3.0f);
+		//PredictParams.DrawDebugTime = DeltaTime;
+		PredictParams.DrawDebugType = EDrawDebugTrace::None;
+		PredictParams.OverrideGravityZ = GetWorld()->GetGravityZ();
+		PredictParams.bTraceWithCollision = true;
+
+		TEnumAsByte<EObjectTypeQuery> WorldStatic = UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldStatic);
+		TEnumAsByte<EObjectTypeQuery> WorldDynamic = UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic);
+		PredictParams.ObjectTypes.Add(WorldStatic);
+		PredictParams.ObjectTypes.Add(WorldDynamic);
+			
+
+		FPredictProjectilePathResult PredictResult;
+		UGameplayStatics::PredictProjectilePath(this, PredictParams, PredictResult);
+
+		DrawDebugSphere(GetWorld(), PredictResult.HitResult.Location, 15.0f, 16, FColor::Yellow, false, 0.25f);
+		//PredictResult.LastTraceDestination.Location;
+	}
 }
 
 void ASBombSubWeapon::StartSubWeaponAttack()
