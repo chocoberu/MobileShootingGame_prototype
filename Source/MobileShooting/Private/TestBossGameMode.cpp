@@ -4,10 +4,12 @@
 #include "TestBossGameMode.h"
 #include "SPlayerController.h"
 #include "SCharacter.h"
+#include "STestBossCharacter.h"
 #include "TestBossGameState.h"
 #include "Blueprint/UserWidget.h"
 #include "UI/SGameTimerHUDWidget.h"
 #include "UI/SGameQuestTextWidget.h"
+#include "EngineUtils.h"
 
 ATestBossGameMode::ATestBossGameMode()
 {
@@ -44,7 +46,17 @@ void ATestBossGameMode::BeginPlay()
 			GameQuestTextWidget->AddToViewport();
 		}
 	}
+
+	// TEST CODE
+	{
+		for (const auto& Boss : TActorRange<ASTestBossCharacter>(GetWorld()))
+		{
+			UE_LOG(LogTemp, Log, TEXT("Character Name : %s"), *Boss->GetName());
+			Boss->OnBossDeadDelegate.AddUObject(this, &ATestBossGameMode::SetGameClear, true);
+		}
+	}
 	
+	UE_LOG(LogTemp, Log, TEXT("Start Timer"));
 	StartTimer();
 }
 
@@ -74,5 +86,22 @@ void ATestBossGameMode::UpdateTimeCount()
 	if (0 == CurrentRemainTime)
 	{
 		GetWorldTimerManager().ClearTimer(GameTimer);
+		SetGameClear(false);
+	}
+}
+
+void ATestBossGameMode::SetGameClear(bool Value)
+{
+	// Game Clear
+	if (true == Value)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Game Clear"));
+		// TODO : UI 코드 추가
+	}
+	// Game Over
+	else
+	{
+		UE_LOG(LogTemp, Log, TEXT("Game Over"));
+		// TODO : UI 코드 추가
 	}
 }

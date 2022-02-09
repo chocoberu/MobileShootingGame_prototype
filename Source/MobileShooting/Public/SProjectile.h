@@ -33,6 +33,8 @@ public:
 
 	float GetProjectileRadius() const;
 
+	float GetProjectileGravityZ() const;
+
 protected:
 
 	// Components

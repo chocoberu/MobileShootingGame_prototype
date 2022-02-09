@@ -70,3 +70,8 @@ float ASProjectile::GetProjectileRadius() const
 	return SphereComp->GetScaledSphereRadius();
 }
 
+float ASProjectile::GetProjectileGravityZ() const
+{
+	return ProjectileMovemetComp->GetGravityZ();
+}
+

@@ -74,5 +74,6 @@ void ASSubWeapon::ReloadSubWeapon(void)
 
 void ASSubWeapon::StopReloadSubWeapon(void)
 {
+	// GetWorldTimerManager().ClearAllTimersForObject(this); // 해당 방식으로는 안됨 -> 함수를 가상함수로 변경필요
 	GetWorldTimerManager().ClearTimer(ReloadTimer);
 }

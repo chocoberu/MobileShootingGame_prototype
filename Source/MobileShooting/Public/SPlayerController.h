@@ -36,7 +36,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI", Meta = (AllowPrivateAccess = true))
 	TSubclassOf<class URightButtonHUDWidget> RightPadButtonHUDClass;
-\
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI", Meta = (AllowPrivateAccess = true))
 	TSubclassOf<class USPraticeMenuWidget> MenuWidgetClass;
 

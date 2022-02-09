@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "STestBossCharacter.generated.h"
 
+using FOnBossDeadDelegate = TMulticastDelegate<void()>;
+
 UENUM(BlueprintType)
 enum class EBossPhase : uint8
 {
@@ -73,4 +75,8 @@ public:
 	void UpdateHPBarWidget(void);
 
 	void NormalAttack(void);
+
+	// Delegates
+
+	FOnBossDeadDelegate OnBossDeadDelegate;
 };

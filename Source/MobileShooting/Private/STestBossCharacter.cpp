@@ -117,6 +117,8 @@ void ASTestBossCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, f
 
 		HPBarWidgetComp->SetHiddenInGame(true);
 		bDied = true;
+
+		OnBossDeadDelegate.Broadcast();
 	}
 }
 

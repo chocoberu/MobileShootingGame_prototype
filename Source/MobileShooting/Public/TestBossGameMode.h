@@ -28,6 +28,8 @@ public:
 
 	int32 GetCurrentRemainTime() { return CurrentRemainTime; }
 
+	void SetGameClear(bool Value);
+
 protected:
 	UPROPERTY()
 	class ATestBossGameState* TestGameState;

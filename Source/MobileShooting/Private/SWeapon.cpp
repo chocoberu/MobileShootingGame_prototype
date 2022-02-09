@@ -63,7 +63,8 @@ void ASWeapon::ReloadWeapon(void)
 
 void ASWeapon::StopReloadWeapon(void)
 {
-	GetWorldTimerManager().ClearTimer(ReloadTimer);
+	GetWorldTimerManager().ClearAllTimersForObject(this);
+	//GetWorldTimerManager().ClearTimer(ReloadTimer);
 }
 
 float ASWeapon::GetFirstDelay(void) const
