@@ -4,6 +4,7 @@
 #include "TestBossGameState.h"
 #include "Blueprint/UserWidget.h"
 #include "UI/SGameTimerHUDWidget.h"
+#include "UI/SGameQuestTextWidget.h"
 
 ATestBossGameState::ATestBossGameState()
 {
@@ -14,6 +15,19 @@ ATestBossGameState::ATestBossGameState()
 void ATestBossGameState::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (nullptr != GameQuestTextWidgetClass)
+	{
+		GameQuestTextWidget = CreateWidget<USGameQuestTextWidget>(GetWorld(), GameQuestTextWidgetClass);
+		if (nullptr != GameQuestTextWidget)
+		{
+			if (false == GameQuestString.IsEmpty())
+			{
+				GameQuestTextWidget->SetText(GameQuestString);
+			}
+			GameQuestTextWidget->AddToViewport();
+		}
+	}
 
 	if (nullptr != GameTimerWidgetClass)
 	{

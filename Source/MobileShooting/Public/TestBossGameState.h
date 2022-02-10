@@ -34,6 +34,15 @@ public:
 protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game", Meta = (AllowPrivateAccess = true))
+	TSubclassOf<class USGameQuestTextWidget> GameQuestTextWidgetClass;
+
+	UPROPERTY()
+	class USGameQuestTextWidget* GameQuestTextWidget;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game")
+	FString GameQuestString;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game", Meta = (AllowPrivateAccess = true))
 	TSubclassOf<class USGameTimerHUDWidget> GameTimerWidgetClass;
 
 	UPROPERTY()

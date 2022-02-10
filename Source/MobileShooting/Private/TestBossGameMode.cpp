@@ -6,8 +6,6 @@
 #include "SCharacter.h"
 #include "STestBossCharacter.h"
 #include "TestBossGameState.h"
-#include "Blueprint/UserWidget.h"
-#include "UI/SGameQuestTextWidget.h"
 #include "EngineUtils.h"
 
 ATestBossGameMode::ATestBossGameMode()
@@ -32,19 +30,6 @@ void ATestBossGameMode::StartPlay()
 void ATestBossGameMode::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (nullptr != GameQuestTextWidgetClass)
-	{
-		GameQuestTextWidget = CreateWidget<USGameQuestTextWidget>(GetWorld(), GameQuestTextWidgetClass);
-		if (nullptr != GameQuestTextWidget)
-		{
-			if (false == GameQuestString.IsEmpty())
-			{
-				GameQuestTextWidget->SetText(GameQuestString);
-			}
-			GameQuestTextWidget->AddToViewport();
-		}
-	}
 
 	// TEST CODE
 	{

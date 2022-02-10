@@ -27,13 +27,4 @@ protected:
 	UPROPERTY()
 	class ATestBossGameState* TestGameState;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI", Meta = (AllowPrivateAccess = true))
-	TSubclassOf<class USGameQuestTextWidget> GameQuestTextWidgetClass;
-
-	UPROPERTY()
-	class USGameQuestTextWidget* GameQuestTextWidget;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game")
-	FString GameQuestString;
-
 };
