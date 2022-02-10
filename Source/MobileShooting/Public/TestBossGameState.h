@@ -10,7 +10,8 @@
 UENUM(BlueprintType)
 enum class EGameState : uint8
 {
-	E_GamePlaying = 0 UMETA(DisplayName = "GamePlaying"),
+	E_None = 0 UMETA(DisplayName = "None"),
+	E_GamePlaying UMETA(DisplayName = "GamePlaying"),
 	E_GamePause UMETA(DisplayName = "GamePause"),
 	E_GameOver UMETA(DisplayName = "GameOver"),
 };
@@ -31,6 +32,8 @@ public:
 
 	void SetCurrentGameState(EGameState NewGameState);
 
+	void ShowGameClearWidget(bool bFlag);
+
 protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game", Meta = (AllowPrivateAccess = true))
@@ -47,6 +50,12 @@ protected:
 
 	UPROPERTY()
 	class USGameTimerHUDWidget* GameTimerWidget;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game", Meta = (AllowPrivateAccess = true))
+	TSubclassOf<class USGameClearWidget> GameClearWidgetClass;
+
+	UPROPERTY()
+	class USGameClearWidget* GameClearWidget;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game")
 	float DefaultGameTime;

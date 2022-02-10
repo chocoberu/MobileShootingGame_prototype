@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "TestBossGameMode.h"
 #include "SPlayerController.h"
 #include "SCharacter.h"
@@ -39,21 +38,21 @@ void ATestBossGameMode::BeginPlay()
 			Boss->OnBossDeadDelegate.AddUObject(this, &ATestBossGameMode::SetGameClear, true);
 		}
 	}
+}
 
+bool ATestBossGameMode::SetPause(APlayerController* PC, FCanUnpause CanUnpauseDelegate)
+{
+	TestGameState->SetCurrentGameState(EGameState::E_GamePause);
+	return Super::SetPause(PC, CanUnpauseDelegate);
+}
+
+bool ATestBossGameMode::ClearPause()
+{
+	TestGameState->SetCurrentGameState(EGameState::E_GamePlaying);
+	return Super::ClearPause();
 }
 
 void ATestBossGameMode::SetGameClear(bool Value)
 {
-	TestGameState->SetCurrentGameState(EGameState::E_GameOver);
-	// Game Clear
-	if (true == Value)
-	{
-		UE_LOG(LogTemp, Log, TEXT("Game Clear"));
-	}
-	// Game Over
-	else
-	{
-		UE_LOG(LogTemp, Log, TEXT("Game Over"));
-		// TODO : UI 코드 추가
-	}
+	TestGameState->ShowGameClearWidget(Value);
 }

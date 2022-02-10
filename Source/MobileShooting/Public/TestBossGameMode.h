@@ -18,8 +18,14 @@ public:
 	ATestBossGameMode();
 
 	virtual void PostInitializeComponents() override;
+	
 	virtual void StartPlay() override;
+	
 	virtual void BeginPlay() override;
+
+	virtual bool SetPause(APlayerController* PC, FCanUnpause CanUnpauseDelegate = FCanUnpause()) override;
+
+	virtual bool ClearPause() override;
 
 	void SetGameClear(bool Value);
 
