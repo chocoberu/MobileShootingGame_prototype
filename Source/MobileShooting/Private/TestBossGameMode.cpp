@@ -7,7 +7,6 @@
 #include "STestBossCharacter.h"
 #include "TestBossGameState.h"
 #include "Blueprint/UserWidget.h"
-#include "UI/SGameTimerHUDWidget.h"
 #include "UI/SGameQuestTextWidget.h"
 #include "EngineUtils.h"
 
@@ -55,48 +54,16 @@ void ATestBossGameMode::BeginPlay()
 			Boss->OnBossDeadDelegate.AddUObject(this, &ATestBossGameMode::SetGameClear, true);
 		}
 	}
-	
-	UE_LOG(LogTemp, Log, TEXT("Start Timer"));
-	StartTimer();
-}
 
-void ATestBossGameMode::StartTimer()
-{
-	CurrentRemainTime = DefaultRemainTime;
-
-	if (nullptr != GameTimerWidgetClass)
-	{
-		GameTimerWidget = CreateWidget<USGameTimerHUDWidget>(GetWorld(), GameTimerWidgetClass);
-
-		if (nullptr != GameTimerWidget)
-		{
-			GameTimerWidget->SetTimeText(CurrentRemainTime);
-			GameTimerWidget->AddToViewport();
-		}
-		GetWorldTimerManager().SetTimer(GameTimer, this, &ATestBossGameMode::UpdateTimeCount, 1.0f, true);
-	}
-}
-
-void ATestBossGameMode::UpdateTimeCount()
-{
-	--CurrentRemainTime;
-	//UE_LOG(LogTemp, Log, TEXT("Time : %d"), CurrentRemainTime);
-
-	GameTimerWidget->SetTimeText(CurrentRemainTime);
-	if (0 == CurrentRemainTime)
-	{
-		GetWorldTimerManager().ClearTimer(GameTimer);
-		SetGameClear(false);
-	}
 }
 
 void ATestBossGameMode::SetGameClear(bool Value)
 {
+	TestGameState->SetCurrentGameState(EGameState::E_GameOver);
 	// Game Clear
 	if (true == Value)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Game Clear"));
-		// TODO : UI 코드 추가
 	}
 	// Game Over
 	else
