@@ -28,7 +28,13 @@ protected:
 	FName WeaponeSocketName;
 
 	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
-	float  BombMaxChargingTime;
+	float BombMaxChargingTime;
+
+	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
+	float InitialBombSpeed;
+
+	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
+	float ChargingBombSpeed;
 
 	FTimerHandle BombChargingTimer;
 	

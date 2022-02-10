@@ -27,28 +27,18 @@ void ASBombSubWeapon::Tick(float DeltaTime)
 	{
 		FVector StartLocation = GetOwner()->GetActorLocation() + GetOwner()->GetActorForwardVector() * 100.0f;
 		float RemainTime = BombMaxChargingTime - GetWorldTimerManager().GetTimerRemaining(BombChargingTimer);
-		float InitialSpeed = 700.0f + 2000.0f * RemainTime / BombMaxChargingTime;
+		float InitialSpeed = InitialBombSpeed + ChargingBombSpeed * RemainTime / BombMaxChargingTime;
 		FRotator Rot = GetOwner()->GetActorRotation();
 		Rot.Pitch += 30.0f;
 
 		FPredictProjectilePathParams PredictParams(10.0f, StartLocation, Rot.Vector() * InitialSpeed, 2.0f);
-		//PredictParams.DrawDebugTime = DeltaTime;
 		PredictParams.DrawDebugType = EDrawDebugTrace::ForOneFrame;
 		PredictParams.OverrideGravityZ = GetWorld()->GetGravityZ();
 		PredictParams.bTraceWithCollision = true;
 
-		/*
-		TEnumAsByte<EObjectTypeQuery> WorldStatic = UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldStatic);
-		TEnumAsByte<EObjectTypeQuery> WorldDynamic = UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic);
-		PredictParams.ObjectTypes.Add(WorldStatic);
-		PredictParams.ObjectTypes.Add(WorldDynamic);
-		*/
-
 		FPredictProjectilePathResult PredictResult;
 		UGameplayStatics::PredictProjectilePath(this, PredictParams, PredictResult);
 
-		//DrawDebugSphere(GetWorld(), PredictResult.HitResult.Location, 30.0f, 16, FColor::Yellow, false, 0.1f);
-		//PredictResult.LastTraceDestination.Location;
 	}
 }
 
@@ -62,13 +52,13 @@ void ASBombSubWeapon::StartSubWeaponAttack()
 
 	GetWorldTimerManager().SetTimer(BombChargingTimer, FTimerDelegate::CreateLambda([&]() {
 		UE_LOG(LogTemp, Log, TEXT("MAX TIME !"));
+		StopSubWeaponAttack();
 		}), BombMaxChargingTime, false);
 }
 
 void ASBombSubWeapon::StopSubWeaponAttack()
 {
 	// Stop老 锭 气藕阑 带瘤绰 规侥
-
 	if (false == GetWorldTimerManager().IsTimerActive(BombChargingTimer))
 	{
 		return;
@@ -93,7 +83,7 @@ void ASBombSubWeapon::StopSubWeaponAttack()
 
 	if (nullptr != Bomb)
 	{
-		float InitialSpeed = 700.0f + 2000.0f * RemainTime / BombMaxChargingTime;
+		float InitialSpeed = InitialBombSpeed + ChargingBombSpeed * RemainTime / BombMaxChargingTime;
 		UE_LOG(LogTemp, Log, TEXT("Bomb Initial Speed : %f"), InitialSpeed);
 		Bomb->SetInitialSpeed(InitialSpeed);
 		Bomb->SetLaunchVelocity(Rot.Vector() * InitialSpeed);
@@ -104,16 +94,16 @@ void ASBombSubWeapon::StopSubWeaponAttack()
 		{
 			UE_LOG(LogTemp, Log, TEXT("Bomb Vector : %s"), *(Rot.Vector() * InitialSpeed).ToString());
 			FPredictProjectilePathParams PredictParams(Bomb->GetProjectileRadius(), StartLocation, Rot.Vector() * InitialSpeed, 2.0f);
-			PredictParams.DrawDebugTime = 3.0f;
+			PredictParams.DrawDebugTime = 2.0f;
 			PredictParams.DrawDebugType = EDrawDebugTrace::ForDuration;
 			PredictParams.OverrideGravityZ = GetWorld()->GetGravityZ();
+			PredictParams.bTraceWithCollision = true;
 
 			FPredictProjectilePathResult PredictResult;
 			UGameplayStatics::PredictProjectilePath(Bomb, PredictParams, PredictResult);
 		}
 	}
 	
-
 	if (CurrentSubWeaponCount <= 0)
 	{
 		bReload = true;
