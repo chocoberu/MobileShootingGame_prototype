@@ -60,29 +60,21 @@ void ASTestBossCharacter::BeginPlay()
 	bDied = false; 
 	ECurrentBossPhase = EBossPhase::E_Phase1;
 	CurrentPhaseArrayIndex = 0;
+
 }
 
 void ASTestBossCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
 	UpdateHPBarWidget();
 
-	// TODO : 여기 코드 수정 필요 -> 깔끔하게 정리
-	if (OwningHealthComp->GetHPRatio() <= Phase2Percent && ECurrentBossPhase == EBossPhase::E_Phase1)
+	if (CurrentPhaseArrayIndex + 1 < PhaseToPercentArray.Num() && OwningHealthComp->GetHPRatio() <= PhaseToPercentArray[CurrentPhaseArrayIndex + 1])
 	{
+		++CurrentPhaseArrayIndex;
 		auto AIController = Cast<ASTestBossAIController>(GetController());
 		auto BlackboardComp = AIController->GetBlackboardComponent();
 
-		BlackboardComp->SetValueAsEnum(TEXT("BossPhase"), (uint8)EBossPhase::E_Phase2);
-		ECurrentBossPhase = EBossPhase::E_Phase2;
-	}
-
-	if (OwningHealthComp->GetHPRatio() <= Phase3Percent && ECurrentBossPhase == EBossPhase::E_Phase2)
-	{
-		auto AIController = Cast<ASTestBossAIController>(GetController());
-		auto BlackboardComp = AIController->GetBlackboardComponent();
-
-		BlackboardComp->SetValueAsEnum(TEXT("BossPhase"), (uint8)EBossPhase::E_Phase3);
-		ECurrentBossPhase = EBossPhase::E_Phase3;
+		BlackboardComp->SetValueAsEnum(TEXT("BossPhase"), static_cast<uint8>(CurrentPhaseArrayIndex));
+		ECurrentBossPhase = static_cast<EBossPhase>(CurrentPhaseArrayIndex);
 	}
 
 	if (Health <= 0.0f && !bDied)
@@ -193,15 +185,14 @@ void ASTestBossCharacter::BombAttack(void)
 	FVector Velocity;
 	if (true == UGameplayStatics::SuggestProjectileVelocity_CustomArc(Bomb, Velocity, StartLocation, TargetActor->GetActorLocation(), Bomb->GetProjectileGravityZ(), 0.3f))
 	{
-		
-		DrawDebugSphere(GetWorld(), TargetActor->GetActorLocation(), 100.0f, 32, FColor::Red, false, 2.5f);
+		FVector TargetLocation = TargetActor->GetActorLocation();
+		TargetLocation.Z -= TargetActor->GetDefaultHalfHeight();
+		DrawDebugSphere(GetWorld(), TargetLocation, 100.0f, 32, FColor::Red, false, 2.5f);
 	}
 
 
 	Bomb->SetInitialSpeed(2000.0f);
 	Bomb->SetLaunchVelocity(Velocity);
-
-	// TODO : 낙하 지점 DrawDebug 추가
 }
 
 
