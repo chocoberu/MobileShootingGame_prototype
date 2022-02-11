@@ -18,6 +18,7 @@ USHealthComponent::USHealthComponent()
 	{
 		DamageTextWidgetCompClass = WC_DamageText.Class;
 	}
+	bUseDamageText = true;
 }
 
 
@@ -75,8 +76,11 @@ void USHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, 
 	UE_LOG(LogTemp, Log, TEXT("Health Changed : %s"), *FString::SanitizeFloat(Health));
 
 	bIsDead = Health <= 0.0f;
-	UpdateDamageText(Damage);
 
+	if (true == bUseDamageText)
+	{
+		UpdateDamageText(Damage);
+	}
 	OnHealthChanged.Broadcast(this, Health, Damage, DamageType, InstigatedBy, DamageCauser);
 
 	/*if (bIsDead == true)

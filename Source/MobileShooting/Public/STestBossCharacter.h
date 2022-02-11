@@ -48,6 +48,9 @@ protected:
 	// Weapon
 	UPROPERTY(EditAnywhere, Category = "Weapon")
 	TSubclassOf<class ASProjectile> ProjectileClass;
+
+	UPROPERTY(EditAnywhere, Category = "Weapon")
+	TSubclassOf<class ASProjectile> BombClass;
 	
 	// BossPhase
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Boss")
@@ -75,6 +78,8 @@ public:
 	void UpdateHPBarWidget(void);
 
 	void NormalAttack(void);
+
+	void BombAttack(void);
 
 	// Delegates
 

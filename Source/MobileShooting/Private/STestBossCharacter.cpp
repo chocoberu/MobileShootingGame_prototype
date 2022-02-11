@@ -12,6 +12,7 @@
 #include "SProjectile.h"
 #include "AI/STestBossAIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 ASTestBossCharacter::ASTestBossCharacter()
@@ -164,6 +165,43 @@ void ASTestBossCharacter::NormalAttack()
 	ASProjectile* Bullet = GetWorld()->SpawnActor<ASProjectile>(ProjectileClass,
 		GetActorLocation() + GetActorForwardVector() * 100.0f,
 		GetActorRotation());
+}
+
+void ASTestBossCharacter::BombAttack(void)
+{
+	if (nullptr == BombClass)
+	{
+		return;
+	}
+	
+	FVector StartLocation = GetActorLocation() + GetActorForwardVector() * 200.0f;
+	FRotator Rot = GetActorRotation();
+	Rot.Pitch += 45.0f;
+
+	auto Bomb = GetWorld()->SpawnActor<ASProjectile>(BombClass, StartLocation, Rot);
+	if (nullptr == Bomb)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Bomb is nullptr"));
+		return;
+	}
+	
+	auto AIController = Cast<ASTestBossAIController>(GetController());
+	auto BlackboardComp = AIController->GetBlackboardComponent();
+	auto TargetActor = Cast<ACharacter>(BlackboardComp->GetValueAsObject(TEXT("TargetActor")));
+
+	BlackboardComp->SetValueAsEnum(TEXT("BossPhase"), (uint8)EBossPhase::E_Phase2);
+	FVector Velocity;
+	if (true == UGameplayStatics::SuggestProjectileVelocity_CustomArc(Bomb, Velocity, StartLocation, TargetActor->GetActorLocation(), Bomb->GetProjectileGravityZ(), 0.3f))
+	{
+		
+		DrawDebugSphere(GetWorld(), TargetActor->GetActorLocation(), 100.0f, 32, FColor::Red, false, 2.5f);
+	}
+
+
+	Bomb->SetInitialSpeed(2000.0f);
+	Bomb->SetLaunchVelocity(Velocity);
+
+	// TODO : 낙하 지점 DrawDebug 추가
 }
 
 

@@ -35,6 +35,9 @@ protected:
 
 	bool bIsDead;
 
+	UPROPERTY(EditDefaultsOnly, Category = "HealthComponent")
+	bool bUseDamageText;
+
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<class USDamageTextWidgetComponent> DamageTextWidgetCompClass;
 
