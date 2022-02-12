@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "GenericTeamAgentInterface.h"
 #include "SCharacter.generated.h"
 
 UCLASS()
-class MOBILESHOOTING_API ASCharacter : public ACharacter
+class MOBILESHOOTING_API ASCharacter : public ACharacter, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -94,6 +95,9 @@ protected:
 
 	FTimerHandle RespawnTimer;
 
+	// AI
+	FGenericTeamId TeamId;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -120,4 +124,11 @@ public:
 	class ASWeapon* GetWeapon(void) { return MainWeapon; }
 
 	class ASSubWeapon* GetSubWeapon(void) { return SubWeapon; }
+
+	// AI
+	//virtual void SetGenericTeamId(const FGenericTeamId& TeamID) override;
+
+	virtual FGenericTeamId GetGenericTeamId() const { return TeamId; }
+
+	//virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
 };

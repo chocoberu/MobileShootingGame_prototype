@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "GenericTeamAgentInterface.h"
 #include "STurret.generated.h"
 
 UCLASS()
-class MOBILESHOOTING_API ASTurret : public APawn
+class MOBILESHOOTING_API ASTurret : public APawn, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 	
@@ -22,6 +23,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	virtual FGenericTeamId GetGenericTeamId() const { return TeamId; }
 
 	void TurretAttack();
 
@@ -54,6 +57,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Turret")
 	bool bDied;
+
+	// AI 
+	FGenericTeamId TeamId;
 
 	UFUNCTION()
 	void OnHealthChanged(class USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);

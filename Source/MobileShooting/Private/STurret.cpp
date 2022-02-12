@@ -36,6 +36,8 @@ ASTurret::ASTurret()
 
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
+	// TEST CODE
+	TeamId = FGenericTeamId(0);
 }
 
 // Called when the game starts or when spawned

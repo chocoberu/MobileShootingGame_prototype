@@ -55,6 +55,9 @@ ASCharacter::ASCharacter()
 	}
 
 	RespawnTime = 5.0f;
+
+	// TEST CODE
+	TeamId = FGenericTeamId(0);
 }
 
 // Called when the game starts or when spawned
