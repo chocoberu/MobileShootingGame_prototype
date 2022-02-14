@@ -3,6 +3,8 @@
 
 #include "STurretSubWeapon.h"
 #include "STurret.h"
+#include "SCharacter.h"
+#include "AI/STurretAIController.h"
 
 ASTurretSubWeapon::ASTurretSubWeapon()
 {
@@ -28,11 +30,17 @@ void ASTurretSubWeapon::StartSubWeaponAttack()
 	}
 
 	auto TurretObject = GetWorld()->SpawnActor<ASTurret>(TurretClass, GetOwner()->GetActorLocation() + GetOwner()->GetActorForwardVector() * 100.0f, GetOwner()->GetActorRotation());
+	auto SOwner = Cast<ASCharacter>(GetOwner());
 
-	if (nullptr != TurretObject)
+	if (nullptr != TurretObject && nullptr != SOwner)
 	{
 		TurretObject->SetOwner(GetOwner());
-
+		//TurretObject->SetGenericTeamId(SOwner->GetGenericTeamId());
+		//auto TurretController = Cast<ASTurretAIController>(TurretObject->GetController());
+		//if (nullptr != TurretController)
+		{
+			//TurretController->SetGenericTeamId(SOwner->GetGenericTeamId());
+		}
 		SubtrackCurrentSubWeaponCount();
 	}
 

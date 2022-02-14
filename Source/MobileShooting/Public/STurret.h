@@ -24,7 +24,11 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	virtual FGenericTeamId GetGenericTeamId() const { return TeamId; }
+	virtual FGenericTeamId GetGenericTeamId() const override { return TeamId; }
+
+	virtual void SetGenericTeamId(const FGenericTeamId& NewTeamID) override;
+
+	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
 
 	void TurretAttack();
 
@@ -59,6 +63,7 @@ protected:
 	bool bDied;
 
 	// AI 
+	UPROPERTY(EditDefaultsOnly, Category = "Turret")
 	FGenericTeamId TeamId;
 
 	UFUNCTION()

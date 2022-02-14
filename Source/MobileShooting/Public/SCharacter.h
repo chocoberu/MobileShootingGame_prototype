@@ -96,6 +96,7 @@ protected:
 	FTimerHandle RespawnTimer;
 
 	// AI
+	UPROPERTY(EditDefaultsOnly, Category = "Player")
 	FGenericTeamId TeamId;
 
 public:	
@@ -125,10 +126,8 @@ public:
 
 	class ASSubWeapon* GetSubWeapon(void) { return SubWeapon; }
 
-	// AI
-	//virtual void SetGenericTeamId(const FGenericTeamId& TeamID) override;
+	// TeamAgent
+	virtual void SetGenericTeamId(const FGenericTeamId& NewTeamID) override;
 
-	virtual FGenericTeamId GetGenericTeamId() const { return TeamId; }
-
-	//virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
+	virtual FGenericTeamId GetGenericTeamId() const override { return TeamId; }
 };

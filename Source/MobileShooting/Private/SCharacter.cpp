@@ -314,3 +314,11 @@ void ASCharacter::UpdateHPBarWidget()
 	}
 	HPBarWidget->UpdateHPWidget();
 }
+
+void ASCharacter::SetGenericTeamId(const FGenericTeamId& NewTeamID)
+{
+	if (NewTeamID != FGenericTeamId::NoTeam)
+	{
+		TeamId = NewTeamID;
+	}
+}

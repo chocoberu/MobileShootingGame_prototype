@@ -66,6 +66,23 @@ void ASTurret::Tick(float DeltaTime)
 
 }
 
+void ASTurret::SetGenericTeamId(const FGenericTeamId& NewTeamID)
+{
+	if (NewTeamID != FGenericTeamId::NoTeam)
+	{
+		TeamId = NewTeamID;
+	}
+}
+
+ETeamAttitude::Type ASTurret::GetTeamAttitudeTowards(const AActor& Other) const
+{
+	UE_LOG(LogTemp, Log, TEXT("GetTeamAttitudeTowards() Call : Other : %s"), *Other.GetName());
+
+	// TODO : Controller 관련 작업 추가?, Neutral 관련 작업 추가 (현재 Actor에 FGenericTeamId를 통해 체크)
+
+	return IGenericTeamAgentInterface::GetTeamAttitudeTowards(Other);
+}
+
 void ASTurret::TurretAttack()
 {
 	ASProjectile* Bullet = GetWorld()->SpawnActor<ASProjectile>(TurretProjectileClass,
