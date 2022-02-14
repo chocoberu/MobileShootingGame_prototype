@@ -35,12 +35,6 @@ void ASTurretSubWeapon::StartSubWeaponAttack()
 	if (nullptr != TurretObject && nullptr != SOwner)
 	{
 		TurretObject->SetOwner(GetOwner());
-		//TurretObject->SetGenericTeamId(SOwner->GetGenericTeamId());
-		//auto TurretController = Cast<ASTurretAIController>(TurretObject->GetController());
-		//if (nullptr != TurretController)
-		{
-			//TurretController->SetGenericTeamId(SOwner->GetGenericTeamId());
-		}
 		SubtrackCurrentSubWeaponCount();
 	}
 
