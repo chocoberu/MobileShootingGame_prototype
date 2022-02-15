@@ -7,11 +7,13 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "STestBossCharacter.h"
 #include "SCharacter.h"
+#include "NavigationSystem.h"
 
 
 UBTTaskNode_TestBossTeleport::UBTTaskNode_TestBossTeleport()
 {
 	NodeName = TEXT("TestBoss Teleport");
+	DetectRadius = 1000.0f;
 }
 
 EBTNodeResult::Type UBTTaskNode_TestBossTeleport::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
@@ -29,7 +31,22 @@ EBTNodeResult::Type UBTTaskNode_TestBossTeleport::ExecuteTask(UBehaviorTreeCompo
 		return EBTNodeResult::Failed;
 	}
 
-	//TestBossCharacter->TeleportTo();
+	UNavigationSystemV1* NaviSystem = UNavigationSystemV1::GetNavigationSystem(GetWorld());
+	if (nullptr == NaviSystem)
+	{
+		return Result;
+	}
+
+	FNavLocation NextLocation;
+	if (true == NaviSystem->GetRandomPointInNavigableRadius(TargetActor->GetActorLocation(), DetectRadius, NextLocation))
+	{
+		FVector Location = NextLocation.Location;
+		FVector DirectionToTarget = TargetActor->GetActorLocation() - Location;
+		DirectionToTarget.Z = 0.0f;
+		TestBossCharacter->TeleportTo(Location, DirectionToTarget.Rotation());
+
+		return EBTNodeResult::Succeeded;
+	}
 
 	return Result;
 }
