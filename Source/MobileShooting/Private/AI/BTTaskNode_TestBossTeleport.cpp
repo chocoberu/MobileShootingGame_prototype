@@ -31,6 +31,12 @@ EBTNodeResult::Type UBTTaskNode_TestBossTeleport::ExecuteTask(UBehaviorTreeCompo
 		return EBTNodeResult::Failed;
 	}
 
+	// 일정 거리 이내에 위치하면 텔레포트 X
+	if ((TestBossCharacter->GetActorLocation() - TargetActor->GetActorLocation()).Size() <= 600.0f)
+	{
+		return EBTNodeResult::Succeeded;
+	}
+
 	UNavigationSystemV1* NaviSystem = UNavigationSystemV1::GetNavigationSystem(GetWorld());
 	if (nullptr == NaviSystem)
 	{

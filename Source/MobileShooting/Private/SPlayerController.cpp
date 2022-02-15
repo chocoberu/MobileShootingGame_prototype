@@ -33,17 +33,20 @@ void ASPlayerController::OnPossess(APawn* aPawn)
 
 void ASPlayerController::BindMainWeaponStatusWidget(ASWeapon* MainWeapon)
 {
-	//UE_LOG(LogTemp, Log, TEXT("BindMainWeaponStatusWidget() Call"));
-	
+	if (nullptr == RightButtonHUD)
+	{
+		return;
+	}
 	RightButtonHUD->BindMainWeapon(MainWeapon);
-	//UE_LOG(LogTemp, Log, TEXT("BindMainWeaponStatusWidget() Complete"));
 }
 
 void ASPlayerController::BindSubWeaponStatusWidget(ASSubWeapon* SubWeapon)
 {
-	//UE_LOG(LogTemp, Log, TEXT("BindSubWeaponStatusWidget() Call"));
+	if (nullptr == RightButtonHUD)
+	{
+		return;
+	}
 	RightButtonHUD->BindSubWeapon(SubWeapon);
-	//UE_LOG(LogTemp, Log, TEXT("BindSubWeaponStatusWidget() Complete"));
 }
 
 void ASPlayerController::OnGamePause()
@@ -77,6 +80,10 @@ void ASPlayerController::OnGameResume()
 void ASPlayerController::OnPlayerDead()
 {
 	// Stop All Widget Animations
+	if (nullptr == RightButtonHUD)
+	{
+		return;
+	}
 	RightButtonHUD->StopAllWidgetAnimations();
 
 	// TODO : SCharacter 사망 시 작업 추가
@@ -95,6 +102,10 @@ void ASPlayerController::BeginPlay()
 	// 임시 주석 처리
 	//if (0 == CurrentPlatform.Compare(TEXT("IOS")) || 0 == CurrentPlatform.Compare(TEXT("Android")))
 	{
+		if (nullptr == RightButtonHUD)
+		{
+			return;
+		}
 		RightButtonHUD->AddToViewport();
 		if (nullptr == MenuWidget)
 		{

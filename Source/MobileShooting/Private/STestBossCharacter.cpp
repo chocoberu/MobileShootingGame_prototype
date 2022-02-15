@@ -165,8 +165,19 @@ void ASTestBossCharacter::BombAttack(void)
 	{
 		return;
 	}
-	
+
+	auto AIController = Cast<ASTestBossAIController>(GetController());
+	auto BlackboardComp = AIController->GetBlackboardComponent();
+	auto TargetActor = Cast<ACharacter>(BlackboardComp->GetValueAsObject(TEXT("TargetActor")));
+
+	// Turn To Target
+	FVector DirectionToTarget = TargetActor->GetActorLocation() - GetActorLocation();
+	DirectionToTarget.Z = 0.0f;
+	DirectionToTarget.Normalize();
+	SetActorRotation(FRotationMatrix::MakeFromX(DirectionToTarget).Rotator());
+
 	FVector StartLocation = GetActorLocation() + GetActorForwardVector() * 200.0f;
+	StartLocation.Z += 100.0f;
 	FRotator Rot = GetActorRotation();
 	Rot.Pitch += 45.0f;
 
@@ -176,12 +187,8 @@ void ASTestBossCharacter::BombAttack(void)
 		UE_LOG(LogTemp, Error, TEXT("Bomb is nullptr"));
 		return;
 	}
+	DrawDebugSphere(GetWorld(), StartLocation, 100.0f, 32, FColor::Green, false, 3.0f);
 	
-	auto AIController = Cast<ASTestBossAIController>(GetController());
-	auto BlackboardComp = AIController->GetBlackboardComponent();
-	auto TargetActor = Cast<ACharacter>(BlackboardComp->GetValueAsObject(TEXT("TargetActor")));
-
-	BlackboardComp->SetValueAsEnum(TEXT("BossPhase"), (uint8)EBossPhase::E_Phase2);
 	FVector Velocity;
 	if (true == UGameplayStatics::SuggestProjectileVelocity_CustomArc(Bomb, Velocity, StartLocation, TargetActor->GetActorLocation(), Bomb->GetProjectileGravityZ(), 0.3f))
 	{

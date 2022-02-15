@@ -9,6 +9,7 @@
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
 #include "SProjectile.h"
+#include "SCharacter.h"
 
 // Sets default values
 ASTurret::ASTurret()
@@ -80,7 +81,8 @@ ETeamAttitude::Type ASTurret::GetTeamAttitudeTowards(const AActor& Other) const
 
 	// TODO : Controller 관련 작업 추가?, Neutral 관련 작업 추가 (현재 Actor에 FGenericTeamId를 통해 체크)
 
-	return IGenericTeamAgentInterface::GetTeamAttitudeTowards(Other);
+	ETeamAttitude::Type Result = IGenericTeamAgentInterface::GetTeamAttitudeTowards(Other);
+	return Result;
 }
 
 void ASTurret::TurretAttack()
