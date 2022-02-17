@@ -80,6 +80,8 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Player")
 	FName SubWeaponAttachSocketName;
 
+	bool bIsAttack;
+
 	// UI, HUD
 	
 	// Controller

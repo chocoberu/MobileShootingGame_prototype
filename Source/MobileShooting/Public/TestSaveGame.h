@@ -18,4 +18,11 @@ public:
 
 	UTestSaveGame();
 
+protected:
+
+	UPROPERTY()
+	int32 MainWeaponIndex;
+
+	UPROPERTY()
+	int32 SubWeaponIndex;
 };

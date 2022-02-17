@@ -58,6 +58,8 @@ ASCharacter::ASCharacter()
 
 	// TEST CODE
 	TeamId = FGenericTeamId(0);
+
+	bIsAttack = false;
 }
 
 // Called when the game starts or when spawned
@@ -205,7 +207,11 @@ void ASCharacter::Tick(float DeltaTime)
 	//UE_LOG(LogTemp, Log, TEXT("DirectionToMove : %s"), *DirectionToMove.ToString());
 	if (DirectionToMove.SizeSquared() > 0.0f)
 	{
-		GetController()->SetControlRotation(FRotationMatrix::MakeFromX(DirectionToMove).Rotator());
+		// TEST CODE
+		if (false == bIsAttack)
+		{
+			GetController()->SetControlRotation(FRotationMatrix::MakeFromX(DirectionToMove).Rotator());
+		}
 		//UE_LOG(LogTemp, Log, TEXT("FRotationMatrix::MakeFromX(DirectionToMove) : %s"), *FRotationMatrix::MakeFromX(DirectionToMove).Rotator().ToString());
 		AddMovementInput(DirectionToMove);
 	}
@@ -232,6 +238,7 @@ void ASCharacter::StartMainAttack()
 {
 	if (nullptr != MainWeapon && false == bDied && false == MainWeapon->IsReloading())
 	{
+		bIsAttack = true;
 		MainWeapon->StartNormalAttack();
 	}
 }
@@ -240,6 +247,7 @@ void ASCharacter::StopMainAttack()
 {
 	if (nullptr != MainWeapon && false == bDied)
 	{
+		bIsAttack = false;
 		//GetWorldTimerManager().ClearTimer(NormalAttackTimer);
 		MainWeapon->StopNormalAttack();
 	}
