@@ -10,6 +10,12 @@ void ASPlayerController::OnPossess(APawn* aPawn)
 {
 	Super::OnPossess(aPawn);
 
+	// TEST CODE
+	if (false == IsLocalController())
+	{
+		return;
+	}
+
 	if (nullptr != RightPadButtonHUDClass)
 	{
 		RightButtonHUD = CreateWidget<URightButtonHUDWidget>(this, RightPadButtonHUDClass);
@@ -97,6 +103,13 @@ void ASPlayerController::PostInitializeComponents()
 void ASPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// TEST CODE
+	if (false == IsLocalController())
+	{
+		UE_LOG(LogTemp, Log, TEXT("No Authority "));
+		return;
+	}
 
 	FString CurrentPlatform = UGameplayStatics::GetPlatformName();
 	// 임시 주석 처리
