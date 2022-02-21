@@ -67,6 +67,10 @@ void ASPlayerController::OnGamePause()
 
 	MenuWidget->AddToViewport();
 	bShowMouseCursor = true;
+
+	// TEST CODE
+	FInputModeUIOnly Mode;
+	SetInputMode(Mode);
 }
 
 void ASPlayerController::OnGameResume()
@@ -81,6 +85,10 @@ void ASPlayerController::OnGameResume()
 
 	MenuWidget->RemoveFromViewport();
 	bShowMouseCursor = false;
+
+	// TEST CODE
+	FInputModeGameAndUI Mode;
+	SetInputMode(Mode);
 }
 
 void ASPlayerController::OnPlayerDead()

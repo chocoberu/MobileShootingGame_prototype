@@ -13,6 +13,11 @@ void ASGameStartUIPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (false == IsLocalController())
+	{
+		return;
+	}
+
 	if (nullptr == GameStartUIClass)
 	{
 		return;

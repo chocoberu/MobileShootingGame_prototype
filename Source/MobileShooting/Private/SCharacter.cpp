@@ -82,6 +82,7 @@ void ASCharacter::BeginPlay()
 	}
 
 	// Spawn a default weapon
+	// TODO : Weapon Select UI에서 선택한 Weapon, SubWeapon을 스폰하도록 수정
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	SpawnParams.Owner = this;
