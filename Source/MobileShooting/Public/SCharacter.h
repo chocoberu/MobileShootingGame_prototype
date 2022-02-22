@@ -80,10 +80,6 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Player")
 	FName SubWeaponAttachSocketName;
 
-	FSoftObjectPath WeaponAssetToLoad = FSoftObjectPath(nullptr);
-	
-	TSharedPtr<struct FStreamableHandle> AssetStreamingHandle;
-
 	bool bIsAttack;
 
 	// UI, HUD

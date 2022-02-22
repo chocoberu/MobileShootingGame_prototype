@@ -7,6 +7,7 @@
 #include "Components/CapsuleComponent.h"
 #include "SWeapon.h"
 #include "SSubWeapon.h"
+#include "SGameInstance.h"
 #include "Components/SHealthComponent.h"
 #include "SCharacterAnimInstance.h"
 #include "SPlayerController.h"
@@ -83,11 +84,29 @@ void ASCharacter::BeginPlay()
 
 	// Spawn a default weapon
 	// TODO : Weapon Select UI에서 선택한 Weapon, SubWeapon을 스폰하도록 수정
+
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	SpawnParams.Owner = this;
 
-	MainWeapon = GetWorld()->SpawnActor<ASWeapon>(MainWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+	// TEST CODE
+	auto TestGameInstance = Cast<USGameInstance>(GetGameInstance());
+	if (nullptr == TestGameInstance)
+	{
+		return;
+	}
+	FSoftClassPath WeaponClassPath(TestGameInstance->GetWeaponPath(0) + TEXT("_C"));
+	FSoftClassPath SubWeaponClassPath(TestGameInstance->GetSubWeaponPath(1000) + TEXT("_C"));
+	auto TestWeaponClass = WeaponClassPath.TryLoadClass<ASWeapon>();
+	auto TestSubWeaponClass = SubWeaponClassPath.TryLoadClass<ASSubWeapon>();
+
+	if (nullptr == TestWeaponClass || nullptr == TestSubWeaponClass)
+	{
+		UE_LOG(LogTemp, Error, TEXT("WeaponClass is nullptr"));
+		return;
+	}
+
+	MainWeapon = GetWorld()->SpawnActor<ASWeapon>(TestWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
 	if (nullptr != MainWeapon)
 	{
 		MainWeapon->SetOwner(this);
@@ -97,7 +116,7 @@ void ASCharacter::BeginPlay()
 		MainWeapon->OnReloadMontageDelegate.AddUObject(this, &ASCharacter::ReloadMainWeapon);
 	}
 
-	SubWeapon = GetWorld()->SpawnActor<ASSubWeapon>(SubWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+	SubWeapon = GetWorld()->SpawnActor<ASSubWeapon>(TestSubWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
 	if (nullptr != SubWeapon)
 	{
 		SubWeapon->SetOwner(this);

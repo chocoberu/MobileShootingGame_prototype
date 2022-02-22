@@ -42,6 +42,10 @@ public:
 
 	FStreamableManager StreamableManager;
 
+	FString GetWeaponPath(const int32 WeaponID);
+	
+	FString GetSubWeaponPath(const int32 SubWeaponID);
+
 private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Data")
@@ -49,4 +53,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Data")
 	class UDataTable* TestSubWeaponDataTable;
+
+	// TEST CODE
+	int32 CurrentWeaponID;
+
+	int32 CurrentSubWeaponID;
 };

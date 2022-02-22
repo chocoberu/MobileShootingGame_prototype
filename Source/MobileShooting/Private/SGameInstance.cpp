@@ -5,7 +5,8 @@
 
 USGameInstance::USGameInstance()
 {
-
+	CurrentWeaponID = 0;
+	CurrentSubWeaponID = 1000;
 }
 
 void USGameInstance::Init()
@@ -22,5 +23,31 @@ void USGameInstance::Init()
 	{
 		UE_LOG(LogTemp, Error, TEXT("SubWeapon Data Table is nullptr"));
 		return;
+	}
+}
+
+FString USGameInstance::GetWeaponPath(const int32 WeaponID)
+{
+	auto WeaponData = TestWeaponDataTable->FindRow<FWeaponData>(*FString::FromInt(WeaponID), TEXT(""));
+	if (nullptr != WeaponData)
+	{
+		return WeaponData->WeaponPath;
+	}
+	else
+	{
+		return FString();
+	}
+}
+
+FString USGameInstance::GetSubWeaponPath(const int32 SubWeaponID)
+{
+	auto WeaponData = TestSubWeaponDataTable->FindRow<FWeaponData>(*FString::FromInt(SubWeaponID), TEXT(""));
+	if (nullptr != WeaponData)
+	{
+		return WeaponData->WeaponPath;
+	}
+	else
+	{
+		return FString();
 	}
 }
