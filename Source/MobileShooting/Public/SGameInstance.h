@@ -46,6 +46,18 @@ public:
 	
 	FString GetSubWeaponPath(const int32 SubWeaponID);
 
+	void SetCurrentSelectLevel(const FString SelectLevel);
+
+	FString GetCurrentSelectLevel() { return CurrentSelectLevel; }
+
+	void SetCurrentWeaponID(const int32 WeaponID) { CurrentWeaponID = WeaponID; }
+
+	void SetCurrentSubWeaponID(const int32 WeaponID) { CurrentSubWeaponID = WeaponID; }
+
+	int32 GetCurrentWeaponID() { return CurrentWeaponID; }
+
+	int32 GetCurrentSubWeaponID() { return CurrentSubWeaponID; }
+
 private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Data")
@@ -58,4 +70,6 @@ private:
 	int32 CurrentWeaponID;
 
 	int32 CurrentSubWeaponID;
+
+	FString CurrentSelectLevel;
 };

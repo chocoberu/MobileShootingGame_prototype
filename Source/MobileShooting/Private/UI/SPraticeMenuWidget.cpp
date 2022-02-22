@@ -28,6 +28,8 @@ void USPraticeMenuWidget::OnResumeButtonPressed()
 
 void USPraticeMenuWidget::OnReturnMainMenuButtonPressed()
 {
+	FInputModeGameAndUI Mode;
+	GetWorld()->GetFirstPlayerController()->SetInputMode(Mode);
 	UGameplayStatics::OpenLevel(GetWorld(), TEXT("GameStartLevel"));
 }
 

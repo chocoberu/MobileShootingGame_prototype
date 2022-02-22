@@ -95,8 +95,8 @@ void ASCharacter::BeginPlay()
 	{
 		return;
 	}
-	FSoftClassPath WeaponClassPath(TestGameInstance->GetWeaponPath(0) + TEXT("_C"));
-	FSoftClassPath SubWeaponClassPath(TestGameInstance->GetSubWeaponPath(1000) + TEXT("_C"));
+	FSoftClassPath WeaponClassPath(TestGameInstance->GetWeaponPath(TestGameInstance->GetCurrentWeaponID()) + TEXT("_C"));
+	FSoftClassPath SubWeaponClassPath(TestGameInstance->GetSubWeaponPath(TestGameInstance->GetCurrentSubWeaponID()) + TEXT("_C"));
 	auto TestWeaponClass = WeaponClassPath.TryLoadClass<ASWeapon>();
 	auto TestSubWeaponClass = SubWeaponClassPath.TryLoadClass<ASSubWeapon>();
 

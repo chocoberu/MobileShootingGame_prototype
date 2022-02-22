@@ -51,3 +51,8 @@ FString USGameInstance::GetSubWeaponPath(const int32 SubWeaponID)
 		return FString();
 	}
 }
+
+void USGameInstance::SetCurrentSelectLevel(const FString SelectLevel)
+{
+	CurrentSelectLevel = SelectLevel;
+}

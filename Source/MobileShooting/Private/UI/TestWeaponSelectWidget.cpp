@@ -4,6 +4,9 @@
 #include "UI/TestWeaponSelectWidget.h"
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
+#include "Components/EditableText.h"
+#include "SGameInstance.h"
+#include "Kismet/GameplayStatics.h"
 
 bool UTestWeaponSelectWidget::Initialize()
 {
@@ -21,4 +24,18 @@ void UTestWeaponSelectWidget::OnSelectButtonClicked()
 {
 	// TODO : EditableText에서 ID 값을 가져와서 SaveGame 
 	// TODO : EditableText를 인벤토리로 변경
+
+	auto TestGameInstance = Cast<USGameInstance>(GetGameInstance());
+	if (nullptr == TestGameInstance)
+	{
+		return;
+	}
+
+	int32 WeaponValue = FCString::Atoi(*WeaponID->GetText().ToString());
+	int32 SubWeaponValue = FCString::Atoi(*SubWeaponID->GetText().ToString());
+
+	TestGameInstance->SetCurrentWeaponID(WeaponValue);
+	TestGameInstance->SetCurrentSubWeaponID(SubWeaponValue);
+
+	UGameplayStatics::OpenLevel(GetWorld(), FName(*TestGameInstance->GetCurrentSelectLevel()));
 }
