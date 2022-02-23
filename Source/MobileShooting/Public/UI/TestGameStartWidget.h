@@ -27,6 +27,9 @@ public:
 	UFUNCTION()
 	void OnClickedExitButton();
 
+	UFUNCTION()
+	void SetWidgetSwitcher(const int32 Index = 0);
+
 protected:
 
 	UPROPERTY(meta = (BindWidget))
@@ -40,5 +43,8 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	class UWidgetSwitcher* StartWidgetSwitcher;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTestWeaponSelectWidget* WeaponSelect;
 
 };

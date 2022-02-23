@@ -2,6 +2,7 @@
 
 
 #include "UI/TestGameStartWidget.h"
+#include "UI/TestWeaponSelectWidget.h"
 #include "Components/WidgetSwitcher.h"
 #include "Components/Button.h"
 #include "SGameInstance.h"
@@ -17,6 +18,9 @@ bool UTestGameStartWidget::Initialize()
 	SinglePlayButton->OnClicked.AddDynamic(this, &UTestGameStartWidget::OnClickedSinglePlayButton);
 	PraticeModeButton->OnClicked.AddDynamic(this, &UTestGameStartWidget::OnClickedPraticeModeButton);
 	ExitButton->OnClicked.AddDynamic(this, &UTestGameStartWidget::OnClickedExitButton);
+
+	//WeaponSelect->SetParentWidget(this);
+	WeaponSelect->OnCancelClickedDelegate.AddUObject(this, &UTestGameStartWidget::SetWidgetSwitcher, 0);
 
 	return true;
 }
@@ -49,4 +53,9 @@ void UTestGameStartWidget::OnClickedPraticeModeButton()
 void UTestGameStartWidget::OnClickedExitButton()
 {
 	UKismetSystemLibrary::QuitGame(GetWorld(), nullptr, EQuitPreference::Quit, false);
+}
+
+void UTestGameStartWidget::SetWidgetSwitcher(const int32 Index)
+{
+	StartWidgetSwitcher->SetActiveWidgetIndex(Index);
 }

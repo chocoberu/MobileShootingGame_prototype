@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "TestWeaponSelectWidget.generated.h"
 
+using FOnCancelClickedDelegate = TMulticastDelegate<void()>;
 /**
  * 
  */
@@ -20,6 +21,11 @@ public:
 
 	UFUNCTION()
 	void OnSelectButtonClicked();
+
+	UFUNCTION()
+	void OnCancelButtonClicked();
+
+	FOnCancelClickedDelegate OnCancelClickedDelegate;
 	
 protected:
 

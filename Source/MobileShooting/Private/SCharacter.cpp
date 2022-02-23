@@ -93,6 +93,7 @@ void ASCharacter::BeginPlay()
 	auto TestGameInstance = Cast<USGameInstance>(GetGameInstance());
 	if (nullptr == TestGameInstance)
 	{
+		UE_LOG(LogTemp, Error, TEXT("GameInstance is nullptr"));
 		return;
 	}
 	FSoftClassPath WeaponClassPath(TestGameInstance->GetWeaponPath(TestGameInstance->GetCurrentWeaponID()) + TEXT("_C"));
