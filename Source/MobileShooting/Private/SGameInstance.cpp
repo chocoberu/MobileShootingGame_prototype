@@ -56,3 +56,13 @@ void USGameInstance::SetCurrentSelectLevel(const FString SelectLevel)
 {
 	CurrentSelectLevel = SelectLevel;
 }
+
+void USGameInstance::GetAllWeaponData(const FString& ContextString, TArray<FWeaponData*>& OutRowArray)
+{
+	TestWeaponDataTable->GetAllRows(ContextString, OutRowArray);
+}
+
+void USGameInstance::GetAllSubWeaponData(const FString& ContextString, TArray<FWeaponData*>& OutRowArray)
+{
+	TestSubWeaponDataTable->GetAllRows(ContextString, OutRowArray);
+}

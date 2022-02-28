@@ -58,6 +58,10 @@ public:
 
 	int32 GetCurrentSubWeaponID() { return CurrentSubWeaponID; }
 
+	void GetAllWeaponData(const FString& ContextString, TArray<FWeaponData*>& OutRowArray);
+
+	void GetAllSubWeaponData(const FString& ContextString, TArray<FWeaponData*>& OutRowArray);
+
 private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Data")
