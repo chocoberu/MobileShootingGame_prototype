@@ -7,7 +7,7 @@
 void USCrowdControlTextWidget::SetCCText(const FString NewCC)
 {
 	// TODO : FString -> uint8 등으로 변경
-	CCText->SetText(FText::FromString(NewText));
+	CCText->SetText(FText::FromString(NewCC));
 }
 
 void USCrowdControlTextWidget::SetHiddenInGame(bool NewFlag)
