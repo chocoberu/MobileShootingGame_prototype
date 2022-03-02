@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "UI/TestSelectWEaponInventoryItem.h"
 #include "TestSelectWeaponInventoryWidget.generated.h"
 
 /**
@@ -22,5 +23,14 @@ public:
 
 protected:
 
-	TArray<class UUserWidget> WeaponItem;
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* InventoryName;
+
+	UPROPERTY(meta = (BindWidget))
+	class UUniformGridPanel* GridPanel;
+
+	UPROPERTY(EditAnywhere, Category = "WeaponType")
+	bool bWeaponType;
+
+	TArray<UTestSelectWeaponInventoryItem> WeaponItem;
 };

@@ -3,7 +3,8 @@
 
 #include "UI/TestSelectWeaponInventoryWidget.h"
 #include "SGameInstance.h"
-#include "..\..\Public\UI\TestSelectWeaponInventoryWidget.h"
+#include "Components/TextBlock.h"
+#include "Components/UniformGridPanel.h"
 
 bool UTestSelectWeaponInventoryWidget::Initialize()
 {
@@ -24,21 +25,35 @@ bool UTestSelectWeaponInventoryWidget::Initialize()
 		return true;
 	}
 
-	TArray<FWeaponData*> OutWeaponDataList;
-	TestGameInstance->GetAllWeaponData(TEXT(""), OutWeaponDataList);
-	TArray<FWeaponData*> OutSubWeaponDataList;
-	TestGameInstance->GetAllSubWeaponData(TEXT(""), OutSubWeaponDataList);
-
-	for (auto& Item : OutWeaponDataList)
+	if (true == bWeaponType)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Weapon Name : %s, Weapon ID : %d"), *Item->WeaponName, Item->WeaponID);
-	}
+		UE_LOG(LogTemp, Log, TEXT("Weapon Inventory"));
 
-	for (auto& Item : OutSubWeaponDataList)
-	{
-		UE_LOG(LogTemp, Log, TEXT("SubWeapon Name : %s, Weapon ID : %d"), *Item->WeaponName, Item->WeaponID);
+		InventoryName->SetText(FText::FromString(TEXT("Weapon")));
+
+		TArray<FWeaponData*> OutWeaponDataList;
+		TestGameInstance->GetAllWeaponData(TEXT(""), OutWeaponDataList);
+
+		for (auto& Item : OutWeaponDataList)
+		{
+			UE_LOG(LogTemp, Log, TEXT("Weapon Name : %s, Weapon ID : %d"), *Item->WeaponName, Item->WeaponID);
+		}
+
 	}
-	
+	else
+	{
+		UE_LOG(LogTemp, Log, TEXT("SubWeapon Inventory"));
+
+		InventoryName->SetText(FText::FromString(TEXT("SubWeapon")));
+
+		TArray<FWeaponData*> OutSubWeaponDataList;
+		TestGameInstance->GetAllSubWeaponData(TEXT(""), OutSubWeaponDataList);
+
+		for (auto& Item : OutSubWeaponDataList)
+		{
+			UE_LOG(LogTemp, Log, TEXT("SubWeapon Name : %s, Weapon ID : %d"), *Item->WeaponName, Item->WeaponID);
+		}
+	}
 
 	return true;
 }

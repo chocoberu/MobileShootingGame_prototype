@@ -18,6 +18,7 @@ bool UTestWeaponSelectWidget::Initialize()
 	SelectButton->OnClicked.AddDynamic(this, &UTestWeaponSelectWidget::OnSelectButtonClicked);
 	CancelButton->OnClicked.AddDynamic(this, &UTestWeaponSelectWidget::OnCancelButtonClicked);
 
+	UE_LOG(LogTemp, Log, TEXT("UTestWeaponSelectWidget Initialize"));
 	return true;
 }
 
@@ -32,25 +33,17 @@ void UTestWeaponSelectWidget::OnSelectButtonClicked()
 		return;
 	}
 
-	int32 WeaponValue = FCString::Atoi(*WeaponID->GetText().ToString());
-	int32 SubWeaponValue = FCString::Atoi(*SubWeaponID->GetText().ToString());
-
-	// 임시 : Atoi 결과값이 올바르게 나오지 않을 경우 디폴트값을 저장
-	if (0 == SubWeaponValue)
-	{
-		SubWeaponValue = 1000;
-	}
-
-	TestGameInstance->SetCurrentWeaponID(WeaponValue);
-	TestGameInstance->SetCurrentSubWeaponID(SubWeaponValue);
+	
+	TestGameInstance->SetCurrentWeaponID(0);
+	TestGameInstance->SetCurrentSubWeaponID(1001);
 
 	UGameplayStatics::OpenLevel(GetWorld(), FName(*TestGameInstance->GetCurrentSelectLevel()));
 }
 
 void UTestWeaponSelectWidget::OnCancelButtonClicked()
 {
-	WeaponID->SetText(FText());
-	SubWeaponID->SetText(FText());
+	//WeaponID->SetText(FText());
+	//SubWeaponID->SetText(FText());
 
 	OnCancelClickedDelegate.Broadcast();
 }

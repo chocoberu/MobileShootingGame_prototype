@@ -35,9 +35,4 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	class UButton* SelectButton;
 
-	UPROPERTY(meta = (BindWidget))
-	class UEditableText* WeaponID;
-
-	UPROPERTY(meta = (BindWidget))
-	class UEditableText* SubWeaponID;
 };
