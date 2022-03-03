@@ -33,9 +33,9 @@ void UTestWeaponSelectWidget::OnSelectButtonClicked()
 		return;
 	}
 
-	
+	// TEMP : 현재 임시값 하드코딩
 	TestGameInstance->SetCurrentWeaponID(0);
-	TestGameInstance->SetCurrentSubWeaponID(1001);
+	TestGameInstance->SetCurrentSubWeaponID(1002);
 
 	UGameplayStatics::OpenLevel(GetWorld(), FName(*TestGameInstance->GetCurrentSelectLevel()));
 }

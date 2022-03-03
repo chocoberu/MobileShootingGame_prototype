@@ -2,6 +2,7 @@
 
 
 #include "UI/TestSelectWeaponInventoryWidget.h"
+#include "UI/TestSelectWEaponInventoryItem.h"
 #include "SGameInstance.h"
 #include "Components/TextBlock.h"
 #include "Components/UniformGridPanel.h"
@@ -34,8 +35,23 @@ bool UTestSelectWeaponInventoryWidget::Initialize()
 		TArray<FWeaponData*> OutWeaponDataList;
 		TestGameInstance->GetAllWeaponData(TEXT(""), OutWeaponDataList);
 
+		if (nullptr == InventoryItemClass)
+		{
+			return true;
+		}
+
+		int32 Column = 0;
 		for (auto& Item : OutWeaponDataList)
 		{
+			auto InventorySlot = CreateWidget<UTestSelectWeaponInventoryItem>(World, InventoryItemClass);
+			if (nullptr == InventorySlot)
+			{
+				continue;
+			}
+			InventorySlot->SetItemId(Item->WeaponID);
+			
+			GridPanel->AddChildToUniformGrid(InventorySlot, 0, Column++);
+
 			UE_LOG(LogTemp, Log, TEXT("Weapon Name : %s, Weapon ID : %d"), *Item->WeaponName, Item->WeaponID);
 		}
 
@@ -49,8 +65,18 @@ bool UTestSelectWeaponInventoryWidget::Initialize()
 		TArray<FWeaponData*> OutSubWeaponDataList;
 		TestGameInstance->GetAllSubWeaponData(TEXT(""), OutSubWeaponDataList);
 
+		int32 Column = 0;
 		for (auto& Item : OutSubWeaponDataList)
 		{
+			auto InventorySlot = CreateWidget<UTestSelectWeaponInventoryItem>(World, InventoryItemClass);
+			if (nullptr == InventorySlot)
+			{
+				continue;
+			}
+			InventorySlot->SetItemId(Item->WeaponID);
+			
+			GridPanel->AddChildToUniformGrid(InventorySlot, 0, Column++);
+
 			UE_LOG(LogTemp, Log, TEXT("SubWeapon Name : %s, Weapon ID : %d"), *Item->WeaponName, Item->WeaponID);
 		}
 	}

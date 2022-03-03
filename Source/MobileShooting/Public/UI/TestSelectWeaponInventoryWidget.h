@@ -32,5 +32,8 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "WeaponType")
 	bool bWeaponType;
 
+	UPROPERTY(EditAnywhere, Category = "WeaponType")
+	TSubclassOf <class UTestSelectWeaponInventoryItem> InventoryItemClass;
+
 	TArray<UTestSelectWeaponInventoryItem> WeaponItem;
 };
