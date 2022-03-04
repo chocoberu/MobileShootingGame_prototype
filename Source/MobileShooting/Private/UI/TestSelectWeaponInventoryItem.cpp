@@ -2,6 +2,7 @@
 
 
 #include "UI/TestSelectWeaponInventoryItem.h"
+#include "Components/TextBlock.h"
 
 bool UTestSelectWeaponInventoryItem::Initialize()
 {
@@ -16,4 +17,12 @@ bool UTestSelectWeaponInventoryItem::Initialize()
 void UTestSelectWeaponInventoryItem::SetItemId(const int32 NewItemId)
 {
 	ItemId = NewItemId;
+}
+
+void UTestSelectWeaponInventoryItem::SetItemName(const FString NewName)
+{
+	if (false == NewName.IsEmpty())
+	{
+		ItemName->SetText(FText::FromString(NewName));
+	}
 }

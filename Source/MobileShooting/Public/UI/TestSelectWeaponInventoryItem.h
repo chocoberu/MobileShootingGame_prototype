@@ -22,7 +22,12 @@ public:
 
 	void SetItemId(const int32 NewItemId);
 
+	void SetItemName(const FString NewName);
+
 protected:
 
 	int32 ItemId;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* ItemName;
 };
