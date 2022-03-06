@@ -18,16 +18,29 @@ public:
 
 	virtual bool Initialize() override;
 
+	void Setup(class UTestSelectWeaponInventoryWidget* Parent, uint32 Index);
+
 	int32 GetItemId() const { return ItemId; }
 
 	void SetItemId(const int32 NewItemId);
 
 	void SetItemName(const FString NewName);
 
+	UFUNCTION()
+	void OnClickedItemButton();
+
 protected:
 
 	int32 ItemId;
 
+	uint32 ItemIndex;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* ItemButton;
+
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* ItemName;
+
+	UPROPERTY()
+	class UTestSelectWeaponInventoryWidget* ParentWidget;
 };

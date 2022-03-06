@@ -2,6 +2,7 @@
 
 
 #include "UI/TestWeaponSelectWidget.h"
+#include "UI/TestSelectWeaponInventoryWidget.h"
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
 #include "Components/EditableText.h"
@@ -33,9 +34,20 @@ void UTestWeaponSelectWidget::OnSelectButtonClicked()
 		return;
 	}
 
-	// TEMP : 현재 임시값 하드코딩
-	TestGameInstance->SetCurrentWeaponID(0);
-	TestGameInstance->SetCurrentSubWeaponID(1002);
+	// TEMP : 현재 인벤토리 아이템 미선택시 임시값 하드코딩
+	int32 WeaponId = WeaponInventory->GetSelectedWeaponId();
+	if (-1 == WeaponId)
+	{
+		WeaponId = 0;
+	}
+	int32 SubWeaponId = SubWeaponInventory->GetSelectedWeaponId();
+	if (-1 == SubWeaponId)
+	{
+		SubWeaponId = 1000;
+	}
+
+	TestGameInstance->SetCurrentWeaponID(WeaponId);
+	TestGameInstance->SetCurrentSubWeaponID(SubWeaponId);
 
 	UGameplayStatics::OpenLevel(GetWorld(), FName(*TestGameInstance->GetCurrentSelectLevel()));
 }

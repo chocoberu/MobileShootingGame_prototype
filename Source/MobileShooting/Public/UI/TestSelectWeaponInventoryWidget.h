@@ -21,6 +21,12 @@ public:
 
 	virtual void NativeConstruct() override;
 
+	uint32 GetSelectedIndex();
+
+	void SetSelectedIndex(uint32 NewIndex);
+
+	int32 GetSelectedWeaponId();
+
 protected:
 
 	UPROPERTY(meta = (BindWidget))
@@ -35,5 +41,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "WeaponType")
 	TSubclassOf <class UTestSelectWeaponInventoryItem> InventoryItemClass;
 
-	TArray<UTestSelectWeaponInventoryItem> WeaponItem;
+	TArray<class UTestSelectWeaponInventoryItem*> WeaponItemList;
+
+	TOptional<uint32> SelectedIndex;
 };

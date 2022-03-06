@@ -49,7 +49,8 @@ bool UTestSelectWeaponInventoryWidget::Initialize()
 				continue;
 			}
 
-			// TODO : InventoryItem SetName? µµ Ãß°¡
+			WeaponItemList.Add(InventoryItem);
+			InventoryItem->Setup(this, Column);
 			InventoryItem->SetItemId(Item->WeaponID);
 			InventoryItem->SetItemName(Item->WeaponName);
 			
@@ -76,6 +77,8 @@ bool UTestSelectWeaponInventoryWidget::Initialize()
 			{
 				continue;
 			}
+			WeaponItemList.Add(InventoryItem);
+			InventoryItem->Setup(this, Column);
 			InventoryItem->SetItemId(Item->WeaponID);
 			InventoryItem->SetItemName(Item->WeaponName);
 			
@@ -92,4 +95,34 @@ void UTestSelectWeaponInventoryWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+}
+
+uint32 UTestSelectWeaponInventoryWidget::GetSelectedIndex()
+{
+	if (true == SelectedIndex.IsSet())
+	{
+		return SelectedIndex.GetValue();
+	}
+	else
+	{
+		return -1;
+	}
+}
+
+void UTestSelectWeaponInventoryWidget::SetSelectedIndex(uint32 NewIndex)
+{
+	SelectedIndex = NewIndex;
+}
+
+int32 UTestSelectWeaponInventoryWidget::GetSelectedWeaponId()
+{
+	if (true == SelectedIndex.IsSet())
+	{
+		//UE_LOG(LogTemp, Log, TEXT("Index Get Value : %d"), SelectedIndex.GetValue());
+		return WeaponItemList[SelectedIndex.GetValue()]->GetItemId();
+	}
+	else
+	{
+		return -1;
+	}
 }

@@ -35,4 +35,10 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	class UButton* SelectButton;
 
+	UPROPERTY(meta = (BindWidget))
+	class UTestSelectWeaponInventoryWidget* WeaponInventory;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTestSelectWeaponInventoryWidget* SubWeaponInventory;
+
 };
