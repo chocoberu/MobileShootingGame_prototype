@@ -40,6 +40,20 @@ void UTestSelectWeaponInventoryItem::SetItemName(const FString NewName)
 	}
 }
 
+void UTestSelectWeaponInventoryItem::SetItemSelected(const bool NewFlag)
+{
+	bSelected = NewFlag;
+
+	if (true == NewFlag)
+	{
+		ItemName->SetColorAndOpacity(FLinearColor::Green);
+	}
+	else
+	{
+		ItemName->SetColorAndOpacity(FLinearColor::White);
+	}
+}
+
 void UTestSelectWeaponInventoryItem::OnClickedItemButton()
 {
 	if (nullptr == ParentWidget)
@@ -49,4 +63,5 @@ void UTestSelectWeaponInventoryItem::OnClickedItemButton()
 	}
 
 	ParentWidget->SetSelectedIndex(ItemIndex);
+	SetItemSelected(true);
 }

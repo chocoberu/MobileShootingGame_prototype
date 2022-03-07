@@ -26,6 +26,8 @@ public:
 
 	void SetItemName(const FString NewName);
 
+	void SetItemSelected(const bool NewFlag);
+
 	UFUNCTION()
 	void OnClickedItemButton();
 
@@ -43,4 +45,7 @@ protected:
 
 	UPROPERTY()
 	class UTestSelectWeaponInventoryWidget* ParentWidget;
+
+	UPROPERTY(BlueprintReadOnly)
+	bool bSelected = false;
 };

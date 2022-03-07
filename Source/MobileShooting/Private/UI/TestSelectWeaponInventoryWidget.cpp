@@ -111,6 +111,10 @@ uint32 UTestSelectWeaponInventoryWidget::GetSelectedIndex()
 
 void UTestSelectWeaponInventoryWidget::SetSelectedIndex(uint32 NewIndex)
 {
+	if (true == SelectedIndex.IsSet())
+	{
+		WeaponItemList[SelectedIndex.GetValue()]->SetItemSelected(false);
+	}
 	SelectedIndex = NewIndex;
 }
 
