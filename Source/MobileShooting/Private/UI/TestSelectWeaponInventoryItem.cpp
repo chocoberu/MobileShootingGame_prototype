@@ -14,6 +14,8 @@ bool UTestSelectWeaponInventoryItem::Initialize()
 	}
 
 	ItemButton->OnClicked.AddDynamic(this, &UTestSelectWeaponInventoryItem::OnClickedItemButton);
+	ItemButton->OnHovered.AddDynamic(this, &UTestSelectWeaponInventoryItem::OnHoveredItemButton);
+	ItemButton->OnUnhovered.AddDynamic(this, &UTestSelectWeaponInventoryItem::OnUnHoveredItemButton);
 
 	return true;
 }
@@ -64,4 +66,21 @@ void UTestSelectWeaponInventoryItem::OnClickedItemButton()
 
 	ParentWidget->SetSelectedIndex(ItemIndex);
 	SetItemSelected(true);
+}
+
+void UTestSelectWeaponInventoryItem::OnHoveredItemButton()
+{
+	ItemName->SetColorAndOpacity(FLinearColor::Yellow);
+}
+
+void UTestSelectWeaponInventoryItem::OnUnHoveredItemButton()
+{
+	if (true == bSelected)
+	{
+		ItemName->SetColorAndOpacity(FLinearColor::Green);
+	}
+	else
+	{
+		ItemName->SetColorAndOpacity(FLinearColor::White);
+	}
 }

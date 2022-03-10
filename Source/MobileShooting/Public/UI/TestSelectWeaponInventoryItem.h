@@ -31,6 +31,12 @@ public:
 	UFUNCTION()
 	void OnClickedItemButton();
 
+	UFUNCTION()
+	void OnHoveredItemButton();
+
+	UFUNCTION()
+	void OnUnHoveredItemButton();
+
 protected:
 
 	int32 ItemId;
