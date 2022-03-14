@@ -23,19 +23,17 @@ void URightButtonHUDWidget::NativeConstruct()
 		return;
 	}
 
-	MainAttackButton = Cast<UButton>(GetWidgetFromName(TEXT("MainAttack")));
-	if (nullptr != MainAttackButton)
-	{
-		MainAttackButton->OnPressed.AddDynamic(this, &URightButtonHUDWidget::OnMainAttackPressed);
-		MainAttackButton->OnReleased.AddDynamic(this, &URightButtonHUDWidget::OnMainAttackReleased);
-	}
-	SubAttackButton = Cast<UButton>(GetWidgetFromName(TEXT("SubAttack")));
-	if (nullptr != SubAttackButton)
-	{
-		SubAttackButton->OnPressed.AddDynamic(this, &URightButtonHUDWidget::OnSubAttackPressed);
-		SubAttackButton->OnReleased.AddDynamic(this, &URightButtonHUDWidget::OnSubAttackReleased);
-	}
+	MainAttackButton->OnPressed.AddDynamic(this, &URightButtonHUDWidget::OnMainAttackPressed);
+	MainAttackButton->OnReleased.AddDynamic(this, &URightButtonHUDWidget::OnMainAttackReleased);
+	
+	SubAttackButton->OnPressed.AddDynamic(this, &URightButtonHUDWidget::OnSubAttackPressed);
+	SubAttackButton->OnReleased.AddDynamic(this, &URightButtonHUDWidget::OnSubAttackReleased);
 
+	MainAttackButton->IsFocusable = false;
+	MainAttackButton->PressMethod = EButtonPressMethod::ButtonPress;
+	SubAttackButton->IsFocusable = false;
+	SubAttackButton->PressMethod = EButtonPressMethod::ButtonPress;
+	
 	MenuButton->OnClickedMenuButtonDelegate.AddUObject(this, &URightButtonHUDWidget::OnMenuButtonPressed);
 
 	MainWeaponCoolTimeAnimationPauseTime = 0.0f;

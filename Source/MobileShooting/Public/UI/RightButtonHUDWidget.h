@@ -24,10 +24,10 @@ protected:
 
 private:
 
-	UPROPERTY()
+	UPROPERTY(meta = (BindWidget))
 	class UButton* MainAttackButton;
 
-	UPROPERTY()
+	UPROPERTY(meta = (BindWidget))
 	class UButton* SubAttackButton;
 
 	UPROPERTY(meta = (BindWidget))
