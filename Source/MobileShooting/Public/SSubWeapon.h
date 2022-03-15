@@ -8,6 +8,14 @@
 
 using FOnAttackDelegate = TMulticastDelegate<void()>;
 
+UENUM(BlueprintType)
+enum class ESubWeaponState : uint8
+{
+	E_IDLE = 0 UMETA(DisplayName = "Idle"),
+	E_RELOAD UMETA(DisplayName = "Reload"),
+	E_COOLTIME UMETA(DisplayName = "CoolTime"),
+};
+
 UCLASS()
 class MOBILESHOOTING_API ASSubWeapon : public AActor
 {
@@ -39,6 +47,8 @@ protected:
 	FTimerHandle ReloadTimer;
 
 	bool bReload;
+
+	ESubWeaponState SubWeaponState;
 
 public:	
 	// Called every frame

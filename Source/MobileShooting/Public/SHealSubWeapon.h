@@ -29,6 +29,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
 	float HealAmount;
 
+	// Heal 횟수 관련 변수
 	UPROPERTY(EditDefaultsOnly, Category = "SubWeapon")
 	int32 DefaultHealCount;
 

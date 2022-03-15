@@ -24,7 +24,7 @@ void ASTurretSubWeapon::Tick(float DeltaTime)
 
 void ASTurretSubWeapon::StartSubWeaponAttack()
 {
-	if (true == bReload || CurrentSubWeaponCount <= 0)
+	if (ESubWeaponState::E_IDLE != SubWeaponState || CurrentSubWeaponCount <= 0)
 	{
 		return;
 	}
@@ -40,7 +40,7 @@ void ASTurretSubWeapon::StartSubWeaponAttack()
 
 	if (CurrentSubWeaponCount <= 0)
 	{
-		bReload = true;
+		SubWeaponState = ESubWeaponState::E_RELOAD;
 		GetWorldTimerManager().SetTimer(ReloadTimer, this, &ASSubWeapon::ReloadSubWeapon, ReloadTime, false);
 	}
 }

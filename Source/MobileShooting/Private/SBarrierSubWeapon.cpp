@@ -21,7 +21,7 @@ void ASBarrierSubWeapon::Tick(float DeltaTime)
 
 void ASBarrierSubWeapon::StartSubWeaponAttack()
 {
-	if (true == bReload)
+	if(ESubWeaponState::E_IDLE != SubWeaponState)
 	{
 		return;
 	}
@@ -36,7 +36,7 @@ void ASBarrierSubWeapon::StartSubWeaponAttack()
 
 	if (CurrentSubWeaponCount <= 0)
 	{
-		bReload = true;
+		SubWeaponState = ESubWeaponState::E_RELOAD;
 		GetWorldTimerManager().SetTimer(ReloadTimer, this, &ASSubWeapon::ReloadSubWeapon, ReloadTime, false);
 	}
 	else

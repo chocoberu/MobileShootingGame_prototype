@@ -51,7 +51,7 @@ void ASHealSubWeapon::Tick(float DeltaTime)
 
 void ASHealSubWeapon::StartSubWeaponAttack()
 {
-	if (true == bReload || CurrentSubWeaponCount <= 0)
+	if (ESubWeaponState::E_IDLE != SubWeaponState || CurrentSubWeaponCount <= 0)
 	{
 		return;
 	}
@@ -61,9 +61,8 @@ void ASHealSubWeapon::StartSubWeaponAttack()
 
 	if (CurrentSubWeaponCount <= 0)
 	{
-		bReload = true;
-		//GetWorldTimerManager().SetTimer(ReloadTimer, this, &ASSubWeapon::ReloadSubWeapon, ReloadTime, false);
-		GetWorldTimerManager().SetTimer(ReloadTimer, FTimerDelegate::CreateLambda([&]() 
+		SubWeaponState = ESubWeaponState::E_RELOAD;
+		GetWorldTimerManager().SetTimer(ReloadTimer, FTimerDelegate::CreateLambda([&]()
 			{
 				ReloadSubWeapon();
 				CurrentHealCount = DefaultHealCount;

@@ -65,6 +65,7 @@ void ASSubWeapon::ReloadSubWeapon(void)
 {
 	CurrentSubWeaponCount = DefaultSubWeaponCount;
 	bReload = false;
+	SubWeaponState = ESubWeaponState::E_IDLE;
 	GetWorldTimerManager().ClearTimer(ReloadTimer);
 
 	OnAttackDelegate.Broadcast();
