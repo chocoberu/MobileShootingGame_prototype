@@ -83,13 +83,11 @@ void ASCharacter::BeginPlay()
 	}
 
 	// Spawn a default weapon
-	// TODO : Weapon Select UI에서 선택한 Weapon, SubWeapon을 스폰하도록 수정
-
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	SpawnParams.Owner = this;
 
-	// TEST CODE
+	// GameInstance에서 Weapon, SubWeaponID를 가져와서 스폰
 	auto TestGameInstance = Cast<USGameInstance>(GetGameInstance());
 	if (nullptr == TestGameInstance)
 	{
@@ -213,7 +211,6 @@ void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Hea
 		// TODO : Character를 5초 후에 리스폰 or 시작 위치로 조정
 		
 		GetWorldTimerManager().SetTimer(RespawnTimer, this, &ASCharacter::RespawnCharacter, RespawnTime, false);
-
 	}
 }
 

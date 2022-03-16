@@ -12,7 +12,7 @@ ASWeapon::ASWeapon()
 	MeshComp->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
 	RootComponent = MeshComp;
 
-	bReloading = false;
+	//bReloading = false;
 }
 
 // Called when the game starts or when spawned
@@ -21,6 +21,7 @@ void ASWeapon::BeginPlay()
 	Super::BeginPlay();
 	
 	CurrentBulletCount = DefaultBulletCount;
+	WeaponState = EWeaponState::E_IDLE;
 
 	auto PlayerController = Cast<ASPlayerController>(GetOwner()->GetInstigatorController());
 	if (nullptr == PlayerController)
@@ -54,7 +55,7 @@ void ASWeapon::SkillAttack()
 
 void ASWeapon::ReloadWeapon(void)
 {
-	bReloading = false;
+	WeaponState = EWeaponState::E_IDLE;
 	CurrentBulletCount = DefaultBulletCount;
 	GetWorldTimerManager().ClearTimer(ReloadTimer);
 

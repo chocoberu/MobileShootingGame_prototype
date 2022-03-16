@@ -9,6 +9,14 @@
 using FOnReloadMontageDelegate = TMulticastDelegate<void()>;
 using FOnAttackDelegate = TMulticastDelegate<void()>;
 
+UENUM(BlueprintType)
+enum class EWeaponState : uint8
+{
+	E_IDLE = 0 UMETA(DisplayName = "Idle"),
+	E_RELOAD UMETA(DisplayName = "Reload"),
+	E_COOLTIME UMETA(DisplayName = "CoolTime"),
+};
+
 UCLASS()
 class MOBILESHOOTING_API ASWeapon : public AActor
 {
@@ -81,6 +89,8 @@ protected:
 	int32 CurrentBulletCount;
 
 	bool bReloading;
+
+	EWeaponState WeaponState;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	float ReloadCoolTime;

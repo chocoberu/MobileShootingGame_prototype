@@ -46,8 +46,6 @@ protected:
 
 	FTimerHandle ReloadTimer;
 
-	bool bReload;
-
 	ESubWeaponState SubWeaponState;
 
 public:	

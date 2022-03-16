@@ -19,7 +19,7 @@ void ASRifleWeapon::BeginPlay()
 
 void ASRifleWeapon::StartNormalAttack()
 {
-	if (true == bReloading)
+	if(EWeaponState::E_IDLE != WeaponState)
 	{
 		return;
 	}
@@ -64,7 +64,7 @@ void ASRifleWeapon::NormalAttack()
 	if (0 >= CurrentBulletCount)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Reloading"));
-		bReloading = true;
+		WeaponState = EWeaponState::E_RELOAD;
 		StopNormalAttack();
 
 		// 델리게이트 처리
