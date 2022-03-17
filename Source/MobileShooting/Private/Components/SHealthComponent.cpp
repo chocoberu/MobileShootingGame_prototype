@@ -59,9 +59,6 @@ void USHealthComponent::UpdateDamageText(const float Damage)
 	DamageTextWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
 	DamageTextWidgetComp->SetDamageText(Damage);
 
-	// DamageText Destroy
-	//FTimerHandle DamageTextCompDestroyTimer;
-	//GetWorld()->GetTimerManager().SetTimer(DamageTextCompDestroyTimer, FTimerDelegate::CreateUObject(DamageTextWidgetComp, &UWidgetComponent::DestroyComponent, false), 2.0f, false);
 }
 
 void USHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)

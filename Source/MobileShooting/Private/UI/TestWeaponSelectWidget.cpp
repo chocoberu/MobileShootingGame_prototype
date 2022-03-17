@@ -25,9 +25,6 @@ bool UTestWeaponSelectWidget::Initialize()
 
 void UTestWeaponSelectWidget::OnSelectButtonClicked()
 {
-	// TODO : EditableText에서 ID 값을 가져와서 SaveGame 
-	// TODO : EditableText를 인벤토리로 변경
-
 	auto TestGameInstance = Cast<USGameInstance>(GetGameInstance());
 	if (nullptr == TestGameInstance)
 	{
@@ -54,8 +51,5 @@ void UTestWeaponSelectWidget::OnSelectButtonClicked()
 
 void UTestWeaponSelectWidget::OnCancelButtonClicked()
 {
-	//WeaponID->SetText(FText());
-	//SubWeaponID->SetText(FText());
-
 	OnCancelClickedDelegate.Broadcast();
 }

@@ -25,7 +25,6 @@ void USInGameMenuButtonWidget::NativeConstruct()
 
 void USInGameMenuButtonWidget::OnMenuButtonPressed()
 {
-	// TODO : PlayerController에서 처리하도록?
-	UE_LOG(LogTemp, Log, TEXT("Menu Button OnClick"));
+	//UE_LOG(LogTemp, Log, TEXT("Menu Button OnClick"));
 	OnClickedMenuButtonDelegate.Broadcast();
 }

@@ -11,8 +11,6 @@ USGameInstance::USGameInstance()
 
 void USGameInstance::Init()
 {
-	// TODO 
-
 	if (nullptr == TestWeaponDataTable)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Weapon Data Table is nullptr"));
