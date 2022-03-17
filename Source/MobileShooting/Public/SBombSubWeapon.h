@@ -21,6 +21,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void PredictBombPath(class ASProjectile* Bomb, FVector StartLocation, FRotator Rotation, float InitialSpeed, float PredictTime);
+
 	UPROPERTY(EditAnywhere, Category = "Weapon")
 	TSubclassOf<class ASProjectile> ProjectileClass;
 

@@ -18,11 +18,39 @@ void ASBombSubWeapon::BeginPlay()
 	Super::BeginPlay();
 }
 
+void ASBombSubWeapon::PredictBombPath(ASProjectile* Bomb, FVector StartLocation, FRotator Rotation, float InitialSpeed, float PredictTime)
+{
+	FPredictProjectilePathParams PredictParams;
+	if (nullptr == Bomb)
+	{
+		PredictParams = FPredictProjectilePathParams(10.0f, StartLocation, Rotation.Vector() * InitialSpeed, PredictTime);
+		PredictParams.DrawDebugType = EDrawDebugTrace::ForOneFrame;
+	}
+	else
+	{
+		PredictParams = FPredictProjectilePathParams(Bomb->GetProjectileRadius(), StartLocation, Rotation.Vector() * InitialSpeed, PredictTime);
+		PredictParams.DrawDebugType = EDrawDebugTrace::ForDuration;
+	}
+	PredictParams.DrawDebugTime = PredictTime;
+	PredictParams.OverrideGravityZ = GetWorld()->GetGravityZ();
+	PredictParams.bTraceWithCollision = true;
+	FPredictProjectilePathResult PredictResult;
+
+	if (nullptr == Bomb)
+	{
+		UGameplayStatics::PredictProjectilePath(this, PredictParams, PredictResult);
+	}
+	else
+	{
+		UGameplayStatics::PredictProjectilePath(Bomb, PredictParams, PredictResult);
+	}
+}
+
 void ASBombSubWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// TEST CODE
+	// Charging이면 Bomb 예측 경로를 출력
 	if (true == GetWorldTimerManager().IsTimerActive(BombChargingTimer))
 	{
 		FVector StartLocation = GetOwner()->GetActorLocation() + GetOwner()->GetActorForwardVector() * 100.0f;
@@ -31,13 +59,14 @@ void ASBombSubWeapon::Tick(float DeltaTime)
 		FRotator Rot = GetOwner()->GetActorRotation();
 		Rot.Pitch += 30.0f;
 
-		FPredictProjectilePathParams PredictParams(10.0f, StartLocation, Rot.Vector() * InitialSpeed, 2.0f);
+		PredictBombPath(nullptr, StartLocation, Rot, InitialSpeed, 2.0f);
+		/*FPredictProjectilePathParams PredictParams(10.0f, StartLocation, Rot.Vector() * InitialSpeed, 2.0f);
 		PredictParams.DrawDebugType = EDrawDebugTrace::ForOneFrame;
 		PredictParams.OverrideGravityZ = GetWorld()->GetGravityZ();
 		PredictParams.bTraceWithCollision = true;
 
 		FPredictProjectilePathResult PredictResult;
-		UGameplayStatics::PredictProjectilePath(this, PredictParams, PredictResult);
+		UGameplayStatics::PredictProjectilePath(this, PredictParams, PredictResult);*/
 
 	}
 }
@@ -90,17 +119,9 @@ void ASBombSubWeapon::StopSubWeaponAttack()
 
 		SubtrackCurrentSubWeaponCount();
 
-		// TEST CODE
 		{
 			UE_LOG(LogTemp, Log, TEXT("Bomb Vector : %s"), *(Rot.Vector() * InitialSpeed).ToString());
-			FPredictProjectilePathParams PredictParams(Bomb->GetProjectileRadius(), StartLocation, Rot.Vector() * InitialSpeed, 2.0f);
-			PredictParams.DrawDebugTime = 2.0f;
-			PredictParams.DrawDebugType = EDrawDebugTrace::ForDuration;
-			PredictParams.OverrideGravityZ = GetWorld()->GetGravityZ();
-			PredictParams.bTraceWithCollision = true;
-
-			FPredictProjectilePathResult PredictResult;
-			UGameplayStatics::PredictProjectilePath(Bomb, PredictParams, PredictResult);
+			PredictBombPath(Bomb, StartLocation, Rot, InitialSpeed, 2.0f);
 		}
 	}
 	
