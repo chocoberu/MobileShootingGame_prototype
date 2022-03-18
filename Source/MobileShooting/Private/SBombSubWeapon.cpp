@@ -60,14 +60,6 @@ void ASBombSubWeapon::Tick(float DeltaTime)
 		Rot.Pitch += 30.0f;
 
 		PredictBombPath(nullptr, StartLocation, Rot, InitialSpeed, 2.0f);
-		/*FPredictProjectilePathParams PredictParams(10.0f, StartLocation, Rot.Vector() * InitialSpeed, 2.0f);
-		PredictParams.DrawDebugType = EDrawDebugTrace::ForOneFrame;
-		PredictParams.OverrideGravityZ = GetWorld()->GetGravityZ();
-		PredictParams.bTraceWithCollision = true;
-
-		FPredictProjectilePathResult PredictResult;
-		UGameplayStatics::PredictProjectilePath(this, PredictParams, PredictResult);*/
-
 	}
 }
 

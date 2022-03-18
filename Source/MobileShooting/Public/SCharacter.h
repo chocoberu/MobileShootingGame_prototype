@@ -101,6 +101,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Player")
 	FGenericTeamId TeamId;
 
+	// PlayerState
+	UPROPERTY()
+	class ASPlayerState* SPlayerState;
+
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

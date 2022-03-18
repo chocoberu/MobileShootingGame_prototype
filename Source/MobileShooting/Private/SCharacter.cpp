@@ -11,6 +11,7 @@
 #include "Components/SHealthComponent.h"
 #include "SCharacterAnimInstance.h"
 #include "SPlayerController.h"
+#include "SPlayerState.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/SHPBarWidget.h"
 #include "Components/WidgetComponent.h"
@@ -121,6 +122,8 @@ void ASCharacter::BeginPlay()
 		SubWeapon->SetOwner(this);
 		SubWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, SubWeaponAttachSocketName);
 	}
+
+	SPlayerState = Cast<ASPlayerState>(GetPlayerState());
 }
 
 void ASCharacter::PostInitializeComponents()
@@ -211,6 +214,11 @@ void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Hea
 		// TODO : Character를 5초 후에 리스폰 or 시작 위치로 조정
 		
 		GetWorldTimerManager().SetTimer(RespawnTimer, this, &ASCharacter::RespawnCharacter, RespawnTime, false);
+
+		if (nullptr != SPlayerState)
+		{
+			SPlayerState->AddDeathScore();
+		}
 	}
 }
 
