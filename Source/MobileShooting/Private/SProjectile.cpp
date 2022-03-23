@@ -14,19 +14,19 @@ ASProjectile::ASProjectile()
 
 	SphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComop"));
-	ProjectileMovemetComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComp"));
+	ProjectileMovementComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComp"));
 
 	RootComponent = SphereComp;
 	MeshComp->SetupAttachment(RootComponent);
 
 	MeshComp->SetCollisionProfileName(TEXT("Projectile"));
 	
-	ProjectileMovemetComp->SetUpdatedComponent(RootComponent);
-	ProjectileMovemetComp->InitialSpeed = 1000.0f;
-	ProjectileMovemetComp->MaxSpeed = 1000.0f;
-	ProjectileMovemetComp->bRotationFollowsVelocity = true;
-	ProjectileMovemetComp->bShouldBounce = true;
-	ProjectileMovemetComp->Bounciness = 0.3f;
+	ProjectileMovementComp->SetUpdatedComponent(RootComponent);
+	ProjectileMovementComp->InitialSpeed = 1000.0f;
+	ProjectileMovementComp->MaxSpeed = 1000.0f;
+	ProjectileMovementComp->bRotationFollowsVelocity = true;
+	ProjectileMovementComp->bShouldBounce = true;
+	ProjectileMovementComp->Bounciness = 0.3f;
 
 }
 
@@ -56,13 +56,13 @@ void ASProjectile::NotifyActorBeginOverlap(AActor* OtherActor)
 
 void ASProjectile::SetInitialSpeed(float NewSpeed)
 {
-	ProjectileMovemetComp->InitialSpeed = NewSpeed;
-	ProjectileMovemetComp->MaxSpeed = NewSpeed;
+	ProjectileMovementComp->InitialSpeed = NewSpeed;
+	ProjectileMovementComp->MaxSpeed = NewSpeed;
 }
 
 void ASProjectile::SetLaunchVelocity(FVector Velocity)
 {
-	ProjectileMovemetComp->Velocity = Velocity;
+	ProjectileMovementComp->Velocity = Velocity;
 }
 
 float ASProjectile::GetProjectileRadius() const
@@ -72,6 +72,6 @@ float ASProjectile::GetProjectileRadius() const
 
 float ASProjectile::GetProjectileGravityZ() const
 {
-	return ProjectileMovemetComp->GetGravityZ();
+	return ProjectileMovementComp->GetGravityZ();
 }
 

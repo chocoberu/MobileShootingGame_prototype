@@ -10,7 +10,12 @@
 
 ASRifleBullet::ASRifleBullet()
 {
-
+	if (nullptr == ProjectileMovementComp)
+	{
+		return;
+	}
+	ProjectileMovementComp->ProjectileGravityScale = 0.0f;
+	
 }
 
 void ASRifleBullet::BeginPlay()
@@ -23,6 +28,13 @@ void ASRifleBullet::BeginPlay()
 void ASRifleBullet::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	// TEST CODE
+	if (nullptr == ProjectileMovementComp)
+	{
+		return;
+	}
+	UE_LOG(LogTemp, Log, TEXT("Current Velocity : %f"), ProjectileMovementComp->Velocity.Size());
 }
 
 void ASRifleBullet::NotifyActorBeginOverlap(AActor* OtherActor)
@@ -56,7 +68,7 @@ void ASRifleBullet::NotifyActorBeginOverlap(AActor* OtherActor)
 	
 	//UE_LOG(LogTemp, Log, TEXT("%s overlap"), *OtherActor->GetName());
 	SphereComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	ProjectileMovemetComp->SetVelocityInLocalSpace(FVector::ZeroVector);
+	ProjectileMovementComp->SetVelocityInLocalSpace(FVector::ZeroVector);
 
 	//SetActorHiddenInGame(true);
 	Destroy();

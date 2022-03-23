@@ -45,8 +45,11 @@ protected:
 	class UStaticMeshComponent* MeshComp;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	class UProjectileMovementComponent* ProjectileMovemetComp;
+	class UProjectileMovementComponent* ProjectileMovementComp;
 
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	float AttackDamage;
+
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	float InitialProjectileSpeed;
 };
