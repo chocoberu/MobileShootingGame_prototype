@@ -124,6 +124,10 @@ void ASCharacter::BeginPlay()
 	}
 
 	SPlayerState = Cast<ASPlayerState>(GetPlayerState());
+	if (nullptr == SPlayerState)
+	{
+		UE_LOG(LogTemp, Error, TEXT("PlayerState is nullptr"));
+	}
 }
 
 void ASCharacter::PostInitializeComponents()

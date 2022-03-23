@@ -3,6 +3,7 @@
 
 #include "Components/SHealthComponent.h"
 #include "UI/SDamageTextWidgetComponent.h"
+#include "SPlayerState.h"
 
 // Sets default values for this component's properties
 USHealthComponent::USHealthComponent()
@@ -80,10 +81,21 @@ void USHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, 
 	}
 	OnHealthChanged.Broadcast(this, Health, Damage, DamageType, InstigatedBy, DamageCauser);
 
-	/*if (bIsDead == true)
+	if (bIsDead == true)
 	{
 		// TODO : Ã³¸®
-	}*/
+		auto SCharacter = Cast<APawn>(DamageCauser);
+		if (nullptr == SCharacter)
+		{
+			return;
+		}
+		auto SPlayerState = Cast<ASPlayerState>(SCharacter->GetPlayerState());
+		if (nullptr == SPlayerState)
+		{
+			return;
+		}
+		SPlayerState->AddKillScore();
+	}
 }
 
 
