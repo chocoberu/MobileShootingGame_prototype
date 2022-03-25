@@ -52,4 +52,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	float InitialProjectileSpeed;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
+	float LifeTime;
+
 };

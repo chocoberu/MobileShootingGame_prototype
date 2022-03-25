@@ -15,32 +15,26 @@ ASRifleBullet::ASRifleBullet()
 		return;
 	}
 	ProjectileMovementComp->ProjectileGravityScale = 0.0f;
-	
 }
 
 void ASRifleBullet::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetLifeSpan(3.0f);
+	SetLifeSpan(LifeTime);
 }
 
 void ASRifleBullet::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// TEST CODE
-	if (nullptr == ProjectileMovementComp)
-	{
-		return;
-	}
-	UE_LOG(LogTemp, Log, TEXT("Current Velocity : %f"), ProjectileMovementComp->Velocity.Size());
 }
 
 void ASRifleBullet::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
 
+	// TODO : StaticMesh에 부딪칠때 어떻게 처리할지
 	// HealthComp를 가진 액터에만 데미지 처리
 	const TSet<UActorComponent*> ComponentArray = OtherActor->GetComponents();
 	bool QueryResult = false;
@@ -70,6 +64,5 @@ void ASRifleBullet::NotifyActorBeginOverlap(AActor* OtherActor)
 	SphereComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	ProjectileMovementComp->SetVelocityInLocalSpace(FVector::ZeroVector);
 
-	//SetActorHiddenInGame(true);
 	Destroy();
 }
