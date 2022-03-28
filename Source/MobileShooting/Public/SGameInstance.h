@@ -24,6 +24,16 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	FString WeaponPath;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	float NormalAttackCoolTime;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	int32 MaxBulletCount;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	float ReloadCoolTime;
+
 };
 
 /**
