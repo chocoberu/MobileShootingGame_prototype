@@ -3,7 +3,9 @@
 
 #include "SRifleWeapon.h"
 #include "SProjectile.h"
+#include "SCharacter.h"
 #include "SCharacterAnimInstance.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 ASRifleWeapon::ASRifleWeapon()
 {
@@ -15,6 +17,9 @@ void ASRifleWeapon::BeginPlay()
 	Super::BeginPlay();
 
 	NormalAttackCoolTime = 60.0f / RateOfFire;
+
+	// TEST
+	SkillAttack();
 }
 
 void ASRifleWeapon::StartNormalAttack()
@@ -77,5 +82,17 @@ void ASRifleWeapon::NormalAttack()
 
 void ASRifleWeapon::SkillAttack()
 {
-	// TODO
+	// TODO 
+	ASCharacter* MyOwner = Cast<ASCharacter>(GetOwner());
+	if (nullptr == MyOwner)
+	{
+		return;
+	}
+	auto CharacterMovement = MyOwner->GetCharacterMovement();
+	if (nullptr == CharacterMovement)
+	{
+		return;
+	}
+
+	CharacterMovement->MaxWalkSpeed *= SpeedupRatio;
 }

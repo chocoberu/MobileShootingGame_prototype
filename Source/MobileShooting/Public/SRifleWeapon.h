@@ -22,6 +22,14 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+protected:
+
+	UPROPERTY(EditDefaultsOnly, Category = "Skill")
+	float SkillDuration;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Skill")
+	float SpeedupRatio;
+
 public:
 	
 	// Virtual fuunc 

@@ -76,6 +76,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Weapon")
 	float NormalAttackCoolTime;
 
+	UPROPERTY(EditAnywhere, Category = "Weapon")
+	float SkillAttackCoolTime;
+
 	/* RPM - Bullets per minute friend by weapon */
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	float RateOfFire;
@@ -98,6 +101,8 @@ protected:
 	FTimerHandle ReloadTimer;
 
 	FTimerHandle NormalAttackTimer;
+
+	FTimerHandle SkillAttackTimer;
 
 	class USCharacterAnimInstance* OwnerAnimInstance;
 
