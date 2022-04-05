@@ -31,6 +31,9 @@ private:
 	class UButton* SubAttackButton;
 
 	UPROPERTY(meta = (BindWidget))
+	class UButton* SkillAttackButton;
+
+	UPROPERTY(meta = (BindWidget))
 	class USInGameMenuButtonWidget* MenuButton;
 
 	UPROPERTY(meta = (BindWidget))
@@ -38,6 +41,9 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* SubWeaponStatus;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* SkillStatus;
 
 	UPROPERTY(meta = (BindWidget))
 	class UProgressBar* SubWeaponProgressBar;
@@ -62,6 +68,12 @@ private:
 
 	UFUNCTION()
 	void OnSubAttackReleased();
+
+	UFUNCTION()
+	void OnSkillAttackPressed();
+
+	UFUNCTION()
+	void OnSkillAttackReleased();
 
 	UFUNCTION()
 	void OnMenuButtonPressed();

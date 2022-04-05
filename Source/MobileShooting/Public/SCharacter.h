@@ -123,6 +123,10 @@ public:
 
 	virtual void StopSubAttack(void);
 
+	virtual void StartSkillAttack(void);
+
+	virtual void StopSkillAttack(void);
+
 	void RespawnCharacter(void);
 
 	void UpdateHPBarWidget(void);

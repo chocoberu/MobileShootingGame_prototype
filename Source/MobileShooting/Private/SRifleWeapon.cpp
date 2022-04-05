@@ -80,6 +80,16 @@ void ASRifleWeapon::NormalAttack()
 	}
 }
 
+void ASRifleWeapon::StartSkillAttack()
+{
+
+}
+
+void ASRifleWeapon::StopSkillAttack()
+{
+
+}
+
 void ASRifleWeapon::SkillAttack()
 {
 	// TODO 

@@ -316,6 +316,24 @@ void ASCharacter::StopSubAttack(void)
 	}
 }
 
+void ASCharacter::StartSkillAttack(void)
+{
+	// TODO
+	if (nullptr != MainWeapon && false == bDied)
+	{
+		MainWeapon->StartSkillAttack();
+	}
+}
+
+void ASCharacter::StopSkillAttack(void)
+{
+	// TODO
+	if (nullptr != MainWeapon && false == bDied)
+	{
+		MainWeapon->StopSkillAttack();
+	}
+}
+
 void ASCharacter::RespawnCharacter(void)
 {
 	HealthComp->RestoreHealth();

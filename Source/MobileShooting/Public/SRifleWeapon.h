@@ -34,11 +34,15 @@ public:
 	
 	// Virtual fuunc 
 	// 하위 클래스에서 구현
-	virtual void StartNormalAttack();
+	virtual void StartNormalAttack() override;
 
-	virtual void StopNormalAttack();
+	virtual void StopNormalAttack() override;
 
-	virtual void NormalAttack();
+	virtual void NormalAttack() override;
 
-	virtual void SkillAttack();
+	virtual void StartSkillAttack() override;
+
+	virtual void StopSkillAttack() override;
+
+	virtual void SkillAttack() override;
 };

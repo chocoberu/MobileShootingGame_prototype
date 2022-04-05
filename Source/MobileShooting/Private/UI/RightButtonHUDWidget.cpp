@@ -29,6 +29,9 @@ void URightButtonHUDWidget::NativeConstruct()
 	SubAttackButton->OnPressed.AddDynamic(this, &URightButtonHUDWidget::OnSubAttackPressed);
 	SubAttackButton->OnReleased.AddDynamic(this, &URightButtonHUDWidget::OnSubAttackReleased);
 
+	SkillAttackButton->OnPressed.AddDynamic(this, &URightButtonHUDWidget::OnSkillAttackPressed);
+	SkillAttackButton->OnReleased.AddDynamic(this, &URightButtonHUDWidget::OnSkillAttackReleased);
+
 	MainAttackButton->IsFocusable = false;
 	MainAttackButton->PressMethod = EButtonPressMethod::ButtonPress;
 	SubAttackButton->IsFocusable = false;
@@ -74,6 +77,24 @@ void URightButtonHUDWidget::OnSubAttackReleased()
 		return;
 	}
 	PlayerCharacter->StopSubAttack();
+}
+
+void URightButtonHUDWidget::OnSkillAttackPressed()
+{
+	if (nullptr == PlayerCharacter)
+	{
+		return;
+	}
+	PlayerCharacter->StartSkillAttack();
+}
+
+void URightButtonHUDWidget::OnSkillAttackReleased()
+{
+	if (nullptr == PlayerCharacter)
+	{
+		return;
+	}
+	PlayerCharacter->StopSkillAttack();
 }
 
 void URightButtonHUDWidget::OnMenuButtonPressed()

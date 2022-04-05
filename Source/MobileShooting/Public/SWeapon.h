@@ -40,6 +40,10 @@ public:
 
 	virtual void NormalAttack(void);
 
+	virtual void StartSkillAttack(void);
+
+	virtual void StopSkillAttack(void);
+
 	virtual void SkillAttack(void);
 
 	bool IsReloading(void) const { return bReloading; }
