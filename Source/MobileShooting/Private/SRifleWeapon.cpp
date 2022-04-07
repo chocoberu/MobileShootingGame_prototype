@@ -82,7 +82,18 @@ void ASRifleWeapon::NormalAttack()
 
 void ASRifleWeapon::StartSkillAttack()
 {
+	if (true == bReloadSkill)
+	{
+		return;
+	}
 
+	SkillAttack();
+	bReloadSkill = true;
+
+	GetWorldTimerManager().SetTimer(SkillAttackTimer, FTimerDelegate::CreateLambda([&]()
+		{
+			bReloadSkill = false;
+		}), SkillAttackCoolTime, false);
 }
 
 void ASRifleWeapon::StopSkillAttack()

@@ -97,6 +97,8 @@ protected:
 
 	bool bReloading;
 
+	bool bReloadSkill;
+
 	EWeaponState WeaponState;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
