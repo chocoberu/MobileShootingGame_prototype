@@ -261,7 +261,8 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("MainAttack", EInputEvent::IE_Released, this, &ASCharacter::StopMainAttack);
 	PlayerInputComponent->BindAction("SubAttack", EInputEvent::IE_Pressed, this, &ASCharacter::StartSubAttack);
 	PlayerInputComponent->BindAction("SubAttack", EInputEvent::IE_Released, this, &ASCharacter::StopSubAttack);
-
+	PlayerInputComponent->BindAction("SkillAttack", EInputEvent::IE_Pressed, this, &ASCharacter::StartSkillAttack);
+	PlayerInputComponent->BindAction("SkillAttack", EInputEvent::IE_Released, this, &ASCharacter::StopSkillAttack);
 }
 
 void ASCharacter::StartMainAttack()
@@ -318,7 +319,6 @@ void ASCharacter::StopSubAttack(void)
 
 void ASCharacter::StartSkillAttack(void)
 {
-	// TODO
 	if (nullptr != MainWeapon && false == bDied)
 	{
 		MainWeapon->StartSkillAttack();
@@ -327,7 +327,6 @@ void ASCharacter::StartSkillAttack(void)
 
 void ASCharacter::StopSkillAttack(void)
 {
-	// TODO
 	if (nullptr != MainWeapon && false == bDied)
 	{
 		MainWeapon->StopSkillAttack();

@@ -18,8 +18,6 @@ void ASRifleWeapon::BeginPlay()
 
 	NormalAttackCoolTime = 60.0f / RateOfFire;
 
-	// TEST
-	SkillAttack();
 }
 
 void ASRifleWeapon::StartNormalAttack()
@@ -82,13 +80,14 @@ void ASRifleWeapon::NormalAttack()
 
 void ASRifleWeapon::StartSkillAttack()
 {
+	// TODO : 코드 정리 필요
 	if (true == bReloadSkill)
 	{
 		return;
 	}
 
 	SkillAttack();
-	bReloadSkill = true;
+	bReloadSkill = true; // 상태를 만들지 고민중
 
 	GetWorldTimerManager().SetTimer(SkillAttackTimer, FTimerDelegate::CreateLambda([&]()
 		{

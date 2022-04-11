@@ -36,6 +36,8 @@ void URightButtonHUDWidget::NativeConstruct()
 	MainAttackButton->PressMethod = EButtonPressMethod::ButtonPress;
 	SubAttackButton->IsFocusable = false;
 	SubAttackButton->PressMethod = EButtonPressMethod::ButtonPress;
+	SkillAttackButton->IsFocusable = false;
+	SkillAttackButton->PressMethod = EButtonPressMethod::ButtonPress;
 	
 	MenuButton->OnClickedMenuButtonDelegate.AddUObject(this, &URightButtonHUDWidget::OnMenuButtonPressed);
 
