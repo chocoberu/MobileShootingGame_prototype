@@ -8,6 +8,7 @@
 
 using FOnReloadMontageDelegate = TMulticastDelegate<void()>;
 using FOnAttackDelegate = TMulticastDelegate<void()>;
+using FOnSkillAttackDelegate = TMulticastDelegate<void()>;
 
 UENUM(BlueprintType)
 enum class EWeaponState : uint8
@@ -59,6 +60,8 @@ public:
 	float GetNormalAttackCoolTime(void) const { return NormalAttackCoolTime; }
 
 	float GetReloadTime(void) const { return ReloadCoolTime; }
+
+	float GetSkillCoolTime(void) const { return SkillAttackCoolTime; }
 
 	void SetOwnerAnimInstance(class USCharacterAnimInstance* NewAnimInstance);
 
@@ -116,4 +119,5 @@ public:
 	// Delegate
 	FOnReloadMontageDelegate OnReloadMontageDelegate;
 	FOnAttackDelegate OnAttackDelegate;
+	FOnSkillAttackDelegate OnSkillAttackDelegate;
 };

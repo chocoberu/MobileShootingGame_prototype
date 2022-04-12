@@ -115,4 +115,7 @@ void ASRifleWeapon::SkillAttack()
 	}
 
 	CharacterMovement->MaxWalkSpeed *= SpeedupRatio;
+
+	// TODO : Skill Duration이 지난 후에 CoolTime Animaion이 작동하도록 수정
+	OnSkillAttackDelegate.Broadcast();
 }

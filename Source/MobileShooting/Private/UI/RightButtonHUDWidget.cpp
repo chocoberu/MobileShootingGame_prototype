@@ -118,6 +118,7 @@ void URightButtonHUDWidget::BindMainWeapon(ASWeapon* MainWeapon)
 
 	MainWeaponWeakPtr = MainWeapon;
 	MainWeaponWeakPtr->OnAttackDelegate.AddUObject(this, &URightButtonHUDWidget::SetMainWeaponText);
+	MainWeaponWeakPtr->OnSkillAttackDelegate.AddUObject(this, &URightButtonHUDWidget::PlaySkillAttackCoolTime);
 
 	SetMainWeaponText();
 }
@@ -147,6 +148,10 @@ void URightButtonHUDWidget::SetVisibleWeaponStatusAnimation(bool NewValue)
 		{
 			SubWeaponCoolTimeAnimationPauseTime = PauseAnimation(SubWeaponCoolTimeAnimation);
 		}
+		if (true == IsAnimationPlaying(SkillAttackCoolTimeAnimation))
+		{
+			SkillAttackCoolTimeAnimationPauseTime = PauseAnimation(SkillAttackCoolTimeAnimation);
+		}
 	}
 	// false 이면 Restart Widget Animation
 	else
@@ -163,8 +168,15 @@ void URightButtonHUDWidget::SetVisibleWeaponStatusAnimation(bool NewValue)
 			PlayAnimation(SubWeaponCoolTimeAnimation, SubWeaponCoolTimeAnimationPauseTime, 1, EUMGSequencePlayMode::Forward, PlaySpeed, false);
 		}
 
+		if (0.0f != SkillAttackCoolTimeAnimationPauseTime)
+		{
+			float PlaySpeed = 1.0f / MainWeaponWeakPtr->GetSkillCoolTime();
+			PlayAnimation(SkillAttackCoolTimeAnimation, SkillAttackCoolTimeAnimationPauseTime, 1, EUMGSequencePlayMode::Forward, PlaySpeed, false);
+		}
+
 		MainWeaponCoolTimeAnimationPauseTime = 0.0f;
 		SubWeaponCoolTimeAnimationPauseTime = 0.0f;
+		SkillAttackCoolTimeAnimationPauseTime = 0.0f;
 	}
 }
 
@@ -206,9 +218,21 @@ void URightButtonHUDWidget::SetSubWeaponText()
 	}
 }
 
+void URightButtonHUDWidget::PlaySkillAttackCoolTime()
+{
+	if (false == MainWeaponWeakPtr.IsValid())
+	{
+		return;
+	}
+
+	float PlaySpeed = 1.0f / MainWeaponWeakPtr->GetSkillCoolTime();
+	PlayAnimation(SkillAttackCoolTimeAnimation, 0.0f, 1, EUMGSequencePlayMode::Forward, PlaySpeed, false);
+}
+
 void URightButtonHUDWidget::StopAllWidgetAnimations()
 {
 	// StopAllAnimations()로 처리할 경우 WidgetAnimation의 Time이 0.0f로 고정되기 때문에 해당 방식으로 구현
 	SetAnimationCurrentTime(MainWeaponCoolTimeAnimation, 1.0f);
 	SetAnimationCurrentTime(SubWeaponCoolTimeAnimation, 1.0f);
+	SetAnimationCurrentTime(SkillAttackCoolTimeAnimation, 1.0f);
 }

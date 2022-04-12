@@ -57,6 +57,9 @@ private:
 	UPROPERTY(meta = (BindWidgetAnim), Transient)
 	class UWidgetAnimation* MainWeaponCoolTimeAnimation;
 
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	class UWidgetAnimation* SkillAttackCoolTimeAnimation;
+	
 	UFUNCTION()
 	void OnMainAttackPressed();
 
@@ -88,6 +91,8 @@ private:
 
 	float SubWeaponCoolTimeAnimationPauseTime;
 
+	float SkillAttackCoolTimeAnimationPauseTime;
+
 public:
 	
 	void SetHiddenMenuButton(bool NewValue);
@@ -103,6 +108,9 @@ public:
 
 	UFUNCTION()
 	void SetSubWeaponText();
+
+	UFUNCTION()
+	void PlaySkillAttackCoolTime();
 
 	void StopAllWidgetAnimations();
 };
