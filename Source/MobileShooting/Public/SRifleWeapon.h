@@ -30,6 +30,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Skill")
 	float SpeedupRatio;
 
+	FTimerHandle SkillDurationTimer;
+
 public:
 	
 	// Virtual fuunc 

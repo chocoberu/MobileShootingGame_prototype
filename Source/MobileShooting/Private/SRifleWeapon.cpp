@@ -89,15 +89,29 @@ void ASRifleWeapon::StartSkillAttack()
 	SkillAttack();
 	bReloadSkill = true; // 상태를 만들지 고민중
 
-	GetWorldTimerManager().SetTimer(SkillAttackTimer, FTimerDelegate::CreateLambda([&]()
+	GetWorldTimerManager().SetTimer(SkillDurationTimer, FTimerDelegate::CreateLambda([&]()
 		{
-			bReloadSkill = false;
-		}), SkillAttackCoolTime, false);
+			// TODO : 함수 정리 필요
+			ASCharacter* MyOwner = Cast<ASCharacter>(GetOwner());
+			if (nullptr == MyOwner)
+			{
+				return;
+			}
+			auto CharacterMovement = MyOwner->GetCharacterMovement();
+			if (nullptr == CharacterMovement)
+			{
+				return;
+			}
+
+			CharacterMovement->MaxWalkSpeed /= SpeedupRatio;
+			GetWorldTimerManager().SetTimer(SkillAttackTimer, this, &ASRifleWeapon::StopSkillAttack, SkillAttackCoolTime, false);
+			OnSkillAttackDelegate.Broadcast();
+		}), SkillDuration, false);
 }
 
 void ASRifleWeapon::StopSkillAttack()
 {
-
+	bReloadSkill = false;
 }
 
 void ASRifleWeapon::SkillAttack()
@@ -114,8 +128,13 @@ void ASRifleWeapon::SkillAttack()
 		return;
 	}
 
+	if (SpeedupRatio < 1.0f)
+	{
+		UE_LOG(LogTemp, Error, TEXT("SpeedupRatio 값이 잘못 설정되어 있습니다."));
+		return;
+	}
+
 	CharacterMovement->MaxWalkSpeed *= SpeedupRatio;
 
-	// TODO : Skill Duration이 지난 후에 CoolTime Animaion이 작동하도록 수정
-	OnSkillAttackDelegate.Broadcast();
+	// TODO : 이펙트 추가
 }
