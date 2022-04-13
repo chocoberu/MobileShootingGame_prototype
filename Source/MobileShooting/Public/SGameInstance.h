@@ -74,6 +74,8 @@ public:
 
 private:
 
+	void OnCreateSessionComplete(FName SessionName, bool Success);
+
 	UPROPERTY(EditDefaultsOnly, Category = "Data")
 	class UDataTable* TestWeaponDataTable;
 

@@ -2,6 +2,9 @@
 
 
 #include "SGameInstance.h"
+#include "OnlineSubsystem.h"
+#include "OnlineSessionSettings.h"
+#include "Interfaces/OnlineSessionInterface.h"
 
 USGameInstance::USGameInstance()
 {
@@ -21,6 +24,22 @@ void USGameInstance::Init()
 	{
 		UE_LOG(LogTemp, Error, TEXT("SubWeapon Data Table is nullptr"));
 		return;
+	}
+
+	IOnlineSubsystem* Subsystem = IOnlineSubsystem::Get();
+	if (nullptr != Subsystem)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Found OnlineSubsystem : %s"), *Subsystem->GetSubsystemName().ToString());
+
+		IOnlineSessionPtr SessionInterface = Subsystem->GetSessionInterface();
+		if (SessionInterface.IsValid())
+		{
+			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &USGameInstance::OnCreateSessionComplete);
+			
+			// TODO : Host 쪽으로 이동
+			//FOnlineSessionSettings SessionSettings;
+			//SessionInterface->CreateSession(0, TEXT("Test Session"), SessionSettings);
+		}
 	}
 }
 
@@ -63,4 +82,9 @@ void USGameInstance::GetAllWeaponData(const FString& ContextString, TArray<FWeap
 void USGameInstance::GetAllSubWeaponData(const FString& ContextString, TArray<FWeaponData*>& OutRowArray)
 {
 	TestSubWeaponDataTable->GetAllRows(ContextString, OutRowArray);
+}
+
+void USGameInstance::OnCreateSessionComplete(FName SessionName, bool Success)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Session Name %s "), *SessionName.ToString());
 }
