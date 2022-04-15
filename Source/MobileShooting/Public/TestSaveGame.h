@@ -21,8 +21,8 @@ public:
 protected:
 
 	UPROPERTY()
-	int32 MainWeaponIndex;
+	int32 MainWeaponID;
 
 	UPROPERTY()
-	int32 SubWeaponIndex;
+	int32 SubWeaponID;
 };

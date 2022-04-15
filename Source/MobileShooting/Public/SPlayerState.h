@@ -38,4 +38,9 @@ protected:
 	uint32 DeathScore;
 
 	uint32 AssistScore;
+
+	// current weapon id, subweapon id
+	int32 CurrentWeaponID;
+	
+	int32 CurrentSubweaponID;
 };

@@ -2,6 +2,7 @@
 
 
 #include "SPlayerState.h"
+#include "TestSaveGame.h"
 
 ASPlayerState::ASPlayerState()
 {
