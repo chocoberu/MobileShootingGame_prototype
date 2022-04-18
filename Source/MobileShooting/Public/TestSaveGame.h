@@ -18,11 +18,11 @@ public:
 
 	UTestSaveGame();
 
-protected:
+public:
 
 	UPROPERTY()
-	int32 MainWeaponID;
+	int32 MainWeaponId;
 
 	UPROPERTY()
-	int32 SubWeaponID;
+	int32 SubWeaponId;
 };

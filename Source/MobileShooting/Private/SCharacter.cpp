@@ -8,6 +8,7 @@
 #include "SWeapon.h"
 #include "SSubWeapon.h"
 #include "SGameInstance.h"
+#include "TestSaveGame.h"
 #include "Components/SHealthComponent.h"
 #include "SCharacterAnimInstance.h"
 #include "SPlayerController.h"
@@ -88,15 +89,31 @@ void ASCharacter::BeginPlay()
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	SpawnParams.Owner = this;
 
-	// GameInstance에서 Weapon, SubWeaponID를 가져와서 스폰
+	// SavaGame에서 weapon id 가져와서 로드,
+	// TODO : PlayerState에서 처리하도록 변경 필요
 	auto TestGameInstance = Cast<USGameInstance>(GetGameInstance());
 	if (nullptr == TestGameInstance)
 	{
 		UE_LOG(LogTemp, Error, TEXT("GameInstance is nullptr"));
 		return;
 	}
-	FSoftClassPath WeaponClassPath(TestGameInstance->GetWeaponPath(TestGameInstance->GetCurrentWeaponID()) + TEXT("_C"));
-	FSoftClassPath SubWeaponClassPath(TestGameInstance->GetSubWeaponPath(TestGameInstance->GetCurrentSubWeaponID()) + TEXT("_C"));
+
+	auto TestSaveGame = Cast<UTestSaveGame>(UGameplayStatics::LoadGameFromSlot(TEXT("Test"), 0));
+	int32 CurrentWeaponId = 0;
+	int32 CurrentSubWeaponId = 1000;
+	if (nullptr == TestSaveGame)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed load save game data"));
+	}
+	else
+	{
+		CurrentWeaponId = TestSaveGame->MainWeaponId;
+		CurrentSubWeaponId = TestSaveGame->SubWeaponId;
+		UE_LOG(LogTemp, Log, TEXT("Current Weapon : %d Current SubWeapon : %d"), CurrentWeaponId, CurrentSubWeaponId);
+	}
+
+	FSoftClassPath WeaponClassPath(TestGameInstance->GetWeaponPath(CurrentWeaponId) + TEXT("_C"));
+	FSoftClassPath SubWeaponClassPath(TestGameInstance->GetSubWeaponPath(CurrentSubWeaponId) + TEXT("_C"));
 	auto TestWeaponClass = WeaponClassPath.TryLoadClass<ASWeapon>();
 	auto TestSubWeaponClass = SubWeaponClassPath.TryLoadClass<ASSubWeapon>();
 

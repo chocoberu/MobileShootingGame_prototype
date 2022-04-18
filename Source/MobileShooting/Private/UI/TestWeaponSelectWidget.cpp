@@ -7,6 +7,7 @@
 #include "Components/Button.h"
 #include "Components/EditableText.h"
 #include "SGameInstance.h"
+#include "TestSaveGame.h"
 #include "Kismet/GameplayStatics.h"
 
 bool UTestWeaponSelectWidget::Initialize()
@@ -44,10 +45,20 @@ void UTestWeaponSelectWidget::OnSelectButtonClicked()
 	}
 	
 	// 현재 선택한 weapon id, subweapon id를 gameinstance에 저장 -> SaveGame으로 PlayerState에 저장 필요
-	TestGameInstance->SetCurrentWeaponID(WeaponId);
-	TestGameInstance->SetCurrentSubWeaponID(SubWeaponId);
+	UTestSaveGame* NewPlayerData = NewObject<UTestSaveGame>();
+	NewPlayerData->MainWeaponId = WeaponId;
+	NewPlayerData->SubWeaponId = SubWeaponId;
 
-	UGameplayStatics::OpenLevel(GetWorld(), FName(*TestGameInstance->GetCurrentSelectLevel()));
+	if (true == UGameplayStatics::SaveGameToSlot(NewPlayerData, TEXT("Test"), 0))
+	{
+		UGameplayStatics::OpenLevel(GetWorld(), FName(*TestGameInstance->GetCurrentSelectLevel()));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Save Error"));
+	}
+	//TestGameInstance->SetCurrentWeaponID(WeaponId);
+	//TestGameInstance->SetCurrentSubWeaponID(SubWeaponId);
 }
 
 void UTestWeaponSelectWidget::OnCancelButtonClicked()
