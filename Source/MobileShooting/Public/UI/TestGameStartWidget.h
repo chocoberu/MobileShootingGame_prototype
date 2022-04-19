@@ -25,6 +25,9 @@ public:
 	void OnClickedPraticeModeButton();
 
 	UFUNCTION()
+	void OnClickedMultiPlayButton();
+
+	UFUNCTION()
 	void OnClickedExitButton();
 
 	UFUNCTION()
@@ -37,6 +40,9 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	class UButton* PraticeModeButton;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* MultiPlayButton;
 
 	UPROPERTY(meta = (BindWidget))
 	class UButton* ExitButton;

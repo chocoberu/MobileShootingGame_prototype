@@ -44,7 +44,7 @@ void UTestWeaponSelectWidget::OnSelectButtonClicked()
 		SubWeaponId = 1000;
 	}
 	
-	// 현재 선택한 weapon id, subweapon id를 gameinstance에 저장 -> SaveGame으로 PlayerState에 저장 필요
+	// 현재 선택한 weapon id, subweapon id를 SaveGame으로 저장
 	UTestSaveGame* NewPlayerData = NewObject<UTestSaveGame>();
 	NewPlayerData->MainWeaponId = WeaponId;
 	NewPlayerData->SubWeaponId = SubWeaponId;

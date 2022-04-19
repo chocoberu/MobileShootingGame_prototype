@@ -17,6 +17,7 @@ bool UTestGameStartWidget::Initialize()
 
 	SinglePlayButton->OnClicked.AddDynamic(this, &UTestGameStartWidget::OnClickedSinglePlayButton);
 	PraticeModeButton->OnClicked.AddDynamic(this, &UTestGameStartWidget::OnClickedPraticeModeButton);
+	MultiPlayButton->OnClicked.AddDynamic(this, &UTestGameStartWidget::OnClickedMultiPlayButton);
 	ExitButton->OnClicked.AddDynamic(this, &UTestGameStartWidget::OnClickedExitButton);
 
 	//WeaponSelect->SetParentWidget(this);
@@ -47,6 +48,18 @@ void UTestGameStartWidget::OnClickedPraticeModeButton()
 	}
 
 	TestGameInstance->SetCurrentSelectLevel(TEXT("PraticeLevel"));
+	StartWidgetSwitcher->SetActiveWidgetIndex(1);
+}
+
+void UTestGameStartWidget::OnClickedMultiPlayButton()
+{
+	auto TestGameInstance = Cast<USGameInstance>(GetGameInstance());
+	if (nullptr == TestGameInstance)
+	{
+		return;
+	}
+
+	TestGameInstance->SetCurrentSelectLevel(TEXT("Lobby"));
 	StartWidgetSwitcher->SetActiveWidgetIndex(1);
 }
 
