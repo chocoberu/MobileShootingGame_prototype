@@ -33,6 +33,8 @@ public:
 	UFUNCTION()
 	void SetWidgetSwitcher(const int32 Index = 0);
 
+	FString GetSelectedLevel() const;
+
 protected:
 
 	UPROPERTY(meta = (BindWidget))
@@ -52,5 +54,8 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	class UTestWeaponSelectWidget* WeaponSelect;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Levels", meta = (AllowPrivateAccess = "true"))
+	FString SelectedLevelName;
 
 };

@@ -2,6 +2,7 @@
 
 
 #include "UI/TestWeaponSelectWidget.h"
+#include "UI/TestGameStartWidget.h"
 #include "UI/TestSelectWeaponInventoryWidget.h"
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
@@ -22,6 +23,17 @@ bool UTestWeaponSelectWidget::Initialize()
 
 	UE_LOG(LogTemp, Log, TEXT("UTestWeaponSelectWidget Initialize"));
 	return true;
+}
+
+void UTestWeaponSelectWidget::SetParentWidget(class UTestGameStartWidget* NewParentWidget)
+{
+	if (nullptr == NewParentWidget)
+	{
+		UE_LOG(LogTemp, Error, TEXT("ParentWidget is nullptr"));
+		return;
+	}
+
+	ParentWidget = NewParentWidget;
 }
 
 void UTestWeaponSelectWidget::OnSelectButtonClicked()
@@ -51,7 +63,8 @@ void UTestWeaponSelectWidget::OnSelectButtonClicked()
 
 	if (true == UGameplayStatics::SaveGameToSlot(NewPlayerData, TEXT("Test"), 0))
 	{
-		UGameplayStatics::OpenLevel(GetWorld(), FName(*TestGameInstance->GetCurrentSelectLevel()));
+		//UGameplayStatics::OpenLevel(GetWorld(), FName(*TestGameInstance->GetCurrentSelectLevel()));
+		UGameplayStatics::OpenLevel(GetWorld(), FName(ParentWidget->GetSelectedLevel()));
 	}
 	else
 	{

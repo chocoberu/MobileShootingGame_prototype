@@ -25,6 +25,8 @@ public:
 	UFUNCTION()
 	void OnCancelButtonClicked();
 
+	void SetParentWidget(class UTestGameStartWidget* NewParentWidget);
+
 	FOnCancelClickedDelegate OnCancelClickedDelegate;
 	
 protected:
@@ -40,5 +42,7 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	class UTestSelectWeaponInventoryWidget* SubWeaponInventory;
+
+	class UTestGameStartWidget* ParentWidget;
 
 };
