@@ -56,18 +56,6 @@ public:
 	
 	FString GetSubWeaponPath(const int32 SubWeaponID);
 
-	void SetCurrentSelectLevel(const FString SelectLevel);
-
-	FString GetCurrentSelectLevel() { return CurrentSelectLevel; }
-
-	void SetCurrentWeaponID(const int32 WeaponID) { CurrentWeaponID = WeaponID; }
-
-	void SetCurrentSubWeaponID(const int32 WeaponID) { CurrentSubWeaponID = WeaponID; }
-
-	int32 GetCurrentWeaponID() { return CurrentWeaponID; }
-
-	int32 GetCurrentSubWeaponID() { return CurrentSubWeaponID; }
-
 	void GetAllWeaponData(const FString& ContextString, TArray<FWeaponData*>& OutRowArray);
 
 	void GetAllSubWeaponData(const FString& ContextString, TArray<FWeaponData*>& OutRowArray);
@@ -82,10 +70,4 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Data")
 	class UDataTable* TestSubWeaponDataTable;
 
-	// TEST CODE
-	int32 CurrentWeaponID;
-
-	int32 CurrentSubWeaponID;
-
-	FString CurrentSelectLevel;
 };

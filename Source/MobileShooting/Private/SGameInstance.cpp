@@ -8,8 +8,7 @@
 
 USGameInstance::USGameInstance()
 {
-	CurrentWeaponID = 0;
-	CurrentSubWeaponID = 1000;
+
 }
 
 void USGameInstance::Init()
@@ -67,11 +66,6 @@ FString USGameInstance::GetSubWeaponPath(const int32 SubWeaponID)
 	{
 		return FString();
 	}
-}
-
-void USGameInstance::SetCurrentSelectLevel(const FString SelectLevel)
-{
-	CurrentSelectLevel = SelectLevel;
 }
 
 void USGameInstance::GetAllWeaponData(const FString& ContextString, TArray<FWeaponData*>& OutRowArray)
