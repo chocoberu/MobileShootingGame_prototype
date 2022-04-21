@@ -82,3 +82,14 @@ void USGameInstance::OnCreateSessionComplete(FName SessionName, bool Success)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Session Name %s "), *SessionName.ToString());
 }
+
+void USGameInstance::Host()
+{
+	auto Engine = GetEngine();
+	if (nullptr == Engine)
+	{
+		return;
+	}
+
+	Engine->AddOnScreenDebugMessage(0, 3.0f, FColor::Green, TEXT("Start Hosting"));
+}

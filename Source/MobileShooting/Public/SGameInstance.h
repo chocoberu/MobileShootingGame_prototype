@@ -60,6 +60,9 @@ public:
 
 	void GetAllSubWeaponData(const FString& ContextString, TArray<FWeaponData*>& OutRowArray);
 
+	UFUNCTION(Exec)
+	void Host();
+
 private:
 
 	void OnCreateSessionComplete(FName SessionName, bool Success);
