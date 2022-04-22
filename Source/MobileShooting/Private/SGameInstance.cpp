@@ -4,7 +4,8 @@
 #include "SGameInstance.h"
 #include "OnlineSubsystem.h"
 #include "OnlineSessionSettings.h"
-#include "Interfaces/OnlineSessionInterface.h"
+
+const static FName SESSION_NAME = TEXT("Test Session");
 
 USGameInstance::USGameInstance()
 {
@@ -30,14 +31,19 @@ void USGameInstance::Init()
 	{
 		UE_LOG(LogTemp, Log, TEXT("Found OnlineSubsystem : %s"), *Subsystem->GetSubsystemName().ToString());
 
-		IOnlineSessionPtr SessionInterface = Subsystem->GetSessionInterface();
+		SessionInterface = Subsystem->GetSessionInterface();
 		if (SessionInterface.IsValid())
 		{
 			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &USGameInstance::OnCreateSessionComplete);
-			
-			// TODO : Host 쪽으로 이동
-			//FOnlineSessionSettings SessionSettings;
-			//SessionInterface->CreateSession(0, TEXT("Test Session"), SessionSettings);
+			SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &USGameInstance::OnDestroySessionComplete);
+			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &USGameInstance::OnFindSessionComplete);
+
+			SessionSearch = MakeShareable(new FOnlineSessionSearch());
+			if (true == SessionSearch.IsValid())
+			{
+				UE_LOG(LogTemp, Log, TEXT("Starting Find Sessions"));
+				SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
+			}
 		}
 	}
 }
@@ -80,16 +86,72 @@ void USGameInstance::GetAllSubWeaponData(const FString& ContextString, TArray<FW
 
 void USGameInstance::OnCreateSessionComplete(FName SessionName, bool Success)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Session Name %s "), *SessionName.ToString());
+	if (true == Success)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Session Name : %s Created"), *SessionName.ToString());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to create Session Name : %s"), *SessionName.ToString());
+	}
 }
 
-void USGameInstance::Host()
+void USGameInstance::OnDestroySessionComplete(FName SessionName, bool Success)
 {
+	if (true == Success)
+	{
+		CreateSession();
+	}
+}
+
+void USGameInstance::OnFindSessionComplete(bool Success)
+{
+	if (true == Success && true == SessionInterface.IsValid())
+	{
+		UE_LOG(LogTemp, Log, TEXT("Finish Find Sessions"));
+		for (const auto& SearchResult : SessionSearch.Get()->SearchResults)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Found Session Name : %s"), *SearchResult.GetSessionIdStr());
+		}
+	}
+}
+
+void USGameInstance::CreateSession()
+{
+	if (false == SessionInterface.IsValid())
+	{
+		return;
+	}
+
+	FOnlineSessionSettings SessionSettings;
+	SessionSettings.bShouldAdvertise = true;
+	SessionSettings.NumPublicConnections = 4;
+	
+	SessionInterface->CreateSession(0, SESSION_NAME, SessionSettings);
+
+	// Debug 표시
 	auto Engine = GetEngine();
 	if (nullptr == Engine)
 	{
 		return;
 	}
-
 	Engine->AddOnScreenDebugMessage(0, 3.0f, FColor::Green, TEXT("Start Hosting"));
+}
+
+void USGameInstance::Host()
+{
+	if (false == SessionInterface.IsValid())
+	{
+		return;
+	}
+
+	auto ExistSession = SessionInterface->GetNamedSession(SESSION_NAME);
+	if (nullptr == ExistSession)
+	{
+		CreateSession();
+	}
+	else
+	{
+		SessionInterface->DestroySession(SESSION_NAME);
+	}
 }

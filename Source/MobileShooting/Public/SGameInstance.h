@@ -6,7 +6,9 @@
 #include "Engine/GameInstance.h"
 #include "Engine/DataTable.h"
 #include "Engine/StreamableManager.h"
+#include "Interfaces/OnlineSessionInterface.h"
 #include "SGameInstance.generated.h"
+
 
 
 USTRUCT(BlueprintType)
@@ -66,6 +68,10 @@ public:
 private:
 
 	void OnCreateSessionComplete(FName SessionName, bool Success);
+	void OnDestroySessionComplete(FName SessionName, bool Success);
+	void OnFindSessionComplete(bool Success);
+
+	void CreateSession();
 
 	UPROPERTY(EditDefaultsOnly, Category = "Data")
 	class UDataTable* TestWeaponDataTable;
@@ -73,4 +79,7 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Data")
 	class UDataTable* TestSubWeaponDataTable;
 
+	IOnlineSessionPtr SessionInterface;
+
+	TSharedPtr<class FOnlineSessionSearch> SessionSearch;
 };
