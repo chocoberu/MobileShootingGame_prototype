@@ -13,6 +13,9 @@ void ASGameStartUIPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
+	bShowMouseCursor = true;
+	SetVirtualJoystickVisibility(false);
+
 	if (false == IsLocalController())
 	{
 		return;
@@ -31,7 +34,4 @@ void ASGameStartUIPlayerController::BeginPlay()
 	}
 
 	GameStartUI->AddToViewport();
-	bShowMouseCursor = true;
-
-	SetVirtualJoystickVisibility(false);
 }

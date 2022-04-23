@@ -65,6 +65,9 @@ public:
 	UFUNCTION(Exec)
 	void Host();
 
+	// TODO : 필요하다면 매개변수를 통해 QueryParam 수정하도록
+	void FindSession();
+
 private:
 
 	void OnCreateSessionComplete(FName SessionName, bool Success);

@@ -23,5 +23,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<class UUserWidget> GameStartUIClass;
 
+	UPROPERTY()
 	class UUserWidget* GameStartUI;
 };

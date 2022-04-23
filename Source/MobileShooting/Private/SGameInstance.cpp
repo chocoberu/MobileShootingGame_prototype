@@ -39,11 +39,9 @@ void USGameInstance::Init()
 			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &USGameInstance::OnFindSessionComplete);
 
 			SessionSearch = MakeShareable(new FOnlineSessionSearch());
-			if (true == SessionSearch.IsValid())
-			{
-				UE_LOG(LogTemp, Log, TEXT("Starting Find Sessions"));
-				SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
-			}
+			
+			// TODO : Init()에서 제거하고 Lobby 씬에 입장할 때 FindSession() 함수를 만들어서 호출하는 방식으로 변경
+			//FindSession();
 		}
 	}
 }
@@ -136,6 +134,15 @@ void USGameInstance::CreateSession()
 		return;
 	}
 	Engine->AddOnScreenDebugMessage(0, 3.0f, FColor::Green, TEXT("Start Hosting"));
+}
+
+void USGameInstance::FindSession()
+{
+	if (true == SessionSearch.IsValid() && true == SessionInterface.IsValid())
+	{
+		UE_LOG(LogTemp, Log, TEXT("Starting Find Sessions"));
+		SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
+	}
 }
 
 void USGameInstance::Host()

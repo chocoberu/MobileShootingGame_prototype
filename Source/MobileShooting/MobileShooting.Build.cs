@@ -9,6 +9,7 @@ public class MobileShooting : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay",
-			"UMG", "AIModule", "GameplayTasks", "Slate", "SlateCore","NavigationSystem", "OnlineSubsystem", "OnlineSubsystemUtils" });
+			"UMG", "AIModule", "GameplayTasks", "Slate", "SlateCore","NavigationSystem", "OnlineSubsystem", "OnlineSubsystemUtils",
+			"OnlineSubsystemEOS"});
 	}
 }
