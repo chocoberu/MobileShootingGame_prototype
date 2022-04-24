@@ -26,6 +26,11 @@ public:
 	UFUNCTION()
 	void JoinSession();
 
+	UFUNCTION()
+	void FindSession();
+
+	void SetSessionList(TArray<FString> SessionNames);
+
 protected:
 
 	UPROPERTY(meta = (BindWidget))
@@ -39,7 +44,15 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	class UScrollBox* SessionScrollBox;
+	
+	UPROPERTY(meta = (BindWidget))
+	class UButton* SessionRefreshButton;
+
+	UPROPERTY(meta = (BindWidget))
+	class UCircularThrobber* SessionSearchThrobber;
 
 	UPROPERTY(EditAnywhere, Category = "Session")
 	TSubclassOf <class UTestSessionRow> SessionRowClass;
+
+	class USGameInstance* SGameInstance;
 };

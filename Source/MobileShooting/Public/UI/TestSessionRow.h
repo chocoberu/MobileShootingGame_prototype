@@ -14,4 +14,14 @@ class MOBILESHOOTING_API UTestSessionRow : public UUserWidget
 {
 	GENERATED_BODY()
 	
+public:
+
+	void SetSessionName(FText NewSessionName);
+
+protected:
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* SessionName;
+
+
 };

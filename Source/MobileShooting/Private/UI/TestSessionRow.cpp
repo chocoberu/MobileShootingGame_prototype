@@ -3,3 +3,7 @@
 
 #include "UI/TestSessionRow.h"
 
+void UTestSessionRow::SetSessionName(FText NewSessionName)
+{
+
+}
