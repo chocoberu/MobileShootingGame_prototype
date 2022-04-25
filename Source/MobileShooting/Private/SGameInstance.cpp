@@ -37,11 +37,9 @@ void USGameInstance::Init()
 			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &USGameInstance::OnCreateSessionComplete);
 			SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &USGameInstance::OnDestroySessionComplete);
 			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &USGameInstance::OnFindSessionComplete);
+			SessionInterface->OnJoinSessionCompleteDelegates.AddUObject(this, &USGameInstance::OnJoinSessionComplete);
 
 			SessionSearch = MakeShareable(new FOnlineSessionSearch());
-			
-			// TODO : Init()에서 제거하고 Lobby 씬에 입장할 때 FindSession() 함수를 만들어서 호출하는 방식으로 변경
-			//FindSession();
 		}
 	}
 }
@@ -84,14 +82,28 @@ void USGameInstance::GetAllSubWeaponData(const FString& ContextString, TArray<FW
 
 void USGameInstance::OnCreateSessionComplete(FName SessionName, bool Success)
 {
-	if (true == Success)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Session Name : %s Created"), *SessionName.ToString());
-	}
-	else
+	if (false == Success)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Failed to create Session Name : %s"), *SessionName.ToString());
+		return;
 	}
+	UE_LOG(LogTemp, Warning, TEXT("Session Name : %s Created"), *SessionName.ToString());
+
+	UEngine* Engine = GetEngine();
+	if (nullptr == Engine)
+	{
+		return;
+	}
+
+	Engine->AddOnScreenDebugMessage(0, 5.0f, FColor::Yellow, TEXT("Host Session"));
+
+	UWorld* World = GetWorld();
+	if (nullptr == World)
+	{
+		return;
+	}
+
+	World->ServerTravel("/Game/Levels/SessionLevel?listen");
 }
 
 void USGameInstance::OnDestroySessionComplete(FName SessionName, bool Success)
@@ -107,11 +119,46 @@ void USGameInstance::OnFindSessionComplete(bool Success)
 	if (true == Success && true == SessionInterface.IsValid())
 	{
 		UE_LOG(LogTemp, Log, TEXT("Finish Find Sessions"));
+		SessionNameList.Empty();
 		for (const auto& SearchResult : SessionSearch.Get()->SearchResults)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Found Session Name : %s"), *SearchResult.GetSessionIdStr());
+			SessionNameList.Add(SearchResult.GetSessionIdStr());
 		}
+
+		OnFindSessionCompleteDelegate.Broadcast();
 	}
+}
+
+void USGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result)
+{
+	if (false == SessionInterface.IsValid())
+	{
+		return;
+	}
+
+	auto Engine = GetEngine();
+	if (nullptr == Engine)
+	{
+		return;
+	}
+	FString Address;
+	if (false == SessionInterface->GetResolvedConnectString(SessionName, Address))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Failed to get connect string"));
+		return;
+	}
+
+	Engine->AddOnScreenDebugMessage(0, 5.0f, FColor::Yellow, FString::Printf(TEXT("Join to %s"), *Address));
+
+	APlayerController* PlayerController = GetFirstLocalPlayerController();
+	if (nullptr == PlayerController)
+	{
+		UE_LOG(LogTemp, Log, TEXT("PlayerController is nullptr"));
+		return;
+	}
+
+	PlayerController->ClientTravel(Address, ETravelType::TRAVEL_Absolute);
 }
 
 void USGameInstance::CreateSession()
@@ -124,6 +171,8 @@ void USGameInstance::CreateSession()
 	FOnlineSessionSettings SessionSettings;
 	SessionSettings.bShouldAdvertise = true;
 	SessionSettings.NumPublicConnections = 4;
+	//SessionSettings.bUsesPresence = true;
+	SessionSettings.bIsLANMatch = true; // TEST
 	
 	SessionInterface->CreateSession(0, SESSION_NAME, SessionSettings);
 
@@ -161,4 +210,14 @@ void USGameInstance::Host()
 	{
 		SessionInterface->DestroySession(SESSION_NAME);
 	}
+}
+
+void USGameInstance::Join(uint32 SessionIndex)
+{
+	if (false == SessionInterface.IsValid() || false == SessionSearch.IsValid())
+	{
+		return;
+	}
+
+	SessionInterface->JoinSession(0, SESSION_NAME, SessionSearch->SearchResults[SessionIndex]);
 }

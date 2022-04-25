@@ -16,12 +16,27 @@ class MOBILESHOOTING_API UTestSessionRow : public UUserWidget
 	
 public:
 
+	virtual bool Initialize() override;
+
+	void SetParentWidget(class UTestLobbyWidget* Parent, uint32 Index);
+
 	void SetSessionName(FText NewSessionName);
+
+	uint32 GetSessionIndex() const { return SessionIndex; }
 
 protected:
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* SessionName;
 
+	UPROPERTY(meta = (BindWidget))
+	class UButton* SessionRowButton;
 
+	UPROPERTY()
+	class UTestLobbyWidget* ParentWidget;
+
+	uint32 SessionIndex;
+
+	UFUNCTION() 
+	void SetSelectedSessionIndex();
 };

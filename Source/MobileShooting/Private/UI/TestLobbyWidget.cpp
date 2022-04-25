@@ -31,6 +31,8 @@ bool UTestLobbyWidget::Initialize()
 	}
 	SessionSearchThrobber->SetVisibility(ESlateVisibility::Hidden);
 
+	SGameInstance->OnFindSessionCompleteDelegate.AddUObject(this, &UTestLobbyWidget::OnFindSessionCompleted);
+	
 	return Result;
 }
 
@@ -41,6 +43,8 @@ void UTestLobbyWidget::CreateSession()
 	{
 		return;
 	}
+
+	SGameInstance->Host();
 }
 
 void UTestLobbyWidget::JoinSession()
@@ -49,11 +53,18 @@ void UTestLobbyWidget::JoinSession()
 	{
 		return;
 	}
+
+	if (false == SelectedSessionIndex.IsSet())
+	{
+		return;
+	}
+
+	SGameInstance->Join(SelectedSessionIndex.GetValue());
 }
 
 void UTestLobbyWidget::FindSession()
 {
-	if (nullptr == SGameInstance)
+	if (nullptr == SGameInstance || true == bFindSession)
 	{
 		return;
 	}
@@ -61,13 +72,26 @@ void UTestLobbyWidget::FindSession()
 	SGameInstance->FindSession();
 	SessionSearchThrobber->SetVisibility(ESlateVisibility::Visible);
 
-	// TODO : 콜백함수 추가 필요, 콜백 함수에서 SetSessionList 호출 필요
+	bFindSession = true;
+}
+
+void UTestLobbyWidget::OnFindSessionCompleted()
+{
+	if (nullptr == SGameInstance)
+	{
+		return;
+	}
+
+	SetSessionList(SGameInstance->GetSessionNameList());
+	SessionSearchThrobber->SetVisibility(ESlateVisibility::Hidden);
+	bFindSession = false;
 }
 
 void UTestLobbyWidget::SetSessionList(TArray<FString> SessionNames)
 {
 	SessionScrollBox->ClearChildren();
 
+	uint32 Index = 0;
 	for (const FString& SessionName : SessionNames)
 	{
 		UTestSessionRow* SessionRow = CreateWidget<UTestSessionRow>(this, SessionRowClass);
@@ -76,7 +100,14 @@ void UTestLobbyWidget::SetSessionList(TArray<FString> SessionNames)
 			return;
 		}
 
+		SessionRow->SetParentWidget(this, Index++);
 		SessionRow->SetSessionName(FText::FromString(SessionName));
+		
 		SessionScrollBox->AddChild(SessionRow);
 	}
+}
+
+void UTestLobbyWidget::SelectSessionIndex(uint32 Index)
+{
+	SelectedSessionIndex = Index;
 }

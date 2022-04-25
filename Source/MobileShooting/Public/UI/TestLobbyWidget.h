@@ -26,10 +26,12 @@ public:
 	UFUNCTION()
 	void JoinSession();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void FindSession();
 
 	void SetSessionList(TArray<FString> SessionNames);
+
+	void SelectSessionIndex(uint32 Index);
 
 protected:
 
@@ -55,4 +57,10 @@ protected:
 	TSubclassOf <class UTestSessionRow> SessionRowClass;
 
 	class USGameInstance* SGameInstance;
+
+	TOptional<uint32> SelectedSessionIndex;
+
+	void OnFindSessionCompleted();
+
+	bool bFindSession;
 };

@@ -9,7 +9,7 @@
 #include "Interfaces/OnlineSessionInterface.h"
 #include "SGameInstance.generated.h"
 
-
+using FOnFindSessionCompleteDelegate = TMulticastDelegate<void()>;
 
 USTRUCT(BlueprintType)
 struct FWeaponData : public FTableRowBase
@@ -65,14 +65,22 @@ public:
 	UFUNCTION(Exec)
 	void Host();
 
+	UFUNCTION(Exec)
+	void Join(uint32 SessionIndex);
+
 	// TODO : 필요하다면 매개변수를 통해 QueryParam 수정하도록
 	void FindSession();
+
+	TArray<FString> GetSessionNameList() const { return SessionNameList; }
+
+	FOnFindSessionCompleteDelegate OnFindSessionCompleteDelegate;
 
 private:
 
 	void OnCreateSessionComplete(FName SessionName, bool Success);
 	void OnDestroySessionComplete(FName SessionName, bool Success);
 	void OnFindSessionComplete(bool Success);
+	void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
 
 	void CreateSession();
 
@@ -85,4 +93,6 @@ private:
 	IOnlineSessionPtr SessionInterface;
 
 	TSharedPtr<class FOnlineSessionSearch> SessionSearch;
+
+	TArray<FString> SessionNameList;
 };
