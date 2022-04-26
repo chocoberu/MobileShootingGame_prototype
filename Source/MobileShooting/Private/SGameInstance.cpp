@@ -108,6 +108,7 @@ void USGameInstance::OnCreateSessionComplete(FName SessionName, bool Success)
 
 void USGameInstance::OnDestroySessionComplete(FName SessionName, bool Success)
 {
+	// TODO : 게임이 끝난 후 세션 destroy 처리하도록 수정해야함
 	if (true == Success)
 	{
 		CreateSession();
