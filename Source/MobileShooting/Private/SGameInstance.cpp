@@ -104,6 +104,7 @@ void USGameInstance::OnCreateSessionComplete(FName SessionName, bool Success)
 	}
 
 	World->ServerTravel("/Game/Levels/SessionLevel?listen");
+	//World->ServerTravel("/Game/Levels/TestBossLevel?listen");
 }
 
 void USGameInstance::OnDestroySessionComplete(FName SessionName, bool Success)

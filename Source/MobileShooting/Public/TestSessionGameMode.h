@@ -19,4 +19,8 @@ public:
 	ATestSessionGameMode();
 
 	virtual void PostLogin(APlayerController* NewPlayer) override;
+
+protected:
+
+	TArray<class APlayerController*> PlayerControllerList;
 };
