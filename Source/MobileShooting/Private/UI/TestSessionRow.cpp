@@ -10,7 +10,9 @@ bool UTestSessionRow::Initialize()
 {
 	bool Result = Super::Initialize();
 
-	SessionRowButton->OnClicked.AddDynamic(this, &UTestSessionRow::SetSelectedSessionIndex);
+	SessionRowButton->OnClicked.AddDynamic(this, &UTestSessionRow::OnClickedRowButton);
+	SessionRowButton->OnHovered.AddDynamic(this, &UTestSessionRow::OnHoveredRowButton);
+	SessionRowButton->OnUnhovered.AddDynamic(this, &UTestSessionRow::OnUnHoveredRowButton);
 
 	return Result;
 }
@@ -34,4 +36,39 @@ void UTestSessionRow::SetSelectedSessionIndex()
 	}
 
 	ParentWidget->SelectSessionIndex(SessionIndex);
+}
+
+void UTestSessionRow::OnClickedRowButton()
+{
+	SetSelectedSessionIndex();
+	SetButtonStatus(true);
+}
+
+void UTestSessionRow::OnHoveredRowButton()
+{
+	SessionName->SetColorAndOpacity(FLinearColor::Yellow);
+}
+
+void UTestSessionRow::OnUnHoveredRowButton()
+{
+	SetSessionNameColor(bSelected);
+}
+
+void UTestSessionRow::SetButtonStatus(bool NewFlag)
+{
+	bSelected = NewFlag;
+
+	SetSessionNameColor(bSelected);
+}
+
+void UTestSessionRow::SetSessionNameColor(bool NewFlag)
+{
+	if (true == bSelected)
+	{
+		SessionName->SetColorAndOpacity(FLinearColor::Green);
+	}
+	else
+	{
+		SessionName->SetColorAndOpacity(FLinearColor::White);
+	}
 }

@@ -95,4 +95,7 @@ private:
 	TSharedPtr<class FOnlineSessionSearch> SessionSearch;
 
 	TArray<FString> SessionNameList;
+
+	// TEST
+	bool bEditorSessionDestroy;
 };

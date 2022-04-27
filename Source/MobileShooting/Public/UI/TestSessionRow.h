@@ -24,6 +24,15 @@ public:
 
 	uint32 GetSessionIndex() const { return SessionIndex; }
 
+	UFUNCTION()
+	void OnClickedRowButton();
+
+	UFUNCTION()
+	void OnHoveredRowButton();
+
+	UFUNCTION()
+	void OnUnHoveredRowButton();
+
 protected:
 
 	UPROPERTY(meta = (BindWidget))
@@ -37,6 +46,11 @@ protected:
 
 	uint32 SessionIndex;
 
-	UFUNCTION() 
 	void SetSelectedSessionIndex();
+
+	void SetButtonStatus(bool NewFlag);
+	
+	void SetSessionNameColor(bool NewFlag);
+
+	bool bSelected;
 };

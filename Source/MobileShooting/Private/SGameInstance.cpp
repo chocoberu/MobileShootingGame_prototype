@@ -42,6 +42,7 @@ void USGameInstance::Init()
 			SessionSearch = MakeShareable(new FOnlineSessionSearch());
 		}
 	}
+	
 }
 
 FString USGameInstance::GetWeaponPath(const int32 WeaponID)
@@ -175,8 +176,12 @@ void USGameInstance::CreateSession()
 	SessionSettings.NumPublicConnections = 4;
 	//SessionSettings.bUsesPresence = true;
 	SessionSettings.bIsLANMatch = true; // TEST
+
+	// TEST
+	ULocalPlayer* Player = GetFirstGamePlayer();
+	//Player->GetPreferredUniqueNetId();
 	
-	SessionInterface->CreateSession(0, SESSION_NAME, SessionSettings);
+	SessionInterface->CreateSession(*Player->GetPreferredUniqueNetId(), SESSION_NAME, SessionSettings);
 
 	// Debug Ç¥½Ã
 	auto Engine = GetEngine();
@@ -192,7 +197,14 @@ void USGameInstance::FindSession()
 	if (true == SessionSearch.IsValid() && true == SessionInterface.IsValid())
 	{
 		UE_LOG(LogTemp, Log, TEXT("Starting Find Sessions"));
-		SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
+
+		ULocalPlayer* Player = GetFirstGamePlayer();
+		if (nullptr == Player)
+		{
+			return;
+		}
+
+		SessionInterface->FindSessions(*Player->GetPreferredUniqueNetId(), SessionSearch.ToSharedRef());
 	}
 }
 
@@ -220,6 +232,24 @@ void USGameInstance::Join(uint32 SessionIndex)
 	{
 		return;
 	}
+	
+	/*auto SessionSettings = SessionInterface->GetSessionSettings(SESSION_NAME);
+	if (nullptr != SessionSettings)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Session Settings is not nullptr"));
+		return;
+	}*/
 
-	SessionInterface->JoinSession(0, SESSION_NAME, SessionSearch->SearchResults[SessionIndex]);
+	// TEST
+	ULocalPlayer* Player = GetFirstGamePlayer();
+	//Player->GetPreferredUniqueNetId();
+
+	if (SessionSearch->SearchResults[SessionIndex].Session.OwningUserId != Player->GetPreferredUniqueNetId())
+	{
+		SessionInterface->JoinSession(*Player->GetPreferredUniqueNetId(), SESSION_NAME, SessionSearch->SearchResults[SessionIndex]);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Session OwningUser == Player"));
+	}
 }
