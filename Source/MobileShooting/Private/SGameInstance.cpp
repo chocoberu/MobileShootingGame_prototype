@@ -125,8 +125,12 @@ void USGameInstance::OnFindSessionComplete(bool Success)
 		SessionNameList.Empty();
 		for (const auto& SearchResult : SessionSearch.Get()->SearchResults)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Found Session Name : %s"), *SearchResult.GetSessionIdStr());
-			SessionNameList.Add(SearchResult.GetSessionIdStr());
+			const int32 MaxConnections = SearchResult.Session.SessionSettings.NumPublicConnections;
+			// TODO : 현재 입장한 인원 수를 구하도록 수정 필요
+			const int32 CurrentConnections = SearchResult.Session.NumOpenPublicConnections;
+
+			UE_LOG(LogTemp, Warning, TEXT("Found Session Name : %s, %d / %d "), *SearchResult.Session.OwningUserName, CurrentConnections, MaxConnections);
+			SessionNameList.Add(SearchResult.Session.OwningUserName);
 		}
 
 		OnFindSessionCompleteDelegate.Broadcast();
