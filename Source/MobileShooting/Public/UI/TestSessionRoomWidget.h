@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "TestSessionRoomWidget.generated.h"
 
+using FOnPostLoginDelegate = TMulticastDelegate<void()>;
 /**
  * 
  */
@@ -17,6 +18,8 @@ class MOBILESHOOTING_API UTestSessionRoomWidget : public UUserWidget
 public:
 
 	virtual bool Initialize() override;
+
+	FOnPostLoginDelegate OnPostLoginDelegate;
 
 protected:
 

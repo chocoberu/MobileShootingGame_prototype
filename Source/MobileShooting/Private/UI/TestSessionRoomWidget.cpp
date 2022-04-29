@@ -12,19 +12,26 @@
 bool UTestSessionRoomWidget::Initialize()
 {
 	bool Result = Super::Initialize();
-
-
-	ATestSessionGameMode* TestGameMode = Cast<ATestSessionGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-	if (nullptr == TestGameMode)
-	{
-		return Result;
-	}
-
+	
 	USGameInstance* SGameInstance = Cast<USGameInstance>(GetGameInstance());
 	if (nullptr == SGameInstance)
 	{
 		return Result;
 	}
+
+	auto Engine = SGameInstance->GetEngine();
+	if (nullptr == Engine)
+	{
+		return Result;
+	}
+
+	ATestSessionGameMode* TestGameMode = Cast<ATestSessionGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	if (nullptr == TestGameMode)
+	{
+		Engine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("GameMode is nullptr, Maybe client"));
+		return Result;
+	}
+
 	auto GameSession = TestGameMode->GameSession;
 	if (nullptr == GameSession)
 	{
@@ -38,6 +45,7 @@ bool UTestSessionRoomWidget::Initialize()
 	{
 		return Result;
 	}
+
 	for (auto PlayerState : GameState->PlayerArray)
 	{
 		if (nullptr == PlayerState)
@@ -45,6 +53,7 @@ bool UTestSessionRoomWidget::Initialize()
 			continue;
 		}
 		UE_LOG(LogTemp, Log, TEXT("Player Name : %s"), *PlayerState->GetPlayerName());
+		Engine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Player %s Login"), *PlayerState->GetPlayerName()));
 	}
 
 	return Result;
