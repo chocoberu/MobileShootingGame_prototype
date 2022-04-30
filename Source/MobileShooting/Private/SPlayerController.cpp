@@ -11,12 +11,12 @@ void ASPlayerController::OnPossess(APawn* aPawn)
 	Super::OnPossess(aPawn);
 
 	// TEST CODE
-	if (false == IsLocalController())
+	/*if (false == IsLocalPlayerController())
 	{
 		return;
-	}
+	}*/
 
-	if (nullptr != RightPadButtonHUDClass)
+	/*if (nullptr != RightPadButtonHUDClass)
 	{
 		RightButtonHUD = CreateWidget<URightButtonHUDWidget>(this, RightPadButtonHUDClass);
 	}
@@ -34,7 +34,7 @@ void ASPlayerController::OnPossess(APawn* aPawn)
 	if (nullptr != MenuWidget)
 	{
 		MenuWidget->OnResumeDelegate.AddUObject(this, &ASPlayerController::OnGameResume);
-	}
+	}*/
 }
 
 void ASPlayerController::BindMainWeaponStatusWidget(ASWeapon* MainWeapon)
@@ -113,10 +113,30 @@ void ASPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	// TEST CODE
-	if (false == IsLocalController())
+	if (false == IsLocalPlayerController())
 	{
 		UE_LOG(LogTemp, Log, TEXT("No Authority "));
 		return;
+	}
+
+	if (nullptr != RightPadButtonHUDClass)
+	{
+		RightButtonHUD = CreateWidget<URightButtonHUDWidget>(this, RightPadButtonHUDClass);
+	}
+	if (nullptr == RightButtonHUD)
+	{
+		UE_LOG(LogTemp, Error, TEXT("RightButtonHUD is nullptr"));
+		return;
+	}
+
+	if (nullptr == MenuWidgetClass)
+	{
+		return;
+	}
+	MenuWidget = CreateWidget<USPraticeMenuWidget>(this, MenuWidgetClass);
+	if (nullptr != MenuWidget)
+	{
+		MenuWidget->OnResumeDelegate.AddUObject(this, &ASPlayerController::OnGameResume);
 	}
 
 	FString CurrentPlatform = UGameplayStatics::GetPlatformName();

@@ -98,6 +98,8 @@ void USGameInstance::OnCreateSessionComplete(FName SessionName, bool Success)
 
 	Engine->AddOnScreenDebugMessage(0, 5.0f, FColor::Yellow, TEXT("Host Session"));
 
+	//SessionInterface->StartSession(SessionName);
+
 	UWorld* World = GetWorld();
 	if (nullptr == World)
 	{

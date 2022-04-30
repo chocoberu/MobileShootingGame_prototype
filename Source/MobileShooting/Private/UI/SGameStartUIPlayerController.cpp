@@ -16,7 +16,7 @@ void ASGameStartUIPlayerController::BeginPlay()
 	bShowMouseCursor = true;
 	SetVirtualJoystickVisibility(false);
 
-	if (false == IsLocalController())
+	if (false == IsLocalPlayerController())
 	{
 		return;
 	}

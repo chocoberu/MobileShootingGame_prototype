@@ -3,10 +3,11 @@
 
 #include "TestSessionGameMode.h"
 #include "SGameInstance.h"
+#include "SessionRoomPlayerController.h"
 
 ATestSessionGameMode::ATestSessionGameMode()
 {
-
+	PlayerControllerClass = ASessionRoomPlayerController::StaticClass();
 }
 
 void ATestSessionGameMode::PostLogin(APlayerController* NewPlayer)
