@@ -31,7 +31,13 @@ public:
 
 	void AddAssistScore();
 
+	void SetPlayerReadyState(const bool NewFlag) { bPlayerReady = NewFlag; }
+
+	bool IsPlayerReady() const { return bPlayerReady; }
+
 protected:
+
+	bool bPlayerReady;
 
 	uint32 KillScore;
 

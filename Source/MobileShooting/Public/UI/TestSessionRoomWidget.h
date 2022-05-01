@@ -6,7 +6,6 @@
 #include "Blueprint/UserWidget.h"
 #include "TestSessionRoomWidget.generated.h"
 
-using FOnPostLoginDelegate = TMulticastDelegate<void()>;
 /**
  * 
  */
@@ -19,12 +18,36 @@ public:
 
 	virtual bool Initialize() override;
 
-	FOnPostLoginDelegate OnPostLoginDelegate;
+	void InitPlayerRowList(uint32 Count);
+
+	void SetPlayerRowByIndex(uint32 Index, FString PlayerName, bool bReady);
+
+	UFUNCTION()
+	void OnClickedPrevButton();
 
 protected:
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* SessionName;
 
+	UPROPERTY(meta = (BindWidget))
+	class UVerticalBox* BlueSideVerticalBox;
 
+	UPROPERTY(meta = (BindWidget))
+	class UVerticalBox* RedSideVerticalBox;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* PrevButton;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* ReadyButton;
+
+	TArray<class USessionPlayerRow*> BluePlayerList;
+
+	TArray<class USessionPlayerRow*> RedPlayerList;
+
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<class USessionPlayerRow> SessionPlayerRowClass;
+
+	uint32 MaxPlayerCount;
 };

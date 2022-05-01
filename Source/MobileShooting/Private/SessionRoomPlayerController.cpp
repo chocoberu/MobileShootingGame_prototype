@@ -2,6 +2,7 @@
 
 
 #include "SessionRoomPlayerController.h"
+#include "SPlayerState.h"
 #include "TestSessionGameMode.h"
 #include "UI/TestSessionRoomWidget.h"
 #include "Blueprint/UserWidget.h"
@@ -24,11 +25,44 @@ void ASessionRoomPlayerController::BeginPlay()
 		return;
 	}
 	SessionRoomWidget->AddToViewport();
+	
+	RequestServerPlayerList();
 }
 
-void ASessionRoomPlayerController::UpdatePlayerList()
+void ASessionRoomPlayerController::EndPlay(EEndPlayReason::Type Reason)
 {
+	Super::EndPlay(Reason);
 
+	// TEST CODE
+	// TODO : 앱을 종료할 때 처리가 필요
+	if (GetLocalRole() == ROLE_Authority)
+	{
+		ATestSessionGameMode* SessionGameMode = Cast<ATestSessionGameMode>(GetWorld()->GetAuthGameMode());
+		if (nullptr != SessionGameMode)
+		{
+			SessionGameMode->Logout(this);
+		}
+	}
+}
+
+void ASessionRoomPlayerController::UpdatePlayerList(const TArray<FRoomPlayerInfo>& PlayerInfoList)
+{
+	int32 Index = 0;
+	for (const FRoomPlayerInfo& PlayerInfo : PlayerInfoList)
+	{
+		FString PlayerName;
+		if (0 == PlayerInfo.PlayerName.Compare(GetPlayerName()))
+		{
+			PlayerName = TEXT("ME");
+		}
+		else
+		{
+			PlayerName = PlayerInfo.PlayerName;
+		}
+
+		SessionRoomWidget->SetPlayerRowByIndex(Index, PlayerName, PlayerInfo.bPlayerReady);
+		Index++;
+	}
 }
 
 void ASessionRoomPlayerController::RequestServerPlayerList()
@@ -38,19 +72,92 @@ void ASessionRoomPlayerController::RequestServerPlayerList()
 		ATestSessionGameMode* SessionGameMode = Cast<ATestSessionGameMode>(GetWorld()->GetAuthGameMode());
 		if (nullptr != SessionGameMode)
 		{
-			// TODO : GameMode의 PlayerListUpdate 처리
+			SessionGameMode->UpdatePlayerList();
 		}
 	}
 	else
 	{
 		// 서버 측에 요청 필요
+		Server_RequestServerPlayerList();
 	}
 }
 
-void ASessionRoomPlayerController::ReadyGame()
+void ASessionRoomPlayerController::Server_RequestServerPlayerList_Implementation()
 {
+	RequestServerPlayerList();
+}
+
+bool ASessionRoomPlayerController::Server_RequestServerPlayerList_Validate()
+{
+	return true;
+}
+
+void ASessionRoomPlayerController::ReadyGame(bool bReadyState)
+{
+	if (GetLocalRole() == ROLE_Authority)
+	{
+		// PlayerState에 값을 저장
+		ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
+		if (nullptr != SPlayerState)
+		{
+			SPlayerState->SetPlayerReadyState(bReadyState);
+		}
+
+		// 이후 플레이어 리스트 업데이트
+		RequestServerPlayerList();
+	}
+	else
+	{
+		// 서버 측에 요청 필요
+		Server_ReadyGame(bReadyState);
+	}
+}
+
+void ASessionRoomPlayerController::Server_ReadyGame_Implementation(bool bReadyState)
+{
+	ReadyGame(bReadyState);
+}
+
+bool ASessionRoomPlayerController::Server_ReadyGame_Validate(bool bReadyState)
+{
+	return true;
 }
 
 void ASessionRoomPlayerController::StartGame()
 {
+	if (GetLocalRole() == ROLE_Authority)
+	{
+		ATestSessionGameMode* SessionGameMode = Cast<ATestSessionGameMode>(GetWorld()->GetAuthGameMode());
+		if (nullptr != SessionGameMode)
+		{
+			SessionGameMode->StartGame();
+		}
+	}
+}
+
+void ASessionRoomPlayerController::Client_UpdatePlayerList_Implementation(const TArray<FRoomPlayerInfo>& PlayerInfoList)
+{
+	UpdatePlayerList(PlayerInfoList);
+}
+
+void ASessionRoomPlayerController::SetPlayerName(const FString NewName)
+{
+	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
+	if (nullptr == SPlayerState)
+	{
+		return;
+	}
+
+	SPlayerState->SetPlayerName(NewName);
+}
+
+FString ASessionRoomPlayerController::GetPlayerName()
+{
+	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
+	if (nullptr == SPlayerState)
+	{
+		return FString();
+	}
+
+	return SPlayerState->GetPlayerName();
 }

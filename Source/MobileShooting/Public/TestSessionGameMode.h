@@ -6,6 +6,20 @@
 #include "GameFramework/GameModeBase.h"
 #include "TestSessionGameMode.generated.h"
 
+USTRUCT(BlueprintType)
+struct FRoomPlayerInfo
+{
+	GENERATED_BODY()
+
+public:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerInfo")
+	bool bPlayerReady;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerInfo")
+	FString PlayerName;
+};
+
 /**
  * 
  */
@@ -20,7 +34,15 @@ public:
 
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 
+	virtual void Logout(AController* Exiting) override;
+
+	void UpdatePlayerList();
+
+	void StartGame();
+
 protected:
 
-	TArray<class APlayerController*> PlayerControllerList;
+	TArray<class ASessionRoomPlayerController*> PlayerControllerList;
+
+	TArray<FRoomPlayerInfo> PlayerInfoList;
 };

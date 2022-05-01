@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "TestSessionGameMode.h"
 #include "SessionRoomPlayerController.generated.h"
 
 /**
@@ -16,17 +17,32 @@ class MOBILESHOOTING_API ASessionRoomPlayerController : public APlayerController
 	
 public:
 
-	void UpdatePlayerList();
+	void UpdatePlayerList(const TArray<FRoomPlayerInfo>& PlayerInfoList);
 
 	void RequestServerPlayerList();
 
-	void ReadyGame();
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_RequestServerPlayerList();
+	
+	void ReadyGame(bool bReadyState);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_ReadyGame(bool bReadyState);
 
 	void StartGame();
+
+	UFUNCTION(Client, Reliable)
+	void Client_UpdatePlayerList(const TArray<FRoomPlayerInfo>& PlayerInfoList);
+
+	void SetPlayerName(const FString NewName);
+
+	FString GetPlayerName();
 
 protected:
 
 	virtual void BeginPlay() override;
+
+	virtual void EndPlay(EEndPlayReason::Type Reason) override;
 
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<class UTestSessionRoomWidget> SessionRoomUIClass;
