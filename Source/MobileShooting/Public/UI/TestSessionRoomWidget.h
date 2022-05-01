@@ -25,6 +25,9 @@ public:
 	UFUNCTION()
 	void OnClickedPrevButton();
 
+	UFUNCTION()
+	void OnClickedReadyButton();
+
 protected:
 
 	UPROPERTY(meta = (BindWidget))

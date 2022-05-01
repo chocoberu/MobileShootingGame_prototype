@@ -4,6 +4,7 @@
 #include "SGameInstance.h"
 #include "OnlineSubsystem.h"
 #include "OnlineSessionSettings.h"
+#include "Kismet/GameplayStatics.h"
 
 const static FName SESSION_NAME = TEXT("Test Session");
 
@@ -106,7 +107,8 @@ void USGameInstance::OnCreateSessionComplete(FName SessionName, bool Success)
 		return;
 	}
 
-	World->ServerTravel("/Game/Levels/SessionLevel?listen");
+	UGameplayStatics::OpenLevel(World, TEXT("/Game/Levels/SessionLevel"), true, "listen");
+	//World->ServerTravel("/Game/Levels/SessionLevel?listen");
 	//World->ServerTravel("/Game/Levels/TestBossLevel?listen");
 }
 

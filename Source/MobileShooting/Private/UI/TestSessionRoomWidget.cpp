@@ -4,7 +4,7 @@
 #include "UI/TestSessionRoomWidget.h"
 #include "UI/SessionPlayerRow.h"
 #include "TestSessionGameMode.h"
-#include "SGameInstance.h"
+#include "SessionRoomPlayerController.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/VerticalBox.h"
 #include "Components/Button.h"
@@ -15,6 +15,7 @@ bool UTestSessionRoomWidget::Initialize()
 	InitPlayerRowList(4);
 
 	PrevButton->OnClicked.AddDynamic(this, &UTestSessionRoomWidget::OnClickedPrevButton);
+	ReadyButton->OnClicked.AddDynamic(this, &UTestSessionRoomWidget::OnClickedReadyButton);
 	
 	return Result;
 }
@@ -69,4 +70,14 @@ void UTestSessionRoomWidget::OnClickedPrevButton()
 {
 	// TODO : PlayerController를 이용해서 이전 Level로 이동 처리
 	// SessionInterface->DestroySession()이 필요할 거 같음, 확인 필요
+}
+
+void UTestSessionRoomWidget::OnClickedReadyButton()
+{
+	ASessionRoomPlayerController* SPlayerController = GetOwningPlayer<ASessionRoomPlayerController>();
+	if (nullptr == SPlayerController)
+	{
+		return;
+	}
+	SPlayerController->ChangeReadyState();
 }

@@ -92,6 +92,19 @@ bool ASessionRoomPlayerController::Server_RequestServerPlayerList_Validate()
 	return true;
 }
 
+void ASessionRoomPlayerController::ChangeReadyState()
+{
+	UE_LOG(LogTemp, Log, TEXT("Change Ready State"));
+	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
+	if (nullptr == SPlayerState)
+	{
+		return;
+	}
+
+	bool bReady = SPlayerState->IsPlayerReady();
+	ReadyGame(!bReady);
+}
+
 void ASessionRoomPlayerController::ReadyGame(bool bReadyState)
 {
 	if (GetLocalRole() == ROLE_Authority)
@@ -105,6 +118,7 @@ void ASessionRoomPlayerController::ReadyGame(bool bReadyState)
 
 		// 이후 플레이어 리스트 업데이트
 		RequestServerPlayerList();
+		Client_ReadyGame(bReadyState);
 	}
 	else
 	{
@@ -121,6 +135,15 @@ void ASessionRoomPlayerController::Server_ReadyGame_Implementation(bool bReadySt
 bool ASessionRoomPlayerController::Server_ReadyGame_Validate(bool bReadyState)
 {
 	return true;
+}
+
+void ASessionRoomPlayerController::Client_ReadyGame_Implementation(bool bReadyState)
+{
+	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
+	if (nullptr != SPlayerState)
+	{
+		SPlayerState->SetPlayerReadyState(bReadyState);
+	}
 }
 
 void ASessionRoomPlayerController::StartGame()
