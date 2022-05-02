@@ -10,7 +10,11 @@ const static FName SESSION_NAME = TEXT("Test Session");
 
 USGameInstance::USGameInstance()
 {
-
+	OnCreateSessionCompleteDelegate = FOnCreateSessionCompleteDelegate::CreateUObject(this, &USGameInstance::OnCreateSessionComplete);
+	OnStartSessionCompleteDelegate = FOnStartSessionCompleteDelegate::CreateUObject(this, &USGameInstance::OnStartOnlineGameComplete);
+	OnFindSessionsCompleteDelegate = FOnFindSessionsCompleteDelegate::CreateUObject(this, &USGameInstance::OnFindSessionsComplete);
+	OnJoinSessionCompleteDelegate = FOnJoinSessionCompleteDelegate::CreateUObject(this, &USGameInstance::OnJoinSessionComplete);
+	OnDestroySessionCompleteDelegate = FOnDestroySessionCompleteDelegate::CreateUObject(this, &USGameInstance::OnDestroySessionComplete);
 }
 
 void USGameInstance::Init()
@@ -35,11 +39,6 @@ void USGameInstance::Init()
 		SessionInterface = Subsystem->GetSessionInterface();
 		if (SessionInterface.IsValid())
 		{
-			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &USGameInstance::OnCreateSessionComplete);
-			SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &USGameInstance::OnDestroySessionComplete);
-			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &USGameInstance::OnFindSessionComplete);
-			SessionInterface->OnJoinSessionCompleteDelegates.AddUObject(this, &USGameInstance::OnJoinSessionComplete);
-
 			SessionSearch = MakeShareable(new FOnlineSessionSearch());
 		}
 	}
@@ -84,11 +83,21 @@ void USGameInstance::GetAllSubWeaponData(const FString& ContextString, TArray<FW
 
 void USGameInstance::OnCreateSessionComplete(FName SessionName, bool Success)
 {
+	if (false == SessionInterface.IsValid())
+	{
+		return;
+	}
+
+	SessionInterface->ClearOnCreateSessionCompleteDelegate_Handle(OnCreateSessionCompleteDelegateHandle);
+
 	if (false == Success)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Failed to create Session Name : %s"), *SessionName.ToString());
 		return;
 	}
+
+	OnStartSessionCompleteDelegateHandle = SessionInterface->AddOnStartSessionCompleteDelegate_Handle(OnStartSessionCompleteDelegate);
+
 	UE_LOG(LogTemp, Warning, TEXT("Session Name : %s Created"), *SessionName.ToString());
 
 	UEngine* Engine = GetEngine();
@@ -99,42 +108,71 @@ void USGameInstance::OnCreateSessionComplete(FName SessionName, bool Success)
 
 	Engine->AddOnScreenDebugMessage(0, 5.0f, FColor::Yellow, TEXT("Host Session"));
 
-	//SessionInterface->StartSession(SessionName);
-
 	UWorld* World = GetWorld();
 	if (nullptr == World)
 	{
 		return;
 	}
+	
+	SessionInterface->StartSession(SessionName);
 
-	UGameplayStatics::OpenLevel(World, TEXT("/Game/Levels/SessionLevel"), true, "listen");
+	// TEST CODE
+	//UGameplayStatics::OpenLevel(World, TEXT("/Game/Levels/SessionLevel"), true, "listen");
 	//World->ServerTravel("/Game/Levels/SessionLevel?listen");
 	//World->ServerTravel("/Game/Levels/TestBossLevel?listen");
 }
 
+void USGameInstance::OnStartOnlineGameComplete(FName SessionName, bool Success)
+{
+	if (false == SessionInterface.IsValid())
+	{
+		return;
+	}
+
+	SessionInterface->ClearOnStartSessionCompleteDelegate_Handle(OnStartSessionCompleteDelegateHandle);
+
+	if (false == Success)
+	{
+		return;
+	}
+
+	UGameplayStatics::OpenLevel(GetWorld(), TEXT("/Game/Levels/SessionLevel"), true, "listen");
+}
+
 void USGameInstance::OnDestroySessionComplete(FName SessionName, bool Success)
 {
-	// TODO : 게임이 끝난 후 세션 destroy 처리하도록 수정해야함
+	if (false == SessionInterface.IsValid())
+	{
+		return;
+	}
+	UE_LOG(LogTemp, Log, TEXT("OnDestroySessionComplete() called, Session Name : %s, Success : %d"), *SessionName.ToString(), Success);
+	SessionInterface->ClearOnDestroySessionCompleteDelegate_Handle(OnDestroySessionCompleteDelegateHandle);
+
 	if (true == Success)
 	{
-		CreateSession();
+		UGameplayStatics::OpenLevel(GetWorld(), TEXT("/Game/Levels/GameStartLevel"), true);
 	}
 }
 
-void USGameInstance::OnFindSessionComplete(bool Success)
+void USGameInstance::OnFindSessionsComplete(bool Success)
 {
 	if (true == Success && true == SessionInterface.IsValid())
 	{
 		UE_LOG(LogTemp, Log, TEXT("Finish Find Sessions"));
-		SessionNameList.Empty();
+
+		SessionInterface->ClearOnFindSessionsCompleteDelegate_Handle(OnFindSessionsCompleteDelegateHandle);
+
+		SessionResultList.Empty();
 		for (const auto& SearchResult : SessionSearch.Get()->SearchResults)
 		{
-			const int32 MaxConnections = SearchResult.Session.SessionSettings.NumPublicConnections;
-			// TODO : 현재 입장한 인원 수를 구하도록 수정 필요
-			const int32 CurrentConnections = MaxConnections - SearchResult.Session.NumOpenPublicConnections;
+			// TODO : Current 수정 필요
+			FCustomSessionResult Result;
+			Result.SessionName = SearchResult.Session.OwningUserName;
+			Result.MaxPlayerNumber = SearchResult.Session.SessionSettings.NumPublicConnections;
+			Result.CurrentPlayerNumber = Result.MaxPlayerNumber - SearchResult.Session.NumOpenPublicConnections;
 
-			UE_LOG(LogTemp, Warning, TEXT("Found Session Name : %s, %d / %d "), *SearchResult.Session.OwningUserName, CurrentConnections, MaxConnections);
-			SessionNameList.Add(SearchResult.Session.OwningUserName);
+			UE_LOG(LogTemp, Warning, TEXT("Found Session Name : %s, %d / %d "), *Result.SessionName, Result.CurrentPlayerNumber, Result.MaxPlayerNumber);
+			SessionResultList.Add(Result);
 		}
 
 		OnFindSessionCompleteDelegate.Broadcast();
@@ -148,6 +186,8 @@ void USGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessionComp
 		return;
 	}
 
+	SessionInterface->ClearOnJoinSessionCompleteDelegate_Handle(OnJoinSessionCompleteDelegateHandle);
+	
 	auto Engine = GetEngine();
 	if (nullptr == Engine)
 	{
@@ -182,13 +222,13 @@ void USGameInstance::CreateSession()
 	FOnlineSessionSettings SessionSettings;
 	SessionSettings.bShouldAdvertise = true;
 	SessionSettings.NumPublicConnections = 4;
+	SessionSettings.bAllowJoinInProgress = true;
 	//SessionSettings.bUsesPresence = true;
 	SessionSettings.bIsLANMatch = true; // TEST
 
-	// TEST
+	OnCreateSessionCompleteDelegateHandle = SessionInterface->AddOnCreateSessionCompleteDelegate_Handle(OnCreateSessionCompleteDelegate);
+
 	ULocalPlayer* Player = GetFirstGamePlayer();
-	//Player->GetPreferredUniqueNetId();
-	
 	SessionInterface->CreateSession(*Player->GetPreferredUniqueNetId(), SESSION_NAME, SessionSettings);
 
 	// Debug 표시
@@ -212,6 +252,7 @@ void USGameInstance::FindSession()
 			return;
 		}
 
+		OnFindSessionsCompleteDelegateHandle = SessionInterface->AddOnFindSessionsCompleteDelegate_Handle(OnFindSessionsCompleteDelegate);
 		SessionInterface->FindSessions(*Player->GetPreferredUniqueNetId(), SessionSearch.ToSharedRef());
 	}
 }
@@ -230,6 +271,8 @@ void USGameInstance::Host()
 	}
 	else
 	{
+		// 에디터용
+		//OnDestroySessionCompleteDelegateHandle = SessionInterface->AddOnDestroySessionCompleteDelegate_Handle(OnDestroySessionCompleteDelegate);
 		SessionInterface->DestroySession(SESSION_NAME);
 	}
 }
@@ -241,17 +284,11 @@ void USGameInstance::Join(uint32 SessionIndex)
 		return;
 	}
 	
-	/*auto SessionSettings = SessionInterface->GetSessionSettings(SESSION_NAME);
-	if (nullptr != SessionSettings)
-	{
-		UE_LOG(LogTemp, Log, TEXT("Session Settings is not nullptr"));
-		return;
-	}*/
+	OnJoinSessionCompleteDelegateHandle = SessionInterface->AddOnJoinSessionCompleteDelegate_Handle(OnJoinSessionCompleteDelegate);
 
 	// TEST
 	ULocalPlayer* Player = GetFirstGamePlayer();
-	//Player->GetPreferredUniqueNetId();
-
+	
 	if (SessionSearch->SearchResults[SessionIndex].Session.OwningUserId != Player->GetPreferredUniqueNetId())
 	{
 		SessionInterface->JoinSession(*Player->GetPreferredUniqueNetId(), SESSION_NAME, SessionSearch->SearchResults[SessionIndex]);
@@ -260,4 +297,15 @@ void USGameInstance::Join(uint32 SessionIndex)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Session OwningUser == Player"));
 	}
+}
+
+void USGameInstance::LeaveAndDestroySession()
+{
+	if (false == SessionInterface.IsValid())
+	{
+		return;
+	}
+
+	OnDestroySessionCompleteDelegateHandle = SessionInterface->AddOnDestroySessionCompleteDelegate_Handle(OnDestroySessionCompleteDelegate);
+	SessionInterface->DestroySession(SESSION_NAME);
 }

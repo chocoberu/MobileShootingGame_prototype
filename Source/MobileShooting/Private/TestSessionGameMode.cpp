@@ -5,6 +5,8 @@
 #include "SGameInstance.h"
 #include "SessionRoomPlayerController.h"
 #include "SPlayerState.h"
+#include "OnlineSubsystem.h"
+#include "OnlineSessionSettings.h"
 
 ATestSessionGameMode::ATestSessionGameMode()
 {
@@ -33,6 +35,21 @@ void ATestSessionGameMode::PostLogin(APlayerController* NewPlayer)
 	if (nullptr == SGameInstance)
 	{
 		return;
+	}
+	
+	// TEST CODE : PostLogin()에서 세션에 현재 접속 가능한 인원 수를 차감할 수 있는지 확인
+	IOnlineSubsystem* Subsystem = IOnlineSubsystem::Get();
+	if (nullptr != Subsystem)
+	{
+		auto SessionInterface = Subsystem->GetSessionInterface();
+		if (true == SessionInterface.IsValid())
+		{
+			auto ExitingSession = SessionInterface->GetNamedSession(TEXT("Test Session"));
+			if (nullptr != ExitingSession)
+			{
+				ExitingSession->NumOpenPublicConnections--;
+			}
+		}
 	}
 
 	auto Engine = SGameInstance->GetEngine();

@@ -28,6 +28,11 @@ void UTestSessionRow::SetSessionName(FText NewSessionName)
 	SessionName->SetText(NewSessionName);
 }
 
+void UTestSessionRow::SetPlayerNumbers(const int32 Current, const int32 Max)
+{
+	PlayerNumbers->SetText(FText::FromString(FString::Printf(TEXT("%d / %d"), Current, Max)));
+}
+
 void UTestSessionRow::SetSelectedSessionIndex()
 {
 	if (nullptr == ParentWidget)

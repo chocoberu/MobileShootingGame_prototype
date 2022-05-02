@@ -38,6 +38,23 @@ public:
 
 };
 
+USTRUCT(BlueprintType)
+struct FCustomSessionResult
+{
+	GENERATED_BODY()
+
+public:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Session")
+	FString SessionName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	int32 CurrentPlayerNumber;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	int32 MaxPlayerNumber;
+};
+
 /**
  * 
  */
@@ -71,18 +88,36 @@ public:
 	// TODO : 필요하다면 매개변수를 통해 QueryParam 수정하도록
 	void FindSession();
 
-	TArray<FString> GetSessionNameList() const { return SessionNameList; }
+	void LeaveAndDestroySession();
+
+	TArray<FCustomSessionResult> GetSessionList() const { return SessionResultList; }
 
 	FOnFindSessionCompleteDelegate OnFindSessionCompleteDelegate;
 
 private:
 
 	void OnCreateSessionComplete(FName SessionName, bool Success);
+	void OnStartOnlineGameComplete(FName SessionName, bool Success);
 	void OnDestroySessionComplete(FName SessionName, bool Success);
-	void OnFindSessionComplete(bool Success);
+	void OnFindSessionsComplete(bool Success);
 	void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
 
 	void CreateSession();
+
+	// Session 관련 Delegate
+	FOnCreateSessionCompleteDelegate OnCreateSessionCompleteDelegate;
+	FOnStartSessionCompleteDelegate OnStartSessionCompleteDelegate;
+	FOnFindSessionsCompleteDelegate OnFindSessionsCompleteDelegate;
+	FOnJoinSessionCompleteDelegate OnJoinSessionCompleteDelegate;
+	FOnDestroySessionCompleteDelegate OnDestroySessionCompleteDelegate;
+
+	// Delgate Handle
+	FDelegateHandle OnCreateSessionCompleteDelegateHandle;
+	FDelegateHandle OnStartSessionCompleteDelegateHandle;
+	FDelegateHandle OnFindSessionsCompleteDelegateHandle;
+	FDelegateHandle OnJoinSessionCompleteDelegateHandle;
+	FDelegateHandle OnDestroySessionCompleteDelegateHandle;
+
 
 	UPROPERTY(EditDefaultsOnly, Category = "Data")
 	class UDataTable* TestWeaponDataTable;
@@ -94,7 +129,7 @@ private:
 
 	TSharedPtr<class FOnlineSessionSearch> SessionSearch;
 
-	TArray<FString> SessionNameList;
+	TArray<FCustomSessionResult> SessionResultList;
 
 	// TEST
 	bool bEditorSessionDestroy;

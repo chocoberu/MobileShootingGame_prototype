@@ -22,6 +22,8 @@ public:
 
 	void SetSessionName(FText NewSessionName);
 
+	void SetPlayerNumbers(const int32 Current, const int32 Max);
+
 	uint32 GetSessionIndex() const { return SessionIndex; }
 
 	UFUNCTION()
@@ -37,6 +39,9 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* SessionName;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* PlayerNumbers;
 
 	UPROPERTY(meta = (BindWidget))
 	class UButton* SessionRowButton;

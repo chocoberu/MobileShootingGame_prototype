@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "SGameInstance.h"
 #include "TestLobbyWidget.generated.h"
 
 /**
@@ -29,7 +30,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void FindSession();
 
-	void SetSessionList(TArray<FString> SessionNames);
+	void SetSessionList(const TArray<FCustomSessionResult> SessionList);
 
 	void SelectSessionIndex(uint32 Index);
 

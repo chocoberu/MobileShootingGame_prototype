@@ -7,7 +7,6 @@
 #include "Components/Button.h"
 #include "Components/ScrollBox.h"
 #include "Components/CircularThrobber.h"
-#include "SGameInstance.h"
 
 UTestLobbyWidget::UTestLobbyWidget(const FObjectInitializer& ObjectInitializer) : UUserWidget(ObjectInitializer)
 {
@@ -82,17 +81,17 @@ void UTestLobbyWidget::OnFindSessionCompleted()
 		return;
 	}
 
-	SetSessionList(SGameInstance->GetSessionNameList());
+	SetSessionList(SGameInstance->GetSessionList());
 	SessionSearchThrobber->SetVisibility(ESlateVisibility::Hidden);
 	bFindSession = false;
 }
 
-void UTestLobbyWidget::SetSessionList(TArray<FString> SessionNames)
+void UTestLobbyWidget::SetSessionList(const TArray<FCustomSessionResult> SessionList)
 {
 	SessionScrollBox->ClearChildren();
 
 	uint32 Index = 0;
-	for (const FString& SessionName : SessionNames)
+	for (const FCustomSessionResult& SessionResult : SessionList)
 	{
 		UTestSessionRow* SessionRow = CreateWidget<UTestSessionRow>(this, SessionRowClass);
 		if (nullptr == SessionRow)
@@ -101,7 +100,8 @@ void UTestLobbyWidget::SetSessionList(TArray<FString> SessionNames)
 		}
 
 		SessionRow->SetParentWidget(this, Index++);
-		SessionRow->SetSessionName(FText::FromString(SessionName));
+		SessionRow->SetSessionName(FText::FromString(SessionResult.SessionName));
+		SessionRow->SetPlayerNumbers(SessionResult.CurrentPlayerNumber, SessionResult.MaxPlayerNumber);
 		
 		SessionScrollBox->AddChild(SessionRow);
 	}
