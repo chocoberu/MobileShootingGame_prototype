@@ -4,6 +4,7 @@
 #include "SessionRoomPlayerController.h"
 #include "SPlayerState.h"
 #include "TestSessionGameMode.h"
+#include "SGameInstance.h"
 #include "UI/TestSessionRoomWidget.h"
 #include "Blueprint/UserWidget.h"
 
@@ -33,6 +34,7 @@ void ASessionRoomPlayerController::EndPlay(EEndPlayReason::Type Reason)
 {
 	Super::EndPlay(Reason);
 
+	UE_LOG(LogTemp, Log, TEXT("ASessionRoomPlayerController::EndPlay() called, PlayerController : %s"), *GetName());
 	// TEST CODE
 	// TODO : 앱을 종료할 때 처리가 필요
 	if (GetLocalRole() == ROLE_Authority)
@@ -40,7 +42,7 @@ void ASessionRoomPlayerController::EndPlay(EEndPlayReason::Type Reason)
 		ATestSessionGameMode* SessionGameMode = Cast<ATestSessionGameMode>(GetWorld()->GetAuthGameMode());
 		if (nullptr != SessionGameMode)
 		{
-			SessionGameMode->Logout(this);
+			//SessionGameMode->Logout(this);
 		}
 	}
 }
@@ -161,6 +163,41 @@ void ASessionRoomPlayerController::StartGame()
 void ASessionRoomPlayerController::Client_UpdatePlayerList_Implementation(const TArray<FRoomPlayerInfo>& PlayerInfoList)
 {
 	UpdatePlayerList(PlayerInfoList);
+}
+
+void ASessionRoomPlayerController::LeaveSession()
+{
+	if (GetLocalRole() == ROLE_Authority)
+	{
+		ATestSessionGameMode* SessionGameMode = Cast<ATestSessionGameMode>(GetWorld()->GetAuthGameMode());
+		if (nullptr != SessionGameMode)
+		{
+			SessionGameMode->LeaveSession(GetPlayerName());
+		}
+	}
+	else
+	{
+		Server_LeaveSession();
+	}
+}
+
+void ASessionRoomPlayerController::Server_LeaveSession_Implementation()
+{
+	LeaveSession();
+}
+
+bool ASessionRoomPlayerController::Server_LeaveSession_Validate()
+{
+	return true;
+}
+
+void ASessionRoomPlayerController::Client_LeaveSession_Implementation()
+{
+	USGameInstance* SGameInstance = Cast<USGameInstance>(GetWorld()->GetGameInstance());
+	if (nullptr != SGameInstance)
+	{
+		SGameInstance->LeaveAndDestroySession();
+	}
 }
 
 void ASessionRoomPlayerController::SetPlayerName(const FString NewName)

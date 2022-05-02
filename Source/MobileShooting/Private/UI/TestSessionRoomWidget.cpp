@@ -70,6 +70,14 @@ void UTestSessionRoomWidget::OnClickedPrevButton()
 {
 	// TODO : PlayerController를 이용해서 이전 Level로 이동 처리
 	// SessionInterface->DestroySession()이 필요할 거 같음, 확인 필요
+
+	ASessionRoomPlayerController* SPlayerController = GetOwningPlayer<ASessionRoomPlayerController>();
+	if (nullptr == SPlayerController)
+	{
+		return;
+	}
+
+	SPlayerController->LeaveSession();
 }
 
 void UTestSessionRoomWidget::OnClickedReadyButton()

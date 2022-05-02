@@ -38,6 +38,7 @@ void ATestSessionGameMode::PostLogin(APlayerController* NewPlayer)
 	}
 	
 	// TEST CODE : PostLogin()에서 세션에 현재 접속 가능한 인원 수를 차감할 수 있는지 확인
+	// Logout() 될때도 처리 필요
 	IOnlineSubsystem* Subsystem = IOnlineSubsystem::Get();
 	if (nullptr != Subsystem)
 	{
@@ -72,10 +73,26 @@ void ATestSessionGameMode::Logout(AController* Exiting)
 	Super::Logout(Exiting);
 
 	ASessionRoomPlayerController* SessionRoomPlayerController = Cast<ASessionRoomPlayerController>(Exiting);
-	if (nullptr != SessionRoomPlayerController)
+	if (nullptr == SessionRoomPlayerController)
 	{
-		PlayerControllerList.Remove(SessionRoomPlayerController);
-		UpdatePlayerList();
+		return;
+	}
+	UE_LOG(LogTemp, Log, TEXT("ATestSessionGameMode::Logout() called, PlayerController : %s"), *SessionRoomPlayerController->GetName());
+	PlayerControllerList.Remove(SessionRoomPlayerController);
+	UpdatePlayerList();
+
+	IOnlineSubsystem* Subsystem = IOnlineSubsystem::Get();
+	if (nullptr != Subsystem)
+	{
+		auto SessionInterface = Subsystem->GetSessionInterface();
+		if (true == SessionInterface.IsValid())
+		{
+			auto ExitingSession = SessionInterface->GetNamedSession(TEXT("Test Session"));
+			if (nullptr != ExitingSession)
+			{
+				ExitingSession->NumOpenPublicConnections++;
+			}
+		}
 	}
 }
 
@@ -106,6 +123,8 @@ void ATestSessionGameMode::UpdatePlayerList()
 
 		PlayerInfoList.Add(NewPlayerInfo);
 		Index++;
+
+		UE_LOG(LogTemp, Log, TEXT("PlayerList Add(), %s, %d"), *NewPlayerInfo.PlayerName, NewPlayerInfo.bPlayerReady);
 	}
 
 	for (auto SessionRoomPlayerController : PlayerControllerList)
@@ -115,3 +134,23 @@ void ATestSessionGameMode::UpdatePlayerList()
 	}
 }
 
+void ATestSessionGameMode::LeaveSession(const FString PlayerName)
+{
+	for (auto SessionRoomPlayerController : PlayerControllerList)
+	{
+		if (SessionRoomPlayerController->GetPlayerName().Compare(PlayerName) == 0)
+		{
+			//Logout(SessionRoomPlayerController);
+			// TODO : 서버 상에서도 GameInstance->LeaveAndDestroySession() 처리가 필요한가?, 확인 필요
+			USGameInstance* SGameInstance = GetGameInstance<USGameInstance>();
+			if (nullptr == SGameInstance)
+			{
+				return;
+			}
+			SGameInstance->LeaveAndDestroySession();
+
+			SessionRoomPlayerController->Client_LeaveSession();
+			return;
+		}
+	}
+}

@@ -39,6 +39,14 @@ public:
 	UFUNCTION(Client, Reliable)
 	void Client_UpdatePlayerList(const TArray<FRoomPlayerInfo>& PlayerInfoList);
 
+	void LeaveSession();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_LeaveSession();
+
+	UFUNCTION(Client, Reliable)
+	void Client_LeaveSession();
+
 	void SetPlayerName(const FString NewName);
 
 	FString GetPlayerName();

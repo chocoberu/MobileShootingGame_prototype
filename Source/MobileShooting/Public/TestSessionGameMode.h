@@ -40,6 +40,8 @@ public:
 
 	void StartGame();
 
+	void LeaveSession(const FString PlayerName);
+
 protected:
 
 	TArray<class ASessionRoomPlayerController*> PlayerControllerList;

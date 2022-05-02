@@ -130,7 +130,4 @@ private:
 	TSharedPtr<class FOnlineSessionSearch> SessionSearch;
 
 	TArray<FCustomSessionResult> SessionResultList;
-
-	// TEST
-	bool bEditorSessionDestroy;
 };
