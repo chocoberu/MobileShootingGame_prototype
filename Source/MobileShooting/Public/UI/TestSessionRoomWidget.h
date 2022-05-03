@@ -28,6 +28,11 @@ public:
 	UFUNCTION()
 	void OnClickedReadyButton();
 
+	UFUNCTION()
+	void OnClickedStartButton();
+
+	void SetStartButtonVisible(bool NewFlag);
+
 protected:
 
 	UPROPERTY(meta = (BindWidget))
@@ -41,6 +46,9 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	class UButton* PrevButton;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* StartButton;
 
 	UPROPERTY(meta = (BindWidget))
 	class UButton* ReadyButton;

@@ -99,7 +99,7 @@ void ATestSessionGameMode::Logout(AController* Exiting)
 void ATestSessionGameMode::StartGame()
 {
 	// TEST CODE
-	GetWorld()->ServerTravel("/Game/Levels/TestBossLevel?listen");
+	//GetWorld()->ServerTravel("/Game/Levels/TestBossLevel?listen");
 }
 
 void ATestSessionGameMode::UpdatePlayerList()
@@ -142,12 +142,12 @@ void ATestSessionGameMode::LeaveSession(const FString PlayerName)
 		{
 			//Logout(SessionRoomPlayerController);
 			// TODO : 서버 상에서도 GameInstance->LeaveAndDestroySession() 처리가 필요한가?, 확인 필요
-			USGameInstance* SGameInstance = GetGameInstance<USGameInstance>();
+			/*USGameInstance* SGameInstance = GetGameInstance<USGameInstance>();
 			if (nullptr == SGameInstance)
 			{
 				return;
 			}
-			SGameInstance->LeaveAndDestroySession();
+			SGameInstance->LeaveAndDestroySession();*/
 
 			SessionRoomPlayerController->Client_LeaveSession();
 			return;

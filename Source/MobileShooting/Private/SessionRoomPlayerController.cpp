@@ -25,6 +25,11 @@ void ASessionRoomPlayerController::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("SessionRoom Widget is nullptr"));
 		return;
 	}
+
+	if (GetLocalRole() != ROLE_Authority)
+	{
+		SessionRoomWidget->SetStartButtonVisible(false);
+	}
 	SessionRoomWidget->AddToViewport();
 	
 	RequestServerPlayerList();
@@ -64,6 +69,12 @@ void ASessionRoomPlayerController::UpdatePlayerList(const TArray<FRoomPlayerInfo
 
 		SessionRoomWidget->SetPlayerRowByIndex(Index, PlayerName, PlayerInfo.bPlayerReady);
 		Index++;
+	}
+
+	// 비어있는 Row 초기화
+	for (; Index < 4; Index++)
+	{
+		SessionRoomWidget->SetPlayerRowByIndex(Index, TEXT("Empty"), false);
 	}
 }
 

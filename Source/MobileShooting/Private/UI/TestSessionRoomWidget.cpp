@@ -16,6 +16,7 @@ bool UTestSessionRoomWidget::Initialize()
 
 	PrevButton->OnClicked.AddDynamic(this, &UTestSessionRoomWidget::OnClickedPrevButton);
 	ReadyButton->OnClicked.AddDynamic(this, &UTestSessionRoomWidget::OnClickedReadyButton);
+	StartButton->OnClicked.AddDynamic(this, &UTestSessionRoomWidget::OnClickedStartButton);
 	
 	return Result;
 }
@@ -68,9 +69,6 @@ void UTestSessionRoomWidget::SetPlayerRowByIndex(uint32 Index, FString PlayerNam
 
 void UTestSessionRoomWidget::OnClickedPrevButton()
 {
-	// TODO : PlayerController를 이용해서 이전 Level로 이동 처리
-	// SessionInterface->DestroySession()이 필요할 거 같음, 확인 필요
-
 	ASessionRoomPlayerController* SPlayerController = GetOwningPlayer<ASessionRoomPlayerController>();
 	if (nullptr == SPlayerController)
 	{
@@ -88,4 +86,26 @@ void UTestSessionRoomWidget::OnClickedReadyButton()
 		return;
 	}
 	SPlayerController->ChangeReadyState();
+}
+
+void UTestSessionRoomWidget::OnClickedStartButton()
+{
+	ASessionRoomPlayerController* SPlayerController = GetOwningPlayer<ASessionRoomPlayerController>();
+	if (nullptr == SPlayerController)
+	{
+		return;
+	}
+	SPlayerController->StartGame();
+}
+
+void UTestSessionRoomWidget::SetStartButtonVisible(bool NewFlag)
+{
+	if (true == NewFlag)
+	{
+		StartButton->SetVisibility(ESlateVisibility::Visible);
+	}
+	else
+	{
+		StartButton->SetVisibility(ESlateVisibility::Hidden);
+	}
 }

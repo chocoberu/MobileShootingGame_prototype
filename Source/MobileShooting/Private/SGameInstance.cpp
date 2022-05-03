@@ -96,8 +96,6 @@ void USGameInstance::OnCreateSessionComplete(FName SessionName, bool Success)
 		return;
 	}
 
-	OnStartSessionCompleteDelegateHandle = SessionInterface->AddOnStartSessionCompleteDelegate_Handle(OnStartSessionCompleteDelegate);
-
 	UE_LOG(LogTemp, Warning, TEXT("Session Name : %s Created"), *SessionName.ToString());
 
 	UEngine* Engine = GetEngine();
@@ -114,10 +112,12 @@ void USGameInstance::OnCreateSessionComplete(FName SessionName, bool Success)
 		return;
 	}
 	
-	SessionInterface->StartSession(SessionName);
+	// Session Start는 SessionRoom에서 처리하도록 변경
+	//OnStartSessionCompleteDelegateHandle = SessionInterface->AddOnStartSessionCompleteDelegate_Handle(OnStartSessionCompleteDelegate);
+	//SessionInterface->StartSession(SessionName);
 
 	// TEST CODE
-	//UGameplayStatics::OpenLevel(World, TEXT("/Game/Levels/SessionLevel"), true, "listen");
+	UGameplayStatics::OpenLevel(World, TEXT("/Game/Levels/SessionLevel"), true, "listen");
 	//World->ServerTravel("/Game/Levels/SessionLevel?listen");
 	//World->ServerTravel("/Game/Levels/TestBossLevel?listen");
 }
@@ -222,7 +222,7 @@ void USGameInstance::CreateSession()
 	FOnlineSessionSettings SessionSettings;
 	SessionSettings.bShouldAdvertise = true;
 	SessionSettings.NumPublicConnections = 4;
-	SessionSettings.bAllowJoinInProgress = true;
+	//SessionSettings.bAllowJoinInProgress = true;
 	//SessionSettings.bUsesPresence = true;
 	SessionSettings.bIsLANMatch = true; // TEST
 
