@@ -13,6 +13,8 @@ ATestSessionGameMode::ATestSessionGameMode()
 	PlayerControllerClass = ASessionRoomPlayerController::StaticClass();
 	PlayerStateClass = ASPlayerState::StaticClass();
 
+
+	PlayerCount = 0;
 }
 
 void ATestSessionGameMode::PostLogin(APlayerController* NewPlayer)
@@ -24,11 +26,19 @@ void ATestSessionGameMode::PostLogin(APlayerController* NewPlayer)
 	{
 		return;
 	}
-	
+
 	// PlayerName을 Player0, Player1 과 같은 방식으로 설정
 	// TODO : PlayerCount 값을 따로 만들어서 관리 필요 (현재 방식은 같은 이름이 나올 수 있음)
 	// -> 해당 방식이 스레드 안전한가? 확인 필요
-	SessionRoomPlayerController->SetPlayerName(FString::Printf(TEXT("Player%d"), PlayerControllerList.Num()));
+	SessionRoomPlayerController->SetPlayerName(FString::Printf(TEXT("Player%d"), PlayerCount++));
+
+	// 팀 설정 처리
+	ASPlayerState* SPlayerState = SessionRoomPlayerController->GetPlayerState<ASPlayerState>();
+	if (nullptr == SPlayerState)
+	{
+		return;
+	}
+	SPlayerState->SetTeamNumber(PlayerControllerList.Num() % 2);
 	PlayerControllerList.Add(SessionRoomPlayerController);
 
 	USGameInstance* SGameInstance = GetGameInstance<USGameInstance>();
@@ -36,7 +46,7 @@ void ATestSessionGameMode::PostLogin(APlayerController* NewPlayer)
 	{
 		return;
 	}
-	
+
 	// TEST CODE : PostLogin()에서 세션에 현재 접속 가능한 인원 수를 차감할 수 있는지 확인
 	// Logout() 될때도 처리 필요
 	IOnlineSubsystem* Subsystem = IOnlineSubsystem::Get();
@@ -61,11 +71,10 @@ void ATestSessionGameMode::PostLogin(APlayerController* NewPlayer)
 
 	for (auto SPlayerController : PlayerControllerList)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Player %s Login"), *SPlayerController->GetPlayerName());
+		UE_LOG(LogTemp, Log, TEXT("%s Login"), *SPlayerController->GetPlayerName());
 		Engine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Player %s Login"), *SPlayerController->GetPlayerName()));
 	}
 
-	// TODO : 팀 설정 처리
 }
 
 void ATestSessionGameMode::Logout(AController* Exiting)
@@ -98,8 +107,31 @@ void ATestSessionGameMode::Logout(AController* Exiting)
 
 void ATestSessionGameMode::StartGame()
 {
-	// TEST CODE
-	//GetWorld()->ServerTravel("/Game/Levels/TestBossLevel?listen");
+	// Player 모두가 Ready 상태인지 확인
+	bool bCanStartGame = true;
+	for (auto SessionRoomPlayerController : PlayerControllerList)
+	{
+		if (false == SessionRoomPlayerController->IsPlayerReady())
+		{
+			bCanStartGame = false;
+			break;
+		}
+	}
+
+	if (false == bCanStartGame)
+	{
+		// TODO : 오류 Widget 보이도록 수정 (서버만 보이도록)
+		UE_LOG(LogTemp, Log, TEXT("Can't Start Game, All Players must be ready state"));
+		return;
+	}
+
+	// Session Start
+	USGameInstance* SGameInstance = GetGameInstance<USGameInstance>();
+	if (nullptr == SGameInstance)
+	{
+		return;
+	}
+	SGameInstance->StartSession();
 }
 
 void ATestSessionGameMode::UpdatePlayerList()
@@ -120,6 +152,8 @@ void ATestSessionGameMode::UpdatePlayerList()
 		// PlayerState의 정보를 이용해서 설정
 		NewPlayerInfo.bPlayerReady = SPlayerState->IsPlayerReady();
 		NewPlayerInfo.PlayerName = SPlayerState->GetPlayerName();
+		NewPlayerInfo.TeamNumber = Index % 2;
+		SPlayerState->SetTeamNumber(NewPlayerInfo.TeamNumber);
 
 		PlayerInfoList.Add(NewPlayerInfo);
 		Index++;

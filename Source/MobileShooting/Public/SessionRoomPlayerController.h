@@ -51,6 +51,8 @@ public:
 
 	FString GetPlayerName();
 
+	bool IsPlayerReady() const;
+
 protected:
 
 	virtual void BeginPlay() override;

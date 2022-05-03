@@ -18,6 +18,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerInfo")
 	FString PlayerName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerInfo")
+	int32 TeamNumber;
 };
 
 /**
@@ -47,4 +50,6 @@ protected:
 	TArray<class ASessionRoomPlayerController*> PlayerControllerList;
 
 	TArray<FRoomPlayerInfo> PlayerInfoList;
+
+	uint32 PlayerCount;
 };

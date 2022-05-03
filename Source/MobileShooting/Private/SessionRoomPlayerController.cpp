@@ -39,17 +39,7 @@ void ASessionRoomPlayerController::EndPlay(EEndPlayReason::Type Reason)
 {
 	Super::EndPlay(Reason);
 
-	UE_LOG(LogTemp, Log, TEXT("ASessionRoomPlayerController::EndPlay() called, PlayerController : %s"), *GetName());
-	// TEST CODE
-	// TODO : 앱을 종료할 때 처리가 필요
-	if (GetLocalRole() == ROLE_Authority)
-	{
-		ATestSessionGameMode* SessionGameMode = Cast<ATestSessionGameMode>(GetWorld()->GetAuthGameMode());
-		if (nullptr != SessionGameMode)
-		{
-			//SessionGameMode->Logout(this);
-		}
-	}
+	UE_LOG(LogTemp, Log, TEXT("ASessionRoomPlayerController::EndPlay() called, PlayerController : %s"), *GetName());	
 }
 
 void ASessionRoomPlayerController::UpdatePlayerList(const TArray<FRoomPlayerInfo>& PlayerInfoList)
@@ -108,13 +98,8 @@ bool ASessionRoomPlayerController::Server_RequestServerPlayerList_Validate()
 void ASessionRoomPlayerController::ChangeReadyState()
 {
 	UE_LOG(LogTemp, Log, TEXT("Change Ready State"));
-	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
-	if (nullptr == SPlayerState)
-	{
-		return;
-	}
-
-	bool bReady = SPlayerState->IsPlayerReady();
+	
+	bool bReady = IsPlayerReady();
 	ReadyGame(!bReady);
 }
 
@@ -231,4 +216,15 @@ FString ASessionRoomPlayerController::GetPlayerName()
 	}
 
 	return SPlayerState->GetPlayerName();
+}
+
+bool ASessionRoomPlayerController::IsPlayerReady() const
+{
+	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
+	if (nullptr == SPlayerState)
+	{
+		return false;
+	}
+
+	return SPlayerState->IsPlayerReady();
 }

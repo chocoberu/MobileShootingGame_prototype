@@ -136,7 +136,8 @@ void USGameInstance::OnStartOnlineGameComplete(FName SessionName, bool Success)
 		return;
 	}
 
-	UGameplayStatics::OpenLevel(GetWorld(), TEXT("/Game/Levels/SessionLevel"), true, "listen");
+	//UGameplayStatics::OpenLevel(GetWorld(), TEXT("/Game/Levels/SessionLevel"), true, "listen");
+	GetWorld()->ServerTravel("/Game/Levels/TestBossLevel?listen");
 }
 
 void USGameInstance::OnDestroySessionComplete(FName SessionName, bool Success)
@@ -255,6 +256,17 @@ void USGameInstance::FindSession()
 		OnFindSessionsCompleteDelegateHandle = SessionInterface->AddOnFindSessionsCompleteDelegate_Handle(OnFindSessionsCompleteDelegate);
 		SessionInterface->FindSessions(*Player->GetPreferredUniqueNetId(), SessionSearch.ToSharedRef());
 	}
+}
+
+void USGameInstance::StartSession()
+{
+	if (false == SessionInterface.IsValid())
+	{
+		return;
+	}
+
+	OnStartSessionCompleteDelegateHandle = SessionInterface->AddOnStartSessionCompleteDelegate_Handle(OnStartSessionCompleteDelegate);
+	SessionInterface->StartSession(SESSION_NAME);
 }
 
 void USGameInstance::Host()

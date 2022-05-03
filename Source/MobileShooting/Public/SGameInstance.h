@@ -88,6 +88,8 @@ public:
 	// TODO : 필요하다면 매개변수를 통해 QueryParam 수정하도록
 	void FindSession();
 
+	void StartSession();
+
 	void LeaveAndDestroySession();
 
 	TArray<FCustomSessionResult> GetSessionList() const { return SessionResultList; }

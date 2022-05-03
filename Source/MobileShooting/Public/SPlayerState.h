@@ -35,7 +35,13 @@ public:
 
 	bool IsPlayerReady() const { return bPlayerReady; }
 
+	void SetTeamNumber(const int32 Team) { TeamNumber = Team; }
+
+	int32 GetTeamNumber() const { return TeamNumber; }
+
 protected:
+
+	int32 TeamNumber;
 
 	bool bPlayerReady;
 
