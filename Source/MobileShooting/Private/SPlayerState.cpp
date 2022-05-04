@@ -3,6 +3,7 @@
 
 #include "SPlayerState.h"
 #include "TestSaveGame.h"
+#include "Net/UnrealNetwork.h"
 
 ASPlayerState::ASPlayerState()
 {
@@ -30,4 +31,12 @@ void ASPlayerState::AddAssistScore()
 {
 	++AssistScore;
 	UE_LOG(LogTemp, Log, TEXT("Current Assist Score : %d"), AssistScore);
+}
+
+void ASPlayerState::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ASPlayerState, TeamNumber);
+	//DOREPLIFETIME(ASPlayerState, bPlayerReady);
 }

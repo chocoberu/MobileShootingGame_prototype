@@ -41,6 +41,7 @@ public:
 
 protected:
 
+	UPROPERTY(Replicated)
 	int32 TeamNumber;
 
 	bool bPlayerReady;

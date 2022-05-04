@@ -174,15 +174,6 @@ void ATestSessionGameMode::LeaveSession(const FString PlayerName)
 	{
 		if (SessionRoomPlayerController->GetPlayerName().Compare(PlayerName) == 0)
 		{
-			//Logout(SessionRoomPlayerController);
-			// TODO : 서버 상에서도 GameInstance->LeaveAndDestroySession() 처리가 필요한가?, 확인 필요
-			/*USGameInstance* SGameInstance = GetGameInstance<USGameInstance>();
-			if (nullptr == SGameInstance)
-			{
-				return;
-			}
-			SGameInstance->LeaveAndDestroySession();*/
-
 			SessionRoomPlayerController->Client_LeaveSession();
 			return;
 		}
