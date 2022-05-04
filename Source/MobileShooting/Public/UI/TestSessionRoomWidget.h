@@ -31,7 +31,14 @@ public:
 	UFUNCTION()
 	void OnClickedStartButton();
 
+	UFUNCTION()
+	void OnClickedSelectWeaponButton();
+
 	void SetStartButtonVisible(bool NewFlag);
+
+	void OnFinishSelectWeapon();
+
+	void OnCancelSelectWeapon();
 
 protected:
 
@@ -52,6 +59,12 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	class UButton* ReadyButton;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* SelectWeaponButton;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTestWeaponSelectWidget* WeaponSelect;
 
 	TArray<class USessionPlayerRow*> BluePlayerList;
 

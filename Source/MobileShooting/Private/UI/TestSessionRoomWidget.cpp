@@ -3,6 +3,7 @@
 
 #include "UI/TestSessionRoomWidget.h"
 #include "UI/SessionPlayerRow.h"
+#include "UI/TestWeaponSelectWidget.h"
 #include "TestSessionGameMode.h"
 #include "SessionRoomPlayerController.h"
 #include "Kismet/GameplayStatics.h"
@@ -17,7 +18,13 @@ bool UTestSessionRoomWidget::Initialize()
 	PrevButton->OnClicked.AddDynamic(this, &UTestSessionRoomWidget::OnClickedPrevButton);
 	ReadyButton->OnClicked.AddDynamic(this, &UTestSessionRoomWidget::OnClickedReadyButton);
 	StartButton->OnClicked.AddDynamic(this, &UTestSessionRoomWidget::OnClickedStartButton);
-	
+	SelectWeaponButton->OnClicked.AddDynamic(this, &UTestSessionRoomWidget::OnClickedSelectWeaponButton);
+
+	//WeaponSelect->SetParentWidget(this);
+	WeaponSelect->OnSelectClickedDelegate.AddUObject(this, &UTestSessionRoomWidget::OnFinishSelectWeapon);
+	WeaponSelect->OnCancelClickedDelegate.AddUObject(this, &UTestSessionRoomWidget::OnCancelSelectWeapon);
+	WeaponSelect->SetVisibility(ESlateVisibility::Hidden);
+
 	return Result;
 }
 
@@ -98,6 +105,13 @@ void UTestSessionRoomWidget::OnClickedStartButton()
 	SPlayerController->StartGame();
 }
 
+void UTestSessionRoomWidget::OnClickedSelectWeaponButton()
+{
+	WeaponSelect->SetVisibility(ESlateVisibility::Visible);
+
+	// TODO : 기존 PlayerList는 어떻게 처리할지
+}
+
 void UTestSessionRoomWidget::SetStartButtonVisible(bool NewFlag)
 {
 	if (true == NewFlag)
@@ -108,4 +122,14 @@ void UTestSessionRoomWidget::SetStartButtonVisible(bool NewFlag)
 	{
 		StartButton->SetVisibility(ESlateVisibility::Hidden);
 	}
+}
+
+void UTestSessionRoomWidget::OnFinishSelectWeapon()
+{
+
+}
+
+void UTestSessionRoomWidget::OnCancelSelectWeapon()
+{
+	WeaponSelect->SetVisibility(ESlateVisibility::Hidden);
 }

@@ -35,6 +35,8 @@ public:
 
 	FString GetSelectedLevel() const;
 
+	void OnSelectWeaponFinish();
+
 protected:
 
 	UPROPERTY(meta = (BindWidget))

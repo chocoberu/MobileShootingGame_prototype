@@ -6,7 +6,9 @@
 #include "Components/WidgetSwitcher.h"
 #include "Components/Button.h"
 #include "SGameInstance.h"
+#include "TestSaveGame.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/GameplayStatics.h"
 
 bool UTestGameStartWidget::Initialize()
 {
@@ -22,48 +24,28 @@ bool UTestGameStartWidget::Initialize()
 
 	WeaponSelect->SetParentWidget(this);
 	WeaponSelect->OnCancelClickedDelegate.AddUObject(this, &UTestGameStartWidget::SetWidgetSwitcher, 0);
+	WeaponSelect->OnSelectClickedDelegate.AddUObject(this, &UTestGameStartWidget::OnSelectWeaponFinish);
 
 	return true;
 }
 
 void UTestGameStartWidget::OnClickedSinglePlayButton()
 {
-	auto TestGameInstance = Cast<USGameInstance>(GetGameInstance());
-	if (nullptr == TestGameInstance)
-	{
-		return;
-	}
-
-	// TODO : SelectedLevel 처리를 위젯 내부에서 하도록 수정
-	//TestGameInstance->SetCurrentSelectLevel(TEXT("TestBossLevel"));
 	SelectedLevelName = TEXT("TestBossLevel");
 	StartWidgetSwitcher->SetActiveWidgetIndex(1);
 }
 
 void UTestGameStartWidget::OnClickedPraticeModeButton()
 {
-	auto TestGameInstance = Cast<USGameInstance>(GetGameInstance());
-	if (nullptr == TestGameInstance)
-	{
-		return;
-	}
 
-	//TestGameInstance->SetCurrentSelectLevel(TEXT("PraticeLevel"));
 	SelectedLevelName = TEXT("PraticeLevel");
 	StartWidgetSwitcher->SetActiveWidgetIndex(1);
 }
 
 void UTestGameStartWidget::OnClickedMultiPlayButton()
 {
-	auto TestGameInstance = Cast<USGameInstance>(GetGameInstance());
-	if (nullptr == TestGameInstance)
-	{
-		return;
-	}
-
-	//TestGameInstance->SetCurrentSelectLevel(TEXT("Lobby"));
 	SelectedLevelName = TEXT("Lobby");
-	StartWidgetSwitcher->SetActiveWidgetIndex(1);
+	UGameplayStatics::OpenLevel(GetWorld(), FName(*SelectedLevelName));
 }
 
 void UTestGameStartWidget::OnClickedExitButton()
@@ -79,4 +61,33 @@ void UTestGameStartWidget::SetWidgetSwitcher(const int32 Index)
 FString UTestGameStartWidget::GetSelectedLevel() const
 {
 	return SelectedLevelName;
+}
+
+void UTestGameStartWidget::OnSelectWeaponFinish()
+{
+	int32 WeaponId = WeaponSelect->GetSelectedWeaponId();
+	int32 SubWeaponId = WeaponSelect->GetSelectedSubWeaponId();
+
+	// TEMP : 잘못된 값이 저장된 경우 기본값으로 하드코딩
+	if (-1 == WeaponId)
+	{
+		WeaponId = 0;
+	}	
+	if (-1 == SubWeaponId)
+	{
+		SubWeaponId = 1000;
+	}
+
+	UTestSaveGame* NewPlayerData = NewObject<UTestSaveGame>();
+	NewPlayerData->MainWeaponId = WeaponId;
+	NewPlayerData->SubWeaponId = SubWeaponId;
+
+	if (true == UGameplayStatics::SaveGameToSlot(NewPlayerData, TEXT("Test"), 0))
+	{
+		UGameplayStatics::OpenLevel(GetWorld(), FName(*SelectedLevelName));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Save Error"));
+	}
 }

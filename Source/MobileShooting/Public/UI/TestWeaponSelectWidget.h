@@ -7,6 +7,7 @@
 #include "TestWeaponSelectWidget.generated.h"
 
 using FOnCancelClickedDelegate = TMulticastDelegate<void()>;
+using FOnSelectClickedDelegate = TMulticastDelegate<void()>;
 /**
  * 
  */
@@ -27,7 +28,13 @@ public:
 
 	void SetParentWidget(class UTestGameStartWidget* NewParentWidget);
 
+	int32 GetSelectedWeaponId() const;
+
+	int32 GetSelectedSubWeaponId() const;
+
 	FOnCancelClickedDelegate OnCancelClickedDelegate;
+
+	FOnSelectClickedDelegate OnSelectClickedDelegate;
 	
 protected:
 

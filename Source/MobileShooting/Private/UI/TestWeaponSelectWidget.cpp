@@ -38,43 +38,28 @@ void UTestWeaponSelectWidget::SetParentWidget(class UTestGameStartWidget* NewPar
 
 void UTestWeaponSelectWidget::OnSelectButtonClicked()
 {
-	auto TestGameInstance = Cast<USGameInstance>(GetGameInstance());
-	if (nullptr == TestGameInstance)
-	{
-		return;
-	}
-
-	// TEMP : 현재 인벤토리 아이템 미선택시 임시값 하드코딩
-	int32 WeaponId = WeaponInventory->GetSelectedWeaponId();
-	if (-1 == WeaponId)
-	{
-		WeaponId = 0;
-	}
-	int32 SubWeaponId = SubWeaponInventory->GetSelectedWeaponId();
-	if (-1 == SubWeaponId)
-	{
-		SubWeaponId = 1000;
-	}
-	
-	// 현재 선택한 weapon id, subweapon id를 SaveGame으로 저장
-	UTestSaveGame* NewPlayerData = NewObject<UTestSaveGame>();
-	NewPlayerData->MainWeaponId = WeaponId;
-	NewPlayerData->SubWeaponId = SubWeaponId;
-
-	if (true == UGameplayStatics::SaveGameToSlot(NewPlayerData, TEXT("Test"), 0))
-	{
-		//UGameplayStatics::OpenLevel(GetWorld(), FName(*TestGameInstance->GetCurrentSelectLevel()));
-		UGameplayStatics::OpenLevel(GetWorld(), FName(ParentWidget->GetSelectedLevel()));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Save Error"));
-	}
-	//TestGameInstance->SetCurrentWeaponID(WeaponId);
-	//TestGameInstance->SetCurrentSubWeaponID(SubWeaponId);
+	OnSelectClickedDelegate.Broadcast();
 }
 
 void UTestWeaponSelectWidget::OnCancelButtonClicked()
 {
 	OnCancelClickedDelegate.Broadcast();
+}
+
+int32 UTestWeaponSelectWidget::GetSelectedWeaponId() const
+{
+	if (nullptr == WeaponInventory)
+	{
+		return -1;
+	}
+	return WeaponInventory->GetSelectedWeaponId();
+}
+
+int32 UTestWeaponSelectWidget::GetSelectedSubWeaponId() const
+{
+	if (nullptr == SubWeaponInventory)
+	{
+		return -1;
+	}
+	return SubWeaponInventory->GetSelectedWeaponId();
 }
