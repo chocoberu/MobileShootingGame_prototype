@@ -2,6 +2,7 @@
 
 
 #include "SGameInstance.h"
+#include "UI/ErrorMessageWidget.h"
 #include "OnlineSubsystem.h"
 #include "OnlineSessionSettings.h"
 #include "Kismet/GameplayStatics.h"
@@ -41,6 +42,16 @@ void USGameInstance::Init()
 		{
 			SessionSearch = MakeShareable(new FOnlineSessionSearch());
 		}
+	}
+	if (nullptr != ErrorMessageClass)
+	{
+		ErrorMessageWidget = CreateWidget<UErrorMessageWidget>(this, ErrorMessageClass);
+		if (nullptr == ErrorMessageWidget)
+		{
+			UE_LOG(LogTemp, Error, TEXT("ErrorMessageWidget is nullptr"));
+			return;
+		}
+		ErrorMessageWidget->SetVisibility(ESlateVisibility::Hidden);
 	}
 	
 }

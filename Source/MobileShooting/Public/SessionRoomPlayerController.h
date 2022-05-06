@@ -39,7 +39,7 @@ public:
 	UFUNCTION(Client, Reliable)
 	void Client_UpdatePlayerList(const TArray<FRoomPlayerInfo>& PlayerInfoList);
 
-	void LeaveSession();
+	void LeaveSession(bool bSessionHost = true);
 
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_LeaveSession();

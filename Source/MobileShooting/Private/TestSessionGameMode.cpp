@@ -48,7 +48,6 @@ void ATestSessionGameMode::PostLogin(APlayerController* NewPlayer)
 	}
 
 	// TEST CODE : PostLogin()에서 세션에 현재 접속 가능한 인원 수를 차감할 수 있는지 확인
-	// Logout() 될때도 처리 필요
 	IOnlineSubsystem* Subsystem = IOnlineSubsystem::Get();
 	if (nullptr != Subsystem)
 	{
@@ -90,6 +89,7 @@ void ATestSessionGameMode::Logout(AController* Exiting)
 	PlayerControllerList.Remove(SessionRoomPlayerController);
 	UpdatePlayerList();
 
+	// TEST CODE : Logout()에서 세션에 현재 접속 가능한 인원 수를 차감할 수 있는지 확인, 수정 필요
 	IOnlineSubsystem* Subsystem = IOnlineSubsystem::Get();
 	if (nullptr != Subsystem)
 	{

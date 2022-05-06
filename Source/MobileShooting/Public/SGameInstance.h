@@ -127,6 +127,12 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Data")
 	class UDataTable* TestSubWeaponDataTable;
 
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<class UErrorMessageWidget> ErrorMessageClass;
+
+	UPROPERTY()
+	class UErrorMessageWidget* ErrorMessageWidget;
+
 	IOnlineSessionPtr SessionInterface;
 
 	TSharedPtr<class FOnlineSessionSearch> SessionSearch;

@@ -164,13 +164,14 @@ void ASessionRoomPlayerController::Client_UpdatePlayerList_Implementation(const 
 	UpdatePlayerList(PlayerInfoList);
 }
 
-void ASessionRoomPlayerController::LeaveSession()
+void ASessionRoomPlayerController::LeaveSession(bool bSessionHost)
 {
 	if (GetLocalRole() == ROLE_Authority)
 	{
 		ATestSessionGameMode* SessionGameMode = Cast<ATestSessionGameMode>(GetWorld()->GetAuthGameMode());
 		if (nullptr != SessionGameMode)
 		{
+			// TODO : SessionHost가 나갈 때 다른 클라이언트 kick 처리
 			SessionGameMode->LeaveSession(GetPlayerName());
 		}
 	}
@@ -182,7 +183,7 @@ void ASessionRoomPlayerController::LeaveSession()
 
 void ASessionRoomPlayerController::Server_LeaveSession_Implementation()
 {
-	LeaveSession();
+	LeaveSession(false);
 }
 
 bool ASessionRoomPlayerController::Server_LeaveSession_Validate()
