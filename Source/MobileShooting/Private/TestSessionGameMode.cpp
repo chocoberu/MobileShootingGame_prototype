@@ -168,14 +168,27 @@ void ATestSessionGameMode::UpdatePlayerList()
 	}
 }
 
-void ATestSessionGameMode::LeaveSession(const FString PlayerName)
+void ATestSessionGameMode::LeaveSession(const FString PlayerName, bool bSessionHost)
 {
-	for (auto SessionRoomPlayerController : PlayerControllerList)
+	// 호스트가 떠나는 경우 클라이언트도 LeaveSession() 처리
+	if (true == bSessionHost)
 	{
-		if (SessionRoomPlayerController->GetPlayerName().Compare(PlayerName) == 0)
+		for (auto SessionRoomPlayerController : PlayerControllerList)
 		{
 			SessionRoomPlayerController->Client_LeaveSession();
-			return;
+		}
+	}
+
+	// 호스트가 아닌 경우
+	else
+	{
+		for (auto SessionRoomPlayerController : PlayerControllerList)
+		{
+			if (SessionRoomPlayerController->GetPlayerName().Compare(PlayerName) == 0)
+			{
+				SessionRoomPlayerController->Client_LeaveSession();
+				return;
+			}
 		}
 	}
 }

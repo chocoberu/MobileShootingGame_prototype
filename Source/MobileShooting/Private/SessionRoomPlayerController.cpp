@@ -172,7 +172,7 @@ void ASessionRoomPlayerController::LeaveSession(bool bSessionHost)
 		if (nullptr != SessionGameMode)
 		{
 			// TODO : SessionHost가 나갈 때 다른 클라이언트 kick 처리
-			SessionGameMode->LeaveSession(GetPlayerName());
+			SessionGameMode->LeaveSession(GetPlayerName(), bSessionHost);
 		}
 	}
 	else

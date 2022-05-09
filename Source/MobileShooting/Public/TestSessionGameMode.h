@@ -43,7 +43,7 @@ public:
 
 	void StartGame();
 
-	void LeaveSession(const FString PlayerName);
+	void LeaveSession(const FString PlayerName, bool bSessionHost);
 
 protected:
 
