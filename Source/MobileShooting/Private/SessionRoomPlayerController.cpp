@@ -191,13 +191,19 @@ bool ASessionRoomPlayerController::Server_LeaveSession_Validate()
 	return true;
 }
 
-void ASessionRoomPlayerController::Client_LeaveSession_Implementation()
+void ASessionRoomPlayerController::Client_LeaveSession_Implementation(bool bKicked)
 {
+	// TODO : bKicked인 경우 ErrorMessage 처리 필요
 	USGameInstance* SGameInstance = Cast<USGameInstance>(GetWorld()->GetGameInstance());
 	if (nullptr != SGameInstance)
 	{
+		if (true == bKicked)
+		{
+			SGameInstance->ShowErrorMessage(0);
+		}
 		SGameInstance->LeaveAndDestroySession();
 	}
+	
 }
 
 void ASessionRoomPlayerController::SetPlayerName(const FString NewName)

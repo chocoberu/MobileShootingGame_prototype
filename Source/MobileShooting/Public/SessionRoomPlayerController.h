@@ -45,7 +45,7 @@ public:
 	void Server_LeaveSession();
 
 	UFUNCTION(Client, Reliable)
-	void Client_LeaveSession();
+	void Client_LeaveSession(bool bKicked = false);
 
 	void SetPlayerName(const FString NewName);
 

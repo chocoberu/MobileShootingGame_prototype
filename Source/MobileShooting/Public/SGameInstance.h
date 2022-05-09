@@ -69,6 +69,8 @@ public:
 
 	virtual void Init() override;
 
+	// WeaponData 관련
+
 	FStreamableManager StreamableManager;
 
 	FString GetWeaponPath(const int32 WeaponID);
@@ -78,6 +80,8 @@ public:
 	void GetAllWeaponData(const FString& ContextString, TArray<FWeaponData*>& OutRowArray);
 
 	void GetAllSubWeaponData(const FString& ContextString, TArray<FWeaponData*>& OutRowArray);
+
+	// Network 관련
 
 	UFUNCTION(Exec)
 	void Host();
@@ -95,6 +99,9 @@ public:
 	TArray<FCustomSessionResult> GetSessionList() const { return SessionResultList; }
 
 	FOnFindSessionCompleteDelegate OnFindSessionCompleteDelegate;
+
+	// ErrorMessage 관련
+	void ShowErrorMessage(uint32 ErrorCode);
 
 private:
 

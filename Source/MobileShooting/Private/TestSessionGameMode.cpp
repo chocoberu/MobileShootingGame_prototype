@@ -175,7 +175,7 @@ void ATestSessionGameMode::LeaveSession(const FString PlayerName, bool bSessionH
 	{
 		for (auto SessionRoomPlayerController : PlayerControllerList)
 		{
-			SessionRoomPlayerController->Client_LeaveSession();
+			SessionRoomPlayerController->Client_LeaveSession(true);
 		}
 	}
 

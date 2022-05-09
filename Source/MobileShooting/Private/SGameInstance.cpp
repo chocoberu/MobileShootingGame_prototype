@@ -51,7 +51,7 @@ void USGameInstance::Init()
 			UE_LOG(LogTemp, Error, TEXT("ErrorMessageWidget is nullptr"));
 			return;
 		}
-		ErrorMessageWidget->SetVisibility(ESlateVisibility::Hidden);
+		//ErrorMessageWidget->SetVisibility(ESlateVisibility::Hidden);
 	}
 	
 }
@@ -331,4 +331,10 @@ void USGameInstance::LeaveAndDestroySession()
 
 	OnDestroySessionCompleteDelegateHandle = SessionInterface->AddOnDestroySessionCompleteDelegate_Handle(OnDestroySessionCompleteDelegate);
 	SessionInterface->DestroySession(SESSION_NAME);
+}
+
+void USGameInstance::ShowErrorMessage(uint32 ErrorCode)
+{
+	// TEST CODE
+	ErrorMessageWidget->AddToViewport(10);
 }
