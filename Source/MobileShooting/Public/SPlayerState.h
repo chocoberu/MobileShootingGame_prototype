@@ -39,6 +39,14 @@ public:
 
 	int32 GetTeamNumber() const { return TeamNumber; }
 
+	void SetWeaponId(const int32 WeaponId) { CurrentWeaponId = WeaponId; }
+
+	void SetSubWeaponId(const int32 SubWeaponId) { CurrentSubweaponId = SubWeaponId; }
+
+	int32 GetWeaponId() const { return CurrentWeaponId; }
+
+	int32 GetSubWeaponId() const { return CurrentSubweaponId; }
+
 protected:
 
 	UPROPERTY(Replicated)
@@ -53,7 +61,7 @@ protected:
 	uint32 AssistScore;
 
 	// current weapon id, subweapon id
-	int32 CurrentWeaponID;
+	int32 CurrentWeaponId;
 	
-	int32 CurrentSubweaponID;
+	int32 CurrentSubweaponId;
 };

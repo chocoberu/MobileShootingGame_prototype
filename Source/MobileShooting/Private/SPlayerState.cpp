@@ -8,6 +8,10 @@
 ASPlayerState::ASPlayerState()
 {
 	ResetPlayerState();
+
+	// TEST CODE : 하드코딩, 수정 필요
+	CurrentWeaponId = 0;
+	CurrentSubweaponId = 1000;
 }
 
 void ASPlayerState::ResetPlayerState()

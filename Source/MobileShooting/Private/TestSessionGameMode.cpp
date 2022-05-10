@@ -175,7 +175,14 @@ void ATestSessionGameMode::LeaveSession(const FString PlayerName, bool bSessionH
 	{
 		for (auto SessionRoomPlayerController : PlayerControllerList)
 		{
-			SessionRoomPlayerController->Client_LeaveSession(true);
+			if (SessionRoomPlayerController->GetPlayerName().Compare(PlayerName) == 0)
+			{
+				SessionRoomPlayerController->Client_LeaveSession();
+			}
+			else
+			{
+				SessionRoomPlayerController->Client_LeaveSession(true);
+			}
 		}
 	}
 

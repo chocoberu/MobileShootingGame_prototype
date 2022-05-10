@@ -5,8 +5,10 @@
 #include "SPlayerState.h"
 #include "TestSessionGameMode.h"
 #include "SGameInstance.h"
+#include "TestSaveGame.h"
 #include "UI/TestSessionRoomWidget.h"
 #include "Blueprint/UserWidget.h"
+#include "Kismet/GameplayStatics.h"
 
 void ASessionRoomPlayerController::BeginPlay()
 {
@@ -31,6 +33,12 @@ void ASessionRoomPlayerController::BeginPlay()
 		SessionRoomWidget->SetStartButtonVisible(false);
 	}
 	SessionRoomWidget->AddToViewport();
+
+	SPlayerState = GetPlayerState<ASPlayerState>();
+	if(nullptr == SPlayerState)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("SPlayerState is nullptr"));
+	}
 	
 	RequestServerPlayerList();
 }
@@ -62,6 +70,7 @@ void ASessionRoomPlayerController::UpdatePlayerList(const TArray<FRoomPlayerInfo
 	}
 
 	// 비어있는 Row 초기화
+	// 하드 코딩 수정 필요
 	for (; Index < 4; Index++)
 	{
 		SessionRoomWidget->SetPlayerRowByIndex(Index, TEXT("Empty"), false);
@@ -99,7 +108,30 @@ void ASessionRoomPlayerController::ChangeReadyState()
 {
 	UE_LOG(LogTemp, Log, TEXT("Change Ready State"));
 	
+	if (nullptr == SPlayerState)
+	{
+		return;
+	}
+
 	bool bReady = IsPlayerReady();
+
+	if (false == bReady)
+	{
+		UTestSaveGame* NewSaveGame = NewObject<UTestSaveGame>();
+		NewSaveGame->MainWeaponId = SPlayerState->GetWeaponId();
+		NewSaveGame->SubWeaponId = SPlayerState->GetSubWeaponId();
+
+		if (false == UGameplayStatics::SaveGameToSlot(NewSaveGame, SPlayerState->GetPlayerName(), 0))
+		{
+			UE_LOG(LogTemp, Error, TEXT("Failed to save data!"));
+			return;
+		}
+		else
+		{
+			UE_LOG(LogTemp, Log, TEXT("Save Success"));
+		}
+	}
+
 	ReadyGame(!bReady);
 }
 
@@ -108,7 +140,7 @@ void ASessionRoomPlayerController::ReadyGame(bool bReadyState)
 	if (GetLocalRole() == ROLE_Authority)
 	{
 		// PlayerState에 값을 저장
-		ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
+		//ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
 		if (nullptr != SPlayerState)
 		{
 			SPlayerState->SetPlayerReadyState(bReadyState);
@@ -137,14 +169,16 @@ bool ASessionRoomPlayerController::Server_ReadyGame_Validate(bool bReadyState)
 
 void ASessionRoomPlayerController::Client_ReadyGame_Implementation(bool bReadyState)
 {
-	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
-	if (nullptr != SPlayerState)
+	//ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
+	if (nullptr == SPlayerState)
 	{
-		SPlayerState->SetPlayerReadyState(bReadyState);
+		return;
 	}
+	SPlayerState->SetPlayerReadyState(bReadyState);
 
 	// TODO : Ready State == true인 경우 Weapon Select Button 비활성화
-	// TODO : Ready State == true인 경우 PlayerState 값을 저장
+	
+	
 }
 
 void ASessionRoomPlayerController::StartGame()
@@ -208,7 +242,7 @@ void ASessionRoomPlayerController::Client_LeaveSession_Implementation(bool bKick
 
 void ASessionRoomPlayerController::SetPlayerName(const FString NewName)
 {
-	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
+	//ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
 	if (nullptr == SPlayerState)
 	{
 		return;
@@ -219,7 +253,7 @@ void ASessionRoomPlayerController::SetPlayerName(const FString NewName)
 
 FString ASessionRoomPlayerController::GetPlayerName()
 {
-	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
+	//ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
 	if (nullptr == SPlayerState)
 	{
 		return FString();
@@ -230,11 +264,29 @@ FString ASessionRoomPlayerController::GetPlayerName()
 
 bool ASessionRoomPlayerController::IsPlayerReady() const
 {
-	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
+	//ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
 	if (nullptr == SPlayerState)
 	{
 		return false;
 	}
 
 	return SPlayerState->IsPlayerReady();
+}
+
+void ASessionRoomPlayerController::SetWeaponId(const int32 WeaponId)
+{
+	if (nullptr == SPlayerState)
+	{
+		return;
+	}
+	SPlayerState->SetWeaponId(WeaponId);
+}
+
+void ASessionRoomPlayerController::SetSubWeaponId(const int32 SubWeaponId)
+{
+	if (nullptr == SPlayerState)
+	{
+		return;
+	}
+	SPlayerState->SetSubWeaponId(SubWeaponId);
 }

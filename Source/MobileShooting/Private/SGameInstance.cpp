@@ -43,17 +43,6 @@ void USGameInstance::Init()
 			SessionSearch = MakeShareable(new FOnlineSessionSearch());
 		}
 	}
-	if (nullptr != ErrorMessageClass)
-	{
-		ErrorMessageWidget = CreateWidget<UErrorMessageWidget>(this, ErrorMessageClass);
-		if (nullptr == ErrorMessageWidget)
-		{
-			UE_LOG(LogTemp, Error, TEXT("ErrorMessageWidget is nullptr"));
-			return;
-		}
-		//ErrorMessageWidget->SetVisibility(ESlateVisibility::Hidden);
-	}
-	
 }
 
 FString USGameInstance::GetWeaponPath(const int32 WeaponID)
@@ -336,5 +325,25 @@ void USGameInstance::LeaveAndDestroySession()
 void USGameInstance::ShowErrorMessage(uint32 ErrorCode)
 {
 	// TEST CODE
-	ErrorMessageWidget->AddToViewport(10);
+	// TODO : 레벨 전환 시 UMG가 사라지지 않도록 수정 필요
+	if (nullptr == ErrorMessageWidget)
+	{
+		if (nullptr != ErrorMessageClass)
+		{
+			ErrorMessageWidget = CreateWidget<UErrorMessageWidget>(this, ErrorMessageClass);
+			if (nullptr == ErrorMessageWidget)
+			{
+				UE_LOG(LogTemp, Error, TEXT("ErrorMessageWidget is nullptr"));
+				return;
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("ErrorMessageClass is nullptr"));
+			return;
+		}
+	}
+
+	ErrorMessageWidget->AddToViewport();
+	ErrorMessageWidget->SetVisibility(ESlateVisibility::Visible);
 }

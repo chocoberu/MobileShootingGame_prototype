@@ -126,7 +126,19 @@ void UTestSessionRoomWidget::SetStartButtonVisible(bool NewFlag)
 
 void UTestSessionRoomWidget::OnFinishSelectWeapon()
 {
+	int32 WeaponId = WeaponSelect->GetSelectedWeaponId();
+	int32 SubWeaponId = WeaponSelect->GetSelectedSubWeaponId();
 
+	ASessionRoomPlayerController* SPlayerController = GetOwningPlayer<ASessionRoomPlayerController>();
+	if (nullptr == SPlayerController)
+	{
+		return;
+	}
+
+	SPlayerController->SetWeaponId(WeaponId);
+	SPlayerController->SetSubWeaponId(SubWeaponId);
+	
+	WeaponSelect->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UTestSessionRoomWidget::OnCancelSelectWeapon()
