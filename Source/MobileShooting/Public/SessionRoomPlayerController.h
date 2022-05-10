@@ -69,5 +69,5 @@ protected:
 	UPROPERTY()
 	class UTestSessionRoomWidget* SessionRoomWidget;
 
-	class ASPlayerState* SPlayerState;
+	//class ASPlayerState* SPlayerState;
 };

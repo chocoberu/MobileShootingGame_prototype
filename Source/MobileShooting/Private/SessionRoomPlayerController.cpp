@@ -34,12 +34,6 @@ void ASessionRoomPlayerController::BeginPlay()
 	}
 	SessionRoomWidget->AddToViewport();
 
-	SPlayerState = GetPlayerState<ASPlayerState>();
-	if(nullptr == SPlayerState)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("SPlayerState is nullptr"));
-	}
-	
 	RequestServerPlayerList();
 }
 
@@ -108,6 +102,7 @@ void ASessionRoomPlayerController::ChangeReadyState()
 {
 	UE_LOG(LogTemp, Log, TEXT("Change Ready State"));
 	
+	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
 	if (nullptr == SPlayerState)
 	{
 		return;
@@ -120,15 +115,16 @@ void ASessionRoomPlayerController::ChangeReadyState()
 		UTestSaveGame* NewSaveGame = NewObject<UTestSaveGame>();
 		NewSaveGame->MainWeaponId = SPlayerState->GetWeaponId();
 		NewSaveGame->SubWeaponId = SPlayerState->GetSubWeaponId();
+		NewSaveGame->TeamNum = SPlayerState->GetTeamNumber();
 
-		if (false == UGameplayStatics::SaveGameToSlot(NewSaveGame, SPlayerState->GetPlayerName(), 0))
+		if (true == UGameplayStatics::SaveGameToSlot(NewSaveGame, SPlayerState->GetPlayerName(), 0))
 		{
-			UE_LOG(LogTemp, Error, TEXT("Failed to save data!"));
-			return;
+			UE_LOG(LogTemp, Log, TEXT("Save Success"));
 		}
 		else
 		{
-			UE_LOG(LogTemp, Log, TEXT("Save Success"));
+			UE_LOG(LogTemp, Error, TEXT("Failed to save data!"));
+			return;
 		}
 	}
 
@@ -140,6 +136,7 @@ void ASessionRoomPlayerController::ReadyGame(bool bReadyState)
 	if (GetLocalRole() == ROLE_Authority)
 	{
 		// PlayerState에 값을 저장
+		ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
 		if (nullptr != SPlayerState)
 		{
 			SPlayerState->SetPlayerReadyState(bReadyState);
@@ -168,6 +165,7 @@ bool ASessionRoomPlayerController::Server_ReadyGame_Validate(bool bReadyState)
 
 void ASessionRoomPlayerController::Client_ReadyGame_Implementation(bool bReadyState)
 {
+	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
 	if (nullptr == SPlayerState)
 	{
 		return;
@@ -240,6 +238,7 @@ void ASessionRoomPlayerController::Client_LeaveSession_Implementation(bool bKick
 
 void ASessionRoomPlayerController::SetPlayerName(const FString NewName)
 {
+	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
 	if (nullptr == SPlayerState)
 	{
 		return;
@@ -250,6 +249,7 @@ void ASessionRoomPlayerController::SetPlayerName(const FString NewName)
 
 FString ASessionRoomPlayerController::GetPlayerName()
 {
+	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
 	if (nullptr == SPlayerState)
 	{
 		return FString();
@@ -260,6 +260,7 @@ FString ASessionRoomPlayerController::GetPlayerName()
 
 bool ASessionRoomPlayerController::IsPlayerReady() const
 {
+	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
 	if (nullptr == SPlayerState)
 	{
 		return false;
@@ -270,6 +271,7 @@ bool ASessionRoomPlayerController::IsPlayerReady() const
 
 void ASessionRoomPlayerController::SetWeaponId(const int32 WeaponId)
 {
+	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
 	if (nullptr == SPlayerState)
 	{
 		return;
@@ -279,6 +281,7 @@ void ASessionRoomPlayerController::SetWeaponId(const int32 WeaponId)
 
 void ASessionRoomPlayerController::SetSubWeaponId(const int32 SubWeaponId)
 {
+	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
 	if (nullptr == SPlayerState)
 	{
 		return;
