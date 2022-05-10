@@ -140,7 +140,6 @@ void ASessionRoomPlayerController::ReadyGame(bool bReadyState)
 	if (GetLocalRole() == ROLE_Authority)
 	{
 		// PlayerState에 값을 저장
-		//ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
 		if (nullptr != SPlayerState)
 		{
 			SPlayerState->SetPlayerReadyState(bReadyState);
@@ -169,7 +168,6 @@ bool ASessionRoomPlayerController::Server_ReadyGame_Validate(bool bReadyState)
 
 void ASessionRoomPlayerController::Client_ReadyGame_Implementation(bool bReadyState)
 {
-	//ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
 	if (nullptr == SPlayerState)
 	{
 		return;
@@ -242,7 +240,6 @@ void ASessionRoomPlayerController::Client_LeaveSession_Implementation(bool bKick
 
 void ASessionRoomPlayerController::SetPlayerName(const FString NewName)
 {
-	//ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
 	if (nullptr == SPlayerState)
 	{
 		return;
@@ -253,7 +250,6 @@ void ASessionRoomPlayerController::SetPlayerName(const FString NewName)
 
 FString ASessionRoomPlayerController::GetPlayerName()
 {
-	//ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
 	if (nullptr == SPlayerState)
 	{
 		return FString();
@@ -264,7 +260,6 @@ FString ASessionRoomPlayerController::GetPlayerName()
 
 bool ASessionRoomPlayerController::IsPlayerReady() const
 {
-	//ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
 	if (nullptr == SPlayerState)
 	{
 		return false;

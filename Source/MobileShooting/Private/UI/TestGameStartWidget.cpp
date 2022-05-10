@@ -23,8 +23,8 @@ bool UTestGameStartWidget::Initialize()
 	ExitButton->OnClicked.AddDynamic(this, &UTestGameStartWidget::OnClickedExitButton);
 
 	WeaponSelect->SetParentWidget(this);
-	WeaponSelect->OnCancelClickedDelegate.AddUObject(this, &UTestGameStartWidget::SetWidgetSwitcher, 0);
-	WeaponSelect->OnSelectClickedDelegate.AddUObject(this, &UTestGameStartWidget::OnSelectWeaponFinish);
+	WeaponSelect->OnClickedCancelButtonDelegate.AddUObject(this, &UTestGameStartWidget::SetWidgetSwitcher, 0);
+	WeaponSelect->OnClickedSelectButtonDelegate.AddUObject(this, &UTestGameStartWidget::OnSelectWeaponFinish);
 
 	return true;
 }

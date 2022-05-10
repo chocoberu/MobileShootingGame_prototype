@@ -18,8 +18,8 @@ bool UTestWeaponSelectWidget::Initialize()
 		return false;
 	}
 
-	SelectButton->OnClicked.AddDynamic(this, &UTestWeaponSelectWidget::OnSelectButtonClicked);
-	CancelButton->OnClicked.AddDynamic(this, &UTestWeaponSelectWidget::OnCancelButtonClicked);
+	SelectButton->OnClicked.AddDynamic(this, &UTestWeaponSelectWidget::OnClickedSelectButton);
+	CancelButton->OnClicked.AddDynamic(this, &UTestWeaponSelectWidget::OnClickedCancelButton);
 
 	UE_LOG(LogTemp, Log, TEXT("UTestWeaponSelectWidget Initialize"));
 	return true;
@@ -36,14 +36,14 @@ void UTestWeaponSelectWidget::SetParentWidget(class UTestGameStartWidget* NewPar
 	ParentWidget = NewParentWidget;
 }
 
-void UTestWeaponSelectWidget::OnSelectButtonClicked()
+void UTestWeaponSelectWidget::OnClickedSelectButton()
 {
-	OnSelectClickedDelegate.Broadcast();
+	OnClickedSelectButtonDelegate.Broadcast();
 }
 
-void UTestWeaponSelectWidget::OnCancelButtonClicked()
+void UTestWeaponSelectWidget::OnClickedCancelButton()
 {
-	OnCancelClickedDelegate.Broadcast();
+	OnClickedCancelButtonDelegate.Broadcast();
 }
 
 int32 UTestWeaponSelectWidget::GetSelectedWeaponId() const

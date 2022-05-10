@@ -6,8 +6,8 @@
 #include "Blueprint/UserWidget.h"
 #include "TestWeaponSelectWidget.generated.h"
 
-using FOnCancelClickedDelegate = TMulticastDelegate<void()>;
-using FOnSelectClickedDelegate = TMulticastDelegate<void()>;
+using FOnClickedCancelButtonDelegate = TMulticastDelegate<void()>;
+using FOnClickedSelectButtonDelegate = TMulticastDelegate<void()>;
 /**
  * 
  */
@@ -21,10 +21,10 @@ public:
 	virtual bool Initialize() override;
 
 	UFUNCTION()
-	void OnSelectButtonClicked();
+	void OnClickedSelectButton();
 
 	UFUNCTION()
-	void OnCancelButtonClicked();
+	void OnClickedCancelButton();
 
 	void SetParentWidget(class UTestGameStartWidget* NewParentWidget);
 
@@ -32,9 +32,9 @@ public:
 
 	int32 GetSelectedSubWeaponId() const;
 
-	FOnCancelClickedDelegate OnCancelClickedDelegate;
+	FOnClickedCancelButtonDelegate OnClickedCancelButtonDelegate;
 
-	FOnSelectClickedDelegate OnSelectClickedDelegate;
+	FOnClickedSelectButtonDelegate OnClickedSelectButtonDelegate;
 	
 protected:
 

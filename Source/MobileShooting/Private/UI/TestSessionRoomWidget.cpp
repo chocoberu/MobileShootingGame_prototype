@@ -21,8 +21,8 @@ bool UTestSessionRoomWidget::Initialize()
 	SelectWeaponButton->OnClicked.AddDynamic(this, &UTestSessionRoomWidget::OnClickedSelectWeaponButton);
 
 	//WeaponSelect->SetParentWidget(this);
-	WeaponSelect->OnSelectClickedDelegate.AddUObject(this, &UTestSessionRoomWidget::OnFinishSelectWeapon);
-	WeaponSelect->OnCancelClickedDelegate.AddUObject(this, &UTestSessionRoomWidget::OnCancelSelectWeapon);
+	WeaponSelect->OnClickedSelectButtonDelegate.AddUObject(this, &UTestSessionRoomWidget::OnFinishSelectWeapon);
+	WeaponSelect->OnClickedCancelButtonDelegate.AddUObject(this, &UTestSessionRoomWidget::OnCancelSelectWeapon);
 	WeaponSelect->SetVisibility(ESlateVisibility::Hidden);
 
 	return Result;
