@@ -71,7 +71,7 @@ void ATestSessionGameMode::PostLogin(APlayerController* NewPlayer)
 	for (auto SPlayerController : PlayerControllerList)
 	{
 		UE_LOG(LogTemp, Log, TEXT("%s Login"), *SPlayerController->GetPlayerName());
-		Engine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Player %s Login"), *SPlayerController->GetPlayerName()));
+		Engine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("%s Login"), *SPlayerController->GetPlayerName()));
 	}
 
 }
@@ -105,13 +105,14 @@ void ATestSessionGameMode::Logout(AController* Exiting)
 	}
 }
 
-void ATestSessionGameMode::StartGame()
+bool ATestSessionGameMode::StartGame()
 {
 	// Player 모두가 Ready 상태인지 확인
+	// TODO : Host의 경우 Ready 상태인지 확인 안해도 될거 같음
 	bool bCanStartGame = true;
 	for (auto SessionRoomPlayerController : PlayerControllerList)
 	{
-		if (false == SessionRoomPlayerController->IsPlayerReady())
+		if (false == SessionRoomPlayerController->IsPlayerReady() /*&& false == SessionRoomPlayerController->IsSessionHost()*/)
 		{
 			bCanStartGame = false;
 			break;
@@ -122,16 +123,17 @@ void ATestSessionGameMode::StartGame()
 	{
 		// TODO : 오류 Widget 보이도록 수정 (서버만 보이도록)
 		UE_LOG(LogTemp, Log, TEXT("Can't Start Game, All Players must be ready state"));
-		return;
+		return false;
 	}
 
 	// Session Start
 	USGameInstance* SGameInstance = GetGameInstance<USGameInstance>();
 	if (nullptr == SGameInstance)
 	{
-		return;
+		return false;
 	}
 	SGameInstance->StartSession();
+	return true;
 }
 
 void ATestSessionGameMode::UpdatePlayerList()

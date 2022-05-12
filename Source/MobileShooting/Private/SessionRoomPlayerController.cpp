@@ -15,6 +15,7 @@ void ASessionRoomPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	bShowMouseCursor = true;
+	bIsSessionHost = false;
 
 	if (false == IsLocalPlayerController() || nullptr == SessionRoomUIClass)
 	{
@@ -32,6 +33,11 @@ void ASessionRoomPlayerController::BeginPlay()
 	{
 		SessionRoomWidget->SetStartButtonVisible(false);
 	}
+	else
+	{
+		bIsSessionHost = true;
+	}
+
 	SessionRoomWidget->AddToViewport();
 
 	RequestServerPlayerList();
@@ -182,9 +188,18 @@ void ASessionRoomPlayerController::StartGame()
 	if (GetLocalRole() == ROLE_Authority)
 	{
 		ATestSessionGameMode* SessionGameMode = Cast<ATestSessionGameMode>(GetWorld()->GetAuthGameMode());
-		if (nullptr != SessionGameMode)
+		if (nullptr == SessionGameMode)
 		{
-			SessionGameMode->StartGame();
+			return;
+		}
+		if (false == SessionGameMode->StartGame())
+		{
+			USGameInstance* SGameInstance = Cast<USGameInstance>(GetWorld()->GetGameInstance());
+			if (nullptr != SGameInstance)
+			{
+				// TEST CODE
+				SGameInstance->ShowErrorMessage(0);
+			}
 		}
 	}
 }
@@ -267,6 +282,11 @@ bool ASessionRoomPlayerController::IsPlayerReady() const
 	}
 
 	return SPlayerState->IsPlayerReady();
+}
+
+bool ASessionRoomPlayerController::IsSessionHost() const
+{
+	return bIsSessionHost;
 }
 
 void ASessionRoomPlayerController::SetWeaponId(const int32 WeaponId)

@@ -53,6 +53,8 @@ public:
 
 	bool IsPlayerReady() const;
 
+	bool IsSessionHost() const;
+
 	void SetWeaponId(const int32 WeaponId);
 
 	void SetSubWeaponId(const int32 SubWeaponId);
@@ -69,5 +71,5 @@ protected:
 	UPROPERTY()
 	class UTestSessionRoomWidget* SessionRoomWidget;
 
-	//class ASPlayerState* SPlayerState;
+	bool bIsSessionHost;
 };

@@ -41,7 +41,7 @@ public:
 
 	void UpdatePlayerList();
 
-	void StartGame();
+	bool StartGame();
 
 	void LeaveSession(const FString PlayerName, bool bSessionHost);
 
