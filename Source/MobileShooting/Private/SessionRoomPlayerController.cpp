@@ -172,9 +172,9 @@ void ASessionRoomPlayerController::Client_ReadyGame_Implementation(bool bReadySt
 	}
 	SPlayerState->SetPlayerReadyState(bReadyState);
 
-	// TODO : Ready State == true인 경우 Weapon Select Button 비활성화
-	
-	
+	// bReadyState == true인 경우 SelectWeaponButton을 비활성화
+	SessionRoomWidget->SetEnableSelectWeaponButton(!bReadyState);
+	SessionRoomWidget->SetEnablePrevButton(!bReadyState);
 }
 
 void ASessionRoomPlayerController::StartGame()

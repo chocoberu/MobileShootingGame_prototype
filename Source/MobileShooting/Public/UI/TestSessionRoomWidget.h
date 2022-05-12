@@ -40,6 +40,10 @@ public:
 
 	void OnCancelSelectWeapon();
 
+	void SetEnableSelectWeaponButton(bool NewFlag);
+
+	void SetEnablePrevButton(bool NewFlag);
+
 protected:
 
 	UPROPERTY(meta = (BindWidget))

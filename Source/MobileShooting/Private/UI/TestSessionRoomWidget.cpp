@@ -145,3 +145,13 @@ void UTestSessionRoomWidget::OnCancelSelectWeapon()
 {
 	WeaponSelect->SetVisibility(ESlateVisibility::Hidden);
 }
+
+void UTestSessionRoomWidget::SetEnableSelectWeaponButton(bool NewFlag)
+{
+	SelectWeaponButton->SetIsEnabled(NewFlag);
+}
+
+void UTestSessionRoomWidget::SetEnablePrevButton(bool NewFlag)
+{
+	PrevButton->SetIsEnabled(NewFlag);
+}
