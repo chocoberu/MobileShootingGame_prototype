@@ -198,6 +198,7 @@ void ASessionRoomPlayerController::StartGame()
 			if (nullptr != SGameInstance)
 			{
 				// TEST CODE
+				// TODO : ShowErrorMessage() 수정 필요
 				SGameInstance->ShowErrorMessage(0);
 			}
 		}
