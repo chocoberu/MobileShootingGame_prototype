@@ -52,4 +52,8 @@ protected:
 	TArray<FRoomPlayerInfo> PlayerInfoList;
 
 	uint32 PlayerCount;
+
+	int32 BlueTeamCount;
+
+	int32 RedTeamCount;
 };

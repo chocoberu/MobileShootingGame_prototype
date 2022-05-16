@@ -13,8 +13,9 @@ ATestSessionGameMode::ATestSessionGameMode()
 	PlayerControllerClass = ASessionRoomPlayerController::StaticClass();
 	PlayerStateClass = ASPlayerState::StaticClass();
 
-
 	PlayerCount = 0;
+
+	BlueTeamCount = RedTeamCount = 0;
 }
 
 void ATestSessionGameMode::PostLogin(APlayerController* NewPlayer)
@@ -111,8 +112,7 @@ bool ATestSessionGameMode::StartGame()
 	// TODO : Host의 경우 Ready 상태인지 확인 안해도 될거 같음
 
 	// 홀수 인원인 경우 게임을 시작할 수 없음
-	// TODO : 팀별로 count 기록하는 변수 추가해서 비교 필요
-	if (0 != PlayerControllerList.Num() % 2)
+	if (0 != PlayerControllerList.Num() % 2 || BlueTeamCount != RedTeamCount)
 	{
 		return false;
 	}
@@ -147,6 +147,7 @@ bool ATestSessionGameMode::StartGame()
 void ATestSessionGameMode::UpdatePlayerList()
 {
 	PlayerInfoList.Empty();
+	BlueTeamCount = RedTeamCount = 0;
 
 	int32 Index = 0;
 	for (auto SessionRoomPlayerController : PlayerControllerList)
@@ -163,6 +164,16 @@ void ATestSessionGameMode::UpdatePlayerList()
 		NewPlayerInfo.bPlayerReady = SPlayerState->IsPlayerReady();
 		NewPlayerInfo.PlayerName = SPlayerState->GetPlayerName();
 		NewPlayerInfo.TeamNumber = Index % 2;
+		
+		if (0 == Index % 2)
+		{
+			BlueTeamCount++;
+		}
+		else
+		{
+			RedTeamCount++;
+		}
+
 		SPlayerState->SetTeamNumber(NewPlayerInfo.TeamNumber);
 
 		PlayerInfoList.Add(NewPlayerInfo);
