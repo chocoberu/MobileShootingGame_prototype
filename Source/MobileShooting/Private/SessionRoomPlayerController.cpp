@@ -118,6 +118,12 @@ void ASessionRoomPlayerController::ChangeReadyState()
 
 	if (false == bReady)
 	{
+		USGameInstance* SGameInstance = Cast<USGameInstance>(GetWorld()->GetGameInstance());
+		if (nullptr != SGameInstance)
+		{
+			SGameInstance->SetCurrentPlayerName(SPlayerState->GetPlayerName());
+		}
+
 		UTestSaveGame* NewSaveGame = NewObject<UTestSaveGame>();
 		NewSaveGame->MainWeaponId = SPlayerState->GetWeaponId();
 		NewSaveGame->SubWeaponId = SPlayerState->GetSubWeaponId();

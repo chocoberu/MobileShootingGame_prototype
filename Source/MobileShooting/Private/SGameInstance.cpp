@@ -16,6 +16,9 @@ USGameInstance::USGameInstance()
 	OnFindSessionsCompleteDelegate = FOnFindSessionsCompleteDelegate::CreateUObject(this, &USGameInstance::OnFindSessionsComplete);
 	OnJoinSessionCompleteDelegate = FOnJoinSessionCompleteDelegate::CreateUObject(this, &USGameInstance::OnJoinSessionComplete);
 	OnDestroySessionCompleteDelegate = FOnDestroySessionCompleteDelegate::CreateUObject(this, &USGameInstance::OnDestroySessionComplete);
+
+	SetCurrentGameMode(ECurrentGameMode::None);
+	CurrentPlayerName = TEXT("Player0");
 }
 
 void USGameInstance::Init()
@@ -346,4 +349,35 @@ void USGameInstance::ShowErrorMessage(uint32 ErrorCode)
 
 	ErrorMessageWidget->AddToViewport();
 	ErrorMessageWidget->SetVisibility(ESlateVisibility::Visible);
+}
+
+void USGameInstance::SetCurrentGameMode(ECurrentGameMode NewGameMode)
+{
+	// TEST CODE
+	if (NewGameMode == ECurrentGameMode::None)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Clear Current GameMode"));
+	}
+
+	CurrentGameMode = NewGameMode;
+}
+
+ECurrentGameMode USGameInstance::GetCurrentGameMode() const
+{
+	return CurrentGameMode;
+}
+
+void USGameInstance::SetCurrentPlayerName(const FString NewPlayerName)
+{
+	if (true == NewPlayerName.IsEmpty())
+	{
+		return;
+	}
+
+	CurrentPlayerName = NewPlayerName;
+}
+
+FString USGameInstance::GetCurrentPlayerName() const
+{
+	return CurrentPlayerName;
 }

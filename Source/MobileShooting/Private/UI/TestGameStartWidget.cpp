@@ -26,25 +26,45 @@ bool UTestGameStartWidget::Initialize()
 	WeaponSelect->OnClickedCancelButtonDelegate.AddUObject(this, &UTestGameStartWidget::SetWidgetSwitcher, 0);
 	WeaponSelect->OnClickedSelectButtonDelegate.AddUObject(this, &UTestGameStartWidget::OnSelectWeaponFinish);
 
+	auto SGameInstance = Cast<USGameInstance>(GetGameInstance());
+	if (nullptr != SGameInstance)
+	{
+		SGameInstance->SetCurrentGameMode(ECurrentGameMode::None);
+	}
+
 	return true;
 }
 
 void UTestGameStartWidget::OnClickedSinglePlayButton()
 {
 	SelectedLevelName = TEXT("TestBossLevel");
+	auto SGameInstance = Cast<USGameInstance>(GetGameInstance());
+	if (nullptr != SGameInstance)
+	{
+		SGameInstance->SetCurrentGameMode(ECurrentGameMode::SinglePlayGameMode);
+	}
 	StartWidgetSwitcher->SetActiveWidgetIndex(1);
 }
 
 void UTestGameStartWidget::OnClickedPraticeModeButton()
 {
-
 	SelectedLevelName = TEXT("PraticeLevel");
+	auto SGameInstance = Cast<USGameInstance>(GetGameInstance());
+	if (nullptr != SGameInstance)
+	{
+		SGameInstance->SetCurrentGameMode(ECurrentGameMode::PraticeGameMode);
+	}
 	StartWidgetSwitcher->SetActiveWidgetIndex(1);
 }
 
 void UTestGameStartWidget::OnClickedMultiPlayButton()
 {
 	SelectedLevelName = TEXT("Lobby");
+	auto SGameInstance = Cast<USGameInstance>(GetGameInstance());
+	if (nullptr != SGameInstance)
+	{
+		SGameInstance->SetCurrentGameMode(ECurrentGameMode::MultiPlayGameMode);
+	}
 	UGameplayStatics::OpenLevel(GetWorld(), FName(*SelectedLevelName));
 }
 
@@ -82,7 +102,7 @@ void UTestGameStartWidget::OnSelectWeaponFinish()
 	NewPlayerData->MainWeaponId = WeaponId;
 	NewPlayerData->SubWeaponId = SubWeaponId;
 
-	if (true == UGameplayStatics::SaveGameToSlot(NewPlayerData, TEXT("Test"), 0))
+	if (true == UGameplayStatics::SaveGameToSlot(NewPlayerData, TEXT("Player0"), 0))
 	{
 		UGameplayStatics::OpenLevel(GetWorld(), FName(*SelectedLevelName));
 	}

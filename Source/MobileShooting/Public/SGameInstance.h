@@ -55,6 +55,15 @@ public:
 	int32 MaxPlayerNumber;
 };
 
+UENUM(BlueprintType)
+enum class ECurrentGameMode : uint8
+{
+	None UMETA(DisplayName = "None"),
+	SinglePlayGameMode UMETA(DisplayName = "SinglePlay"),
+	MultiPlayGameMode UMETA(DisplayName = "MultiPlay"),
+	PraticeGameMode UMETA(DisplayName = "PraticeMode"),
+};
+
 /**
  * 
  */
@@ -103,6 +112,15 @@ public:
 	// ErrorMessage 관련
 	void ShowErrorMessage(uint32 ErrorCode);
 
+	// GameMode 관련
+	void SetCurrentGameMode(ECurrentGameMode NewGameMode);
+	
+	ECurrentGameMode GetCurrentGameMode() const;
+
+	void SetCurrentPlayerName(const FString NewPlayerName);
+
+	FString GetCurrentPlayerName() const;
+
 private:
 
 	void OnCreateSessionComplete(FName SessionName, bool Success);
@@ -127,22 +145,29 @@ private:
 	FDelegateHandle OnJoinSessionCompleteDelegateHandle;
 	FDelegateHandle OnDestroySessionCompleteDelegateHandle;
 
-
+	// Weapon DataTable
 	UPROPERTY(EditDefaultsOnly, Category = "Data")
 	class UDataTable* TestWeaponDataTable;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Data")
 	class UDataTable* TestSubWeaponDataTable;
 
+	// Error Message Widget
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<class UErrorMessageWidget> ErrorMessageClass;
 
 	UPROPERTY()
 	class UErrorMessageWidget* ErrorMessageWidget;
 
+	// Online Subsystem
 	IOnlineSessionPtr SessionInterface;
 
 	TSharedPtr<class FOnlineSessionSearch> SessionSearch;
 
 	TArray<FCustomSessionResult> SessionResultList;
+
+	// GameMode
+	ECurrentGameMode CurrentGameMode;
+
+	FString CurrentPlayerName;
 };
