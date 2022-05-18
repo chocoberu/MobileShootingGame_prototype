@@ -69,6 +69,8 @@ ASCharacter::ASCharacter()
 void ASCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	UE_LOG(LogTemp, Log, TEXT("ASPlayerCharacter::BeginPlay() call"));
 	
 	AnimInstance = Cast<USCharacterAnimInstance>(GetMesh()->GetAnimInstance());
 
@@ -84,67 +86,13 @@ void ASCharacter::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("PlayerController is nullptr"));
 	}
 
-	// Spawn a default weapon
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	SpawnParams.Owner = this;
-
-	// SavaGame에서 weapon id 가져와서 로드,
-	// TODO : PlayerState에서 처리하도록 변경 필요
-	auto TestGameInstance = Cast<USGameInstance>(GetGameInstance());
-	if (nullptr == TestGameInstance)
-	{
-		UE_LOG(LogTemp, Error, TEXT("GameInstance is nullptr"));
-		return;
-	}
-
-	auto TestSaveGame = Cast<UTestSaveGame>(UGameplayStatics::LoadGameFromSlot(TEXT("Test"), 0));
-	int32 CurrentWeaponId = 0;
-	int32 CurrentSubWeaponId = 1000;
-	if (nullptr == TestSaveGame)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed load save game data"));
-	}
-	else
-	{
-		CurrentWeaponId = TestSaveGame->MainWeaponId;
-		CurrentSubWeaponId = TestSaveGame->SubWeaponId;
-		UE_LOG(LogTemp, Log, TEXT("Current Weapon : %d Current SubWeapon : %d"), CurrentWeaponId, CurrentSubWeaponId);
-	}
-
-	FSoftClassPath WeaponClassPath(TestGameInstance->GetWeaponPath(CurrentWeaponId) + TEXT("_C"));
-	FSoftClassPath SubWeaponClassPath(TestGameInstance->GetSubWeaponPath(CurrentSubWeaponId) + TEXT("_C"));
-	auto TestWeaponClass = WeaponClassPath.TryLoadClass<ASWeapon>();
-	auto TestSubWeaponClass = SubWeaponClassPath.TryLoadClass<ASSubWeapon>();
-
-	if (nullptr == TestWeaponClass || nullptr == TestSubWeaponClass)
-	{
-		UE_LOG(LogTemp, Error, TEXT("WeaponClass is nullptr"));
-		return;
-	}
-
-	MainWeapon = GetWorld()->SpawnActor<ASWeapon>(TestWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
-	if (nullptr != MainWeapon)
-	{
-		MainWeapon->SetOwner(this);
-		MainWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponAttachSocketName);
-		MainWeapon->SetOwnerAnimInstance(AnimInstance);
-
-		MainWeapon->OnReloadMontageDelegate.AddUObject(this, &ASCharacter::ReloadMainWeapon);
-	}
-
-	SubWeapon = GetWorld()->SpawnActor<ASSubWeapon>(TestSubWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
-	if (nullptr != SubWeapon)
-	{
-		SubWeapon->SetOwner(this);
-		SubWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, SubWeaponAttachSocketName);
-	}
-
 	SPlayerState = Cast<ASPlayerState>(GetPlayerState());
 	if (nullptr == SPlayerState)
 	{
 		UE_LOG(LogTemp, Error, TEXT("PlayerState is nullptr"));
 	}
+
+	LoadWeapon();
 }
 
 void ASCharacter::PostInitializeComponents()
@@ -240,6 +188,66 @@ void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Hea
 		{
 			SPlayerState->AddDeathScore();
 		}
+	}
+}
+
+void ASCharacter::LoadWeapon()
+{
+	// TODO : 멀티플레이인 경우의 처리 추가
+
+	if (false == IsLocallyControlled())
+	{
+		return;
+	}
+
+	int32 CurrentWeaponId = 0;
+	int32 CurrentSubWeaponId = 1000;
+
+	if (nullptr != SPlayerState)
+	{
+		CurrentWeaponId = SPlayerState->GetWeaponId();
+		CurrentSubWeaponId = SPlayerState->GetSubWeaponId();
+	}
+	UE_LOG(LogTemp, Log, TEXT("Current Weapon : %d Current SubWeapon : %d"), CurrentWeaponId, CurrentSubWeaponId);
+
+	auto TestGameInstance = Cast<USGameInstance>(GetGameInstance());
+	if (nullptr == TestGameInstance)
+	{
+		UE_LOG(LogTemp, Error, TEXT("GameInstance is nullptr"));
+		return;
+	}
+
+	FSoftClassPath WeaponClassPath(TestGameInstance->GetWeaponPath(CurrentWeaponId) + TEXT("_C"));
+	FSoftClassPath SubWeaponClassPath(TestGameInstance->GetSubWeaponPath(CurrentSubWeaponId) + TEXT("_C"));
+	auto TestWeaponClass = WeaponClassPath.TryLoadClass<ASWeapon>();
+	auto TestSubWeaponClass = SubWeaponClassPath.TryLoadClass<ASSubWeapon>();
+
+	if (nullptr == TestWeaponClass || nullptr == TestSubWeaponClass)
+	{
+		UE_LOG(LogTemp, Error, TEXT("WeaponClass is nullptr"));
+		return;
+	}
+
+	// Spawn a default weapon
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParams.Owner = this;
+
+	MainWeapon = GetWorld()->SpawnActor<ASWeapon>(TestWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+	if (nullptr != MainWeapon)
+	{
+		MainWeapon->SetOwner(this);
+		MainWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponAttachSocketName);
+		MainWeapon->SetOwnerAnimInstance(AnimInstance);
+
+		MainWeapon->OnReloadMontageDelegate.AddUObject(this, &ASCharacter::ReloadMainWeapon);
+	}
+
+	SubWeapon = GetWorld()->SpawnActor<ASSubWeapon>(TestSubWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+	if (nullptr != SubWeapon)
+	{
+		SubWeapon->SetOwner(this);
+		SubWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, SubWeaponAttachSocketName);
 	}
 }
 

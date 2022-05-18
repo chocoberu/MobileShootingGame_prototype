@@ -2,6 +2,9 @@
 
 
 #include "SPlayerController.h"
+#include "SPlayerState.h"
+#include "SGameInstance.h"
+#include "TestSaveGame.h"
 #include "UI/RightButtonHUDWidget.h"
 #include "UI/SPraticeMenuWidget.h"
 #include "Kismet/GameplayStatics.h"
@@ -9,6 +12,8 @@
 void ASPlayerController::OnPossess(APawn* aPawn)
 {
 	Super::OnPossess(aPawn);
+
+	UE_LOG(LogTemp, Log, TEXT("ASPlayerController::OnPossess() call"));
 
 	// TEST CODE
 	/*if (false == IsLocalPlayerController())
@@ -112,11 +117,32 @@ void ASPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
+	UE_LOG(LogTemp, Log, TEXT("ASPlayerController::BeginPlay() call"));
+
 	// TEST CODE
 	if (false == IsLocalPlayerController())
 	{
 		UE_LOG(LogTemp, Log, TEXT("No Authority "));
 		return;
+	}
+
+	UE_LOG(LogTemp, Log, TEXT("Start Load Game"));
+
+	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
+	if (nullptr != SPlayerState)
+	{
+		USGameInstance* SGameInstance = Cast<USGameInstance>(GetGameInstance());
+		FString PlayerName = SGameInstance != nullptr ? SGameInstance->GetCurrentPlayerName() : TEXT("Player0");
+		UTestSaveGame* SaveGame = Cast<UTestSaveGame>(UGameplayStatics::LoadGameFromSlot(PlayerName, 0));
+		if (nullptr != SaveGame)
+		{
+			SPlayerState->SetPlayerName(PlayerName);
+			SPlayerState->SetWeaponId(SaveGame->MainWeaponId);
+			SPlayerState->SetSubWeaponId(SaveGame->SubWeaponId);
+			SPlayerState->SetTeamNumber(SaveGame->TeamNum);
+
+			UE_LOG(LogTemp, Log, TEXT("LoadGame Complete : %s"), *PlayerName);
+		}
 	}
 
 	if (nullptr != RightPadButtonHUDClass)

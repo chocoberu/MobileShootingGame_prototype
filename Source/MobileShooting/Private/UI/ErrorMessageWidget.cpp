@@ -22,4 +22,6 @@ void UErrorMessageWidget::SetErrorMessage(int32 ErrorCode)
 void UErrorMessageWidget::OnClickedOkButton()
 {
 	SetVisibility(ESlateVisibility::Hidden);
+
+	RemoveFromViewport();
 }
