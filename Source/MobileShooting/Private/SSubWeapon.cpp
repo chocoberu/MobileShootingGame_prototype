@@ -20,6 +20,7 @@ ASSubWeapon::ASSubWeapon()
 
 	MeshComp->SetCollisionProfileName(TEXT("Projectile"));
 
+	bReplicates = true;
 }
 
 // Called when the game starts or when spawned

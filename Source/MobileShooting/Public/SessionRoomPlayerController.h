@@ -47,7 +47,10 @@ public:
 	UFUNCTION(Client, Reliable)
 	void Client_LeaveSession(bool bKicked = false);
 
-	void SetPlayerName(const FString NewName);
+	void SetPlayerName(const FString& NewName);
+
+	UFUNCTION(Client, Reliable)
+	void Client_SetPlayerName(const FString& NewName);
 
 	FString GetPlayerName();
 

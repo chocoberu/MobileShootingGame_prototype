@@ -258,7 +258,30 @@ void ASessionRoomPlayerController::Client_LeaveSession_Implementation(bool bKick
 	
 }
 
-void ASessionRoomPlayerController::SetPlayerName(const FString NewName)
+void ASessionRoomPlayerController::SetPlayerName(const FString& NewName)
+{
+	if (GetLocalRole() == ROLE_Authority)
+	{
+		ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
+		if (nullptr == SPlayerState)
+		{
+			return;
+		}
+
+		SPlayerState->SetPlayerName(NewName);
+		USGameInstance* SGameInstance = Cast<USGameInstance>(GetWorld()->GetGameInstance());
+		if (nullptr != SGameInstance)
+		{
+			SGameInstance->SetCurrentPlayerName(NewName);
+		}
+	}
+	else
+	{
+		Client_SetPlayerName(NewName);
+	}
+}
+
+void ASessionRoomPlayerController::Client_SetPlayerName_Implementation(const FString& NewName)
 {
 	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
 	if (nullptr == SPlayerState)
@@ -267,6 +290,12 @@ void ASessionRoomPlayerController::SetPlayerName(const FString NewName)
 	}
 
 	SPlayerState->SetPlayerName(NewName);
+
+	USGameInstance* SGameInstance = Cast<USGameInstance>(GetWorld()->GetGameInstance());
+	if (nullptr != SGameInstance)
+	{
+		SGameInstance->SetCurrentPlayerName(NewName);
+	}
 }
 
 FString ASessionRoomPlayerController::GetPlayerName()

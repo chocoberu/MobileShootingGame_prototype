@@ -132,6 +132,10 @@ void ASPlayerController::BeginPlay()
 	if (nullptr != SPlayerState)
 	{
 		USGameInstance* SGameInstance = Cast<USGameInstance>(GetGameInstance());
+		if (nullptr != SGameInstance)
+		{
+			UE_LOG(LogTemp, Log, TEXT("Current Player Name : %s"), *SGameInstance->GetCurrentPlayerName());
+		}
 		FString PlayerName = SGameInstance != nullptr ? SGameInstance->GetCurrentPlayerName() : TEXT("Player0");
 		UTestSaveGame* SaveGame = Cast<UTestSaveGame>(UGameplayStatics::LoadGameFromSlot(PlayerName, 0));
 		if (nullptr != SaveGame)
