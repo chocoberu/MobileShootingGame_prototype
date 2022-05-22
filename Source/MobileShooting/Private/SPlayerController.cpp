@@ -16,30 +16,7 @@ void ASPlayerController::OnPossess(APawn* aPawn)
 	UE_LOG(LogTemp, Log, TEXT("ASPlayerController::OnPossess() call"));
 
 	// TEST CODE
-	/*if (false == IsLocalPlayerController())
-	{
-		return;
-	}*/
 
-	/*if (nullptr != RightPadButtonHUDClass)
-	{
-		RightButtonHUD = CreateWidget<URightButtonHUDWidget>(this, RightPadButtonHUDClass);
-	}
-	if (nullptr == RightButtonHUD)
-	{
-		UE_LOG(LogTemp, Error, TEXT("RightButtonHUD is nullptr"));
-		return;
-	}
-	
-	if (nullptr == MenuWidgetClass)
-	{
-		return;
-	}
-	MenuWidget = CreateWidget<USPraticeMenuWidget>(this, MenuWidgetClass);
-	if (nullptr != MenuWidget)
-	{
-		MenuWidget->OnResumeDelegate.AddUObject(this, &ASPlayerController::OnGameResume);
-	}*/
 }
 
 void ASPlayerController::BindMainWeaponStatusWidget(ASWeapon* MainWeapon)
@@ -128,7 +105,7 @@ void ASPlayerController::BeginPlay()
 
 	UE_LOG(LogTemp, Log, TEXT("Start Load Game"));
 
-	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
+	/*ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
 	if (nullptr != SPlayerState)
 	{
 		USGameInstance* SGameInstance = Cast<USGameInstance>(GetGameInstance());
@@ -147,7 +124,7 @@ void ASPlayerController::BeginPlay()
 
 			UE_LOG(LogTemp, Log, TEXT("LoadGame Complete : %s"), *PlayerName);
 		}
-	}
+	}*/
 
 	if (nullptr != RightPadButtonHUDClass)
 	{

@@ -42,13 +42,13 @@ void ATestBossGameMode::BeginPlay()
 
 bool ATestBossGameMode::SetPause(APlayerController* PC, FCanUnpause CanUnpauseDelegate)
 {
-	TestGameState->SetCurrentGameState(EGameState::E_GamePause);
+	TestGameState->SetCurrentGameState(ECurrentGameState::E_GamePause);
 	return Super::SetPause(PC, CanUnpauseDelegate);
 }
 
 bool ATestBossGameMode::ClearPause()
 {
-	TestGameState->SetCurrentGameState(EGameState::E_GamePlaying);
+	TestGameState->SetCurrentGameState(ECurrentGameState::E_GamePlaying);
 	return Super::ClearPause();
 }
 

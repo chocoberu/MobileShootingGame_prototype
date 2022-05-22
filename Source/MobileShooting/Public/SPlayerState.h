@@ -49,6 +49,8 @@ public:
 
 protected:
 
+	virtual void BeginPlay() override;
+
 	UPROPERTY(Replicated)
 	int32 TeamNumber;
 

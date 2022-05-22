@@ -8,7 +8,7 @@
 
 
 UENUM(BlueprintType)
-enum class EGameState : uint8
+enum class ECurrentGameState : uint8
 {
 	E_None = 0 UMETA(DisplayName = "None"),
 	E_GamePlaying UMETA(DisplayName = "GamePlaying"),
@@ -30,7 +30,7 @@ public:
 
 	virtual void Tick(float DeltaSeconds) override;
 
-	void SetCurrentGameState(EGameState NewGameState);
+	void SetCurrentGameState(ECurrentGameState NewGameState);
 
 	void ShowGameClearWidget(bool bFlag);
 
@@ -62,5 +62,5 @@ protected:
 
 	float CurrentGameTime;
 
-	EGameState ECurrentGameState;
+	ECurrentGameState CurrentGameState;
 };

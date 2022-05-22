@@ -12,7 +12,7 @@ ATestBossGameState::ATestBossGameState()
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.TickInterval = 1.0f;
 
-	ECurrentGameState = EGameState::E_None;
+	CurrentGameState = ECurrentGameState::E_None;
 }
 
 void ATestBossGameState::BeginPlay()
@@ -49,28 +49,28 @@ void ATestBossGameState::BeginPlay()
 	{
 		GameClearWidget = CreateWidget<USGameClearWidget>(GetWorld(), GameClearWidgetClass);
 	}
-	ECurrentGameState = EGameState::E_GamePlaying;
+	CurrentGameState = ECurrentGameState::E_GamePlaying;
 }
 
 void ATestBossGameState::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	if (EGameState::E_GamePlaying == ECurrentGameState)
+	if (ECurrentGameState::E_GamePlaying == CurrentGameState)
 	{
 		CurrentGameTime -= DeltaSeconds;
 		GameTimerWidget->SetTimeText(static_cast<int32>(CurrentGameTime));
 	}
 }
 
-void ATestBossGameState::SetCurrentGameState(EGameState NewGameState)
+void ATestBossGameState::SetCurrentGameState(ECurrentGameState NewGameState)
 {
-	ECurrentGameState = NewGameState;
+	CurrentGameState = NewGameState;
 }
 
 void ATestBossGameState::ShowGameClearWidget(bool bFlag)
 {
-	SetCurrentGameState(EGameState::E_GameOver);
+	SetCurrentGameState(ECurrentGameState::E_GameOver);
 	if (nullptr == GameClearWidget)
 	{
 		UE_LOG(LogTemp, Error, TEXT("GameClear Widget is nullptr"));

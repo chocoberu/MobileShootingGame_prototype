@@ -14,6 +14,13 @@ ASPlayerState::ASPlayerState()
 	CurrentSubweaponId = 1000;
 }
 
+void ASPlayerState::BeginPlay()
+{
+	Super::BeginPlay();
+
+	UE_LOG(LogTemp, Log, TEXT("ASPlayerState::BeginPlay() call"));
+}
+
 void ASPlayerState::ResetPlayerState()
 {
 	KillScore = DeathScore = AssistScore = 0;

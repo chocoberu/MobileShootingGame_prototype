@@ -203,11 +203,32 @@ void ASCharacter::LoadWeapon()
 	int32 CurrentWeaponId = 0;
 	int32 CurrentSubWeaponId = 1000;
 
-	if (nullptr != SPlayerState)
+	// TEST CODE
+	// LoadWeapon() 시점에서 PlayerState가 생성되지 않은 경우
+	if (nullptr == SPlayerState)
+	{
+		USGameInstance* SGameInstance = Cast<USGameInstance>(GetGameInstance());
+		if (nullptr != SGameInstance)
+		{
+			UE_LOG(LogTemp, Log, TEXT("Current Player Name : %s"), *SGameInstance->GetCurrentPlayerName());
+		}
+		FString PlayerName = SGameInstance != nullptr ? SGameInstance->GetCurrentPlayerName() : TEXT("Player0");
+		UTestSaveGame* SaveGame = Cast<UTestSaveGame>(UGameplayStatics::LoadGameFromSlot(PlayerName, 0));
+		
+		if (nullptr != SaveGame)
+		{
+			CurrentWeaponId = SaveGame->MainWeaponId;
+			CurrentSubWeaponId = SaveGame->SubWeaponId;
+
+			UE_LOG(LogTemp, Log, TEXT("Success to Load SaveGame, SlotName : %s"), *PlayerName);
+		}
+	}
+	else
 	{
 		CurrentWeaponId = SPlayerState->GetWeaponId();
 		CurrentSubWeaponId = SPlayerState->GetSubWeaponId();
 	}
+
 	UE_LOG(LogTemp, Log, TEXT("Current Weapon : %d Current SubWeapon : %d"), CurrentWeaponId, CurrentSubWeaponId);
 
 	auto TestGameInstance = Cast<USGameInstance>(GetGameInstance());
