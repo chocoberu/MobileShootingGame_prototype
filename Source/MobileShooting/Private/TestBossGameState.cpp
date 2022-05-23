@@ -61,6 +61,12 @@ void ATestBossGameState::Tick(float DeltaSeconds)
 		CurrentGameTime -= DeltaSeconds;
 		GameTimerWidget->SetTimeText(static_cast<int32>(CurrentGameTime));
 	}
+
+	if (CurrentGameTime <= 0.0f && ECurrentGameState::E_GamePlaying == CurrentGameState)
+	{
+		CurrentGameTime = 0.0f;
+		ShowGameClearWidget(false);
+	}
 }
 
 void ATestBossGameState::SetCurrentGameState(ECurrentGameState NewGameState)
@@ -68,7 +74,7 @@ void ATestBossGameState::SetCurrentGameState(ECurrentGameState NewGameState)
 	CurrentGameState = NewGameState;
 }
 
-void ATestBossGameState::ShowGameClearWidget(bool bFlag)
+void ATestBossGameState::ShowGameClearWidget(bool bGameClear)
 {
 	SetCurrentGameState(ECurrentGameState::E_GameOver);
 	if (nullptr == GameClearWidget)
@@ -76,7 +82,9 @@ void ATestBossGameState::ShowGameClearWidget(bool bFlag)
 		UE_LOG(LogTemp, Error, TEXT("GameClear Widget is nullptr"));
 		return;
 	}
-	GameClearWidget->SetGameClearWidget(bFlag, static_cast<int32>(DefaultGameTime - CurrentGameTime));
+	 
+	// 게임 클리어 처리
+	GameClearWidget->SetGameClearWidget(bGameClear, static_cast<int32>(DefaultGameTime - CurrentGameTime));
 	GameClearWidget->AddToViewport();
 }
 

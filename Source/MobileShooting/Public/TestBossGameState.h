@@ -32,7 +32,7 @@ public:
 
 	void SetCurrentGameState(ECurrentGameState NewGameState);
 
-	void ShowGameClearWidget(bool bFlag);
+	void ShowGameClearWidget(bool bGameClear);
 
 protected:
 

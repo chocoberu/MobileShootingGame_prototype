@@ -13,5 +13,5 @@ void ATeamNormalGameState::GetLifetimeReplicatedProps(TArray< FLifetimeProperty 
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(ATeamNormalGameState, GameTime);
+	DOREPLIFETIME(ATeamNormalGameState, CurrentGameTime);
 }

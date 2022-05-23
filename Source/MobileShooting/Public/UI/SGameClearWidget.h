@@ -16,7 +16,7 @@ class MOBILESHOOTING_API USGameClearWidget : public UUserWidget
 
 public:
 
-	void SetGameClearWidget(bool bFlag, const int32 GameClearTime);
+	void SetGameClearWidget(bool bGameClear, const int32 GameClearTime);
 
 protected:
 	virtual void NativeConstruct() override;

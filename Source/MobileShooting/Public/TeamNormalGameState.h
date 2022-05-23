@@ -21,6 +21,6 @@ public:
 protected:
 
 	UPROPERTY(Replicated)
-	int32 GameTime;
+	int32 CurrentGameTime;
 	
 };
