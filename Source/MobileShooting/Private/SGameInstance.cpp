@@ -140,7 +140,7 @@ void USGameInstance::OnStartOnlineGameComplete(FName SessionName, bool Success)
 	}
 
 	//UGameplayStatics::OpenLevel(GetWorld(), TEXT("/Game/Levels/SessionLevel"), true, "listen");
-	GetWorld()->ServerTravel("/Game/Levels/TestBossLevel?listen");
+	GetWorld()->ServerTravel("/Game/Levels/TeamNormalMatchLevel?listen");
 }
 
 void USGameInstance::OnDestroySessionComplete(FName SessionName, bool Success)
