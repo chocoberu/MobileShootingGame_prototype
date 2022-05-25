@@ -162,8 +162,11 @@ void ATestSessionGameMode::UpdatePlayerList()
 
 		// PlayerState의 정보를 이용해서 설정
 		NewPlayerInfo.bPlayerReady = SPlayerState->IsPlayerReady();
-		NewPlayerInfo.PlayerName = SPlayerState->GetPlayerName();
+		//NewPlayerInfo.PlayerName = SPlayerState->GetPlayerName();
+		NewPlayerInfo.PlayerName = FString::Printf(TEXT("Player%d"), Index);
 		NewPlayerInfo.TeamNumber = Index % 2;
+
+		SessionRoomPlayerController->SetPlayerName(NewPlayerInfo.PlayerName);
 		
 		if (0 == Index % 2)
 		{
