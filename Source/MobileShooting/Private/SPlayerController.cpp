@@ -105,7 +105,7 @@ void ASPlayerController::BeginPlay()
 
 	UE_LOG(LogTemp, Log, TEXT("Start Load Game"));
 
-	/*ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
+	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
 	if (nullptr != SPlayerState)
 	{
 		USGameInstance* SGameInstance = Cast<USGameInstance>(GetGameInstance());
@@ -124,7 +124,7 @@ void ASPlayerController::BeginPlay()
 
 			UE_LOG(LogTemp, Log, TEXT("LoadGame Complete : %s"), *PlayerName);
 		}
-	}*/
+	}
 
 	if (nullptr != RightPadButtonHUDClass)
 	{
@@ -136,11 +136,11 @@ void ASPlayerController::BeginPlay()
 		return;
 	}
 
-	if (nullptr == MenuWidgetClass)
+	if (nullptr != MenuWidgetClass)
 	{
-		return;
+		MenuWidget = CreateWidget<USPraticeMenuWidget>(this, MenuWidgetClass);
 	}
-	MenuWidget = CreateWidget<USPraticeMenuWidget>(this, MenuWidgetClass);
+	
 	if (nullptr != MenuWidget)
 	{
 		MenuWidget->OnResumeDelegate.AddUObject(this, &ASPlayerController::OnGameResume);
@@ -150,6 +150,7 @@ void ASPlayerController::BeginPlay()
 	// 임시 주석 처리
 	//if (0 == CurrentPlatform.Compare(TEXT("IOS")) || 0 == CurrentPlatform.Compare(TEXT("Android")))
 	{
+		SetVirtualJoystickVisibility(true);
 		if (nullptr == RightButtonHUD)
 		{
 			return;

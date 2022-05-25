@@ -10,6 +10,7 @@ ASPlayerState::ASPlayerState()
 	ResetPlayerState();
 
 	// TEST CODE : 하드코딩, 수정 필요
+	SetPlayerName(TEXT("Player0"));
 	CurrentWeaponId = 0;
 	CurrentSubweaponId = 1000;
 }

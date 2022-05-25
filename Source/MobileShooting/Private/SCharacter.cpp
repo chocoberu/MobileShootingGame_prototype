@@ -195,7 +195,8 @@ void ASCharacter::LoadWeapon()
 {
 	// TODO : 멀티플레이인 경우의 처리 추가
 
-	if ((GetLocalRole() == ROLE_Authority && IsLocallyControlled() == false) || GetLocalRole() == ROLE_SimulatedProxy )
+	//if ((GetLocalRole() == ROLE_Authority && IsLocallyControlled() == false) || GetLocalRole() == ROLE_SimulatedProxy )
+	if(false == IsLocallyControlled())
 	{
 		return;
 	}
