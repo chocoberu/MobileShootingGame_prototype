@@ -7,6 +7,8 @@
 #include "GenericTeamAgentInterface.h"
 #include "SPlayerController.generated.h"
 
+using FRequestRestartPlayerDelegate = TMulticastDelegate<void(class AController* NewPlayer)>;
+
 /**
  * 
  */
@@ -30,6 +32,17 @@ public:
 	void OnGameResume();
 
 	void OnPlayerDead();
+
+	void LoadPlayerStateInfo();
+
+	UFUNCTION(Client, Reliable)
+	void Client_LoadPlayerStateInfo();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_LoadPlayerStateInfo(const FString& NewPlayerName, int32 NewWeaponId, int32 NewSubWeaponId, int32 NewTeamNumber);
+
+	// Delegate
+	FRequestRestartPlayerDelegate RequestRestartPlayerDelegate;
 
 protected:
 

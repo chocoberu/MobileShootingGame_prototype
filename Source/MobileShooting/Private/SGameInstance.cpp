@@ -375,6 +375,8 @@ void USGameInstance::SetCurrentPlayerName(const FString NewPlayerName)
 	}
 
 	CurrentPlayerName = NewPlayerName;
+
+	UE_LOG(LogTemp, Log, TEXT("SGameInstance Current PlayerName : %s"), *CurrentPlayerName);
 }
 
 FString USGameInstance::GetCurrentPlayerName() const

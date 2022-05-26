@@ -52,6 +52,7 @@ void ASessionRoomPlayerController::EndPlay(EEndPlayReason::Type Reason)
 
 void ASessionRoomPlayerController::UpdatePlayerList(const TArray<FRoomPlayerInfo>& PlayerInfoList)
 {
+	// TODO : 인원 배치 방식을 다시 작성할 필요가 있음
 	int32 Index = 0;
 	for (const FRoomPlayerInfo& PlayerInfo : PlayerInfoList)
 	{
@@ -270,7 +271,7 @@ void ASessionRoomPlayerController::SetPlayerName(const FString& NewName)
 
 		SPlayerState->SetPlayerName(NewName);
 		USGameInstance* SGameInstance = Cast<USGameInstance>(GetWorld()->GetGameInstance());
-		if (nullptr != SGameInstance)
+		if (nullptr != SGameInstance && true == IsLocalController())
 		{
 			SGameInstance->SetCurrentPlayerName(NewName);
 		}

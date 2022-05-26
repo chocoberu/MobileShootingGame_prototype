@@ -24,4 +24,6 @@ public:
 	virtual void RestartPlayer(AController* NewPlayer) override;
 
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
+
+	void ResponseRestartPlayer(AController* NewPlayer);
 };

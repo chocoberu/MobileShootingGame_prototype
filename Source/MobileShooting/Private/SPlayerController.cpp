@@ -162,3 +162,78 @@ void ASPlayerController::BeginPlay()
 		}
 	}
 }
+
+void ASPlayerController::LoadPlayerStateInfo()
+{
+	if (true == IsLocalController())
+	{
+		UE_LOG(LogTemp, Log, TEXT("Local Player Controller"));
+	}
+}
+
+void ASPlayerController::Client_LoadPlayerStateInfo_Implementation()
+{
+	UE_LOG(LogTemp, Log, TEXT("ASPlayerController::Client_LoadPlayerStateInfo() called"));
+	
+	USGameInstance* SGameInstance = Cast<USGameInstance>(GetGameInstance());
+	if (nullptr != SGameInstance)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Current Player Name : %s"), *SGameInstance->GetCurrentPlayerName());
+	}
+	
+	FString PlayerName = SGameInstance != nullptr ? SGameInstance->GetCurrentPlayerName() : TEXT("Player0");
+	UTestSaveGame* SaveGame = Cast<UTestSaveGame>(UGameplayStatics::LoadGameFromSlot(PlayerName, 0));
+	
+	if (nullptr == SaveGame)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to LoadGame"));
+		return;
+	}
+	else
+	{
+		if (GetLocalRole() == ROLE_Authority)
+		{
+			ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
+			if (nullptr == SPlayerState)
+			{
+				UE_LOG(LogTemp, Error, TEXT("ASPlayerState is nullptr"))
+			}
+			else
+			{
+				SPlayerState->SetPlayerName(PlayerName);
+				SPlayerState->SetWeaponId(SaveGame->MainWeaponId);
+				SPlayerState->SetSubWeaponId(SaveGame->SubWeaponId);
+				SPlayerState->SetTeamNumber(SaveGame->TeamNum);
+			}			
+			RequestRestartPlayerDelegate.Broadcast(this);
+		}
+		else
+		{
+			Server_LoadPlayerStateInfo(PlayerName, SaveGame->MainWeaponId, SaveGame->SubWeaponId, SaveGame->TeamNum);
+		}
+	}
+}
+
+void ASPlayerController::Server_LoadPlayerStateInfo_Implementation(const FString& NewPlayerName, int32 NewWeaponId, int32 NewSubWeaponId, int32 NewTeamNumber)
+{
+	UE_LOG(LogTemp, Log, TEXT("ASPlayerController::Server_LoadPlayerStateInfo() called, PlayerName : %s"), *NewPlayerName);
+
+	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
+	if (nullptr == SPlayerState)
+	{
+		UE_LOG(LogTemp, Error, TEXT("SPlayerState is nullptr"));
+		return;
+	}
+
+	SPlayerState->SetPlayerName(NewPlayerName);
+	SPlayerState->SetWeaponId(NewWeaponId);
+	SPlayerState->SetSubWeaponId(NewSubWeaponId);
+	SPlayerState->SetTeamNumber(NewTeamNumber);
+
+	RequestRestartPlayerDelegate.Broadcast(this);
+}
+
+bool ASPlayerController::Server_LoadPlayerStateInfo_Validate(const FString& NewPlayerName, int32 NewWeaponId, int32 NewSubWeaponId, int32 NewTeamNumber)
+{
+	return true;
+}
