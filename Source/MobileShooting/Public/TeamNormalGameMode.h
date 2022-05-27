@@ -26,4 +26,8 @@ public:
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 
 	void ResponseRestartPlayer(AController* NewPlayer);
+
+private:
+
+	TArray<class ASPlayerController*> PlayerControllerList;
 };

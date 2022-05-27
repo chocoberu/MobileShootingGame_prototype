@@ -17,7 +17,13 @@ void ATeamNormalGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
 
-	UE_LOG(LogTemp, Log, TEXT("TeamNormalGameMode Player %s Login"), *NewPlayer->GetName());
+	UE_LOG(LogTemp, Log, TEXT("TeamNormalGameMode Player %s PostLogin"), *NewPlayer->GetName());
+
+	ASPlayerController* PC = Cast<ASPlayerController>(NewPlayer);
+	if (nullptr != PC)
+	{
+		PlayerControllerList.Add(PC);
+	}
 }
 
 void ATeamNormalGameMode::Logout(AController* Exiting)
@@ -50,6 +56,8 @@ void ATeamNormalGameMode::RestartPlayer(AController* NewPlayer)
 
 AActor* ATeamNormalGameMode::ChoosePlayerStart_Implementation(AController* Player)
 {
+	UE_LOG(LogTemp, Log, TEXT("ATeamNormalGameMode::ChoosePlayerStart() called"));
+
 	ASPlayerController* PlayerController = Cast<ASPlayerController>(Player);
 	if (nullptr == PlayerController)
 	{
@@ -82,8 +90,7 @@ AActor* ATeamNormalGameMode::ChoosePlayerStart_Implementation(AController* Playe
 		{
 			continue;
 		}
-		UE_LOG(LogTemp, Log, TEXT("Player Start : %s"), *Start->GetName());
-
+		
 		if (nullptr != PlayerState && PlayerState->GetPlayerName().Compare(Start->PlayerStartTag.ToString()) == 0)
 		{
 			UE_LOG(LogTemp, Log, TEXT("Find Player Start : %s"), *Start->PlayerStartTag.ToString());
@@ -107,6 +114,7 @@ void ATeamNormalGameMode::ResponseRestartPlayer(AController* NewPlayer)
 	AActor* StartSpot = ChoosePlayerStart(NewPlayer);
 	UE_LOG(LogTemp, Log, TEXT("ResponseRestartPlayer(), StartSpot : %s"), *StartSpot->GetName());
 
+	// AGameModeBase의 코드 사용
 	// If a start spot wasn't found,
 	if (StartSpot == nullptr)
 	{

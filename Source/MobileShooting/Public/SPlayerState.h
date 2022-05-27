@@ -56,10 +56,13 @@ protected:
 
 	bool bPlayerReady;
 
+	UPROPERTY(Replicated)
 	uint32 KillScore;
 
+	UPROPERTY(Replicated)
 	uint32 DeathScore;
 
+	UPROPERTY(Replicated)
 	uint32 AssistScore;
 
 	// current weapon id, subweapon id
