@@ -91,8 +91,6 @@ void ASCharacter::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("PlayerState is nullptr"));
 	}
-
-	LoadWeapon();
 }
 
 void ASCharacter::PostInitializeComponents()
@@ -193,22 +191,16 @@ void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Hea
 
 void ASCharacter::LoadWeapon()
 {
-	// TODO : 멀티플레이인 경우의 처리 추가
-
-	//if ((GetLocalRole() == ROLE_Authority && IsLocallyControlled() == false) || GetLocalRole() == ROLE_SimulatedProxy )
-	if(false == IsLocallyControlled())
-	{
-		return;
-	}
-
+	UE_LOG(LogTemp, Log, TEXT("ASCharacter::LoadWeapon() called"));
 	int32 CurrentWeaponId = 0;
 	int32 CurrentSubWeaponId = 1000;
 
+	SPlayerState = Cast<ASPlayerState>(GetPlayerState());
 	// TEST CODE
 	// LoadWeapon() 시점에서 PlayerState가 생성되지 않은 경우
 	if (nullptr == SPlayerState)
 	{
-		USGameInstance* SGameInstance = Cast<USGameInstance>(GetGameInstance());
+		/*USGameInstance* SGameInstance = Cast<USGameInstance>(GetGameInstance());
 		if (nullptr != SGameInstance)
 		{
 			UE_LOG(LogTemp, Log, TEXT("Current Player Name : %s"), *SGameInstance->GetCurrentPlayerName());
@@ -222,20 +214,20 @@ void ASCharacter::LoadWeapon()
 			CurrentSubWeaponId = SaveGame->SubWeaponId;
 
 			UE_LOG(LogTemp, Log, TEXT("Success to Load SaveGame, SlotName : %s"), *PlayerName);
-		}
+		}*/
+		UE_LOG(LogTemp, Log, TEXT("ASCharacter::LoadWeapon(), SPlayerState is nullptr"));
+		return;
 	}
-	else
-	{
-		CurrentWeaponId = SPlayerState->GetWeaponId();
-		CurrentSubWeaponId = SPlayerState->GetSubWeaponId();
-	}
+
+	CurrentWeaponId = SPlayerState->GetWeaponId();
+	CurrentSubWeaponId = SPlayerState->GetSubWeaponId();
 
 	UE_LOG(LogTemp, Log, TEXT("Current Weapon : %d Current SubWeapon : %d"), CurrentWeaponId, CurrentSubWeaponId);
 
 	auto TestGameInstance = Cast<USGameInstance>(GetGameInstance());
 	if (nullptr == TestGameInstance)
 	{
-		UE_LOG(LogTemp, Error, TEXT("GameInstance is nullptr"));
+		UE_LOG(LogTemp, Error, TEXT("ASCharacter::LoadWeapon(), SGameInstance is nullptr"));
 		return;
 	}
 

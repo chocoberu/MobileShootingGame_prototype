@@ -13,6 +13,8 @@ ASPlayerState::ASPlayerState()
 	SetPlayerName(TEXT("Player0"));
 	CurrentWeaponId = 0;
 	CurrentSubweaponId = 1000;
+
+	bNetLoadOnClient = true;
 }
 
 void ASPlayerState::BeginPlay()

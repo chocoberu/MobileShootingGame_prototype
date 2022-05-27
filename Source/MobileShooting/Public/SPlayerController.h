@@ -33,8 +33,6 @@ public:
 
 	void OnPlayerDead();
 
-	void LoadPlayerStateInfo();
-
 	UFUNCTION(Client, Reliable)
 	void Client_LoadPlayerStateInfo();
 
@@ -59,4 +57,6 @@ protected:
 
 	UPROPERTY()
 	class USPraticeMenuWidget* MenuWidget;
+
+	bool bLoadPlayerState = false;
 };

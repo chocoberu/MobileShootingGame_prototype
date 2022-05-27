@@ -16,6 +16,8 @@ public:
 	// Sets default values for this character's properties
 	ASCharacter();
 
+	void LoadWeapon();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay(void) override;
@@ -28,8 +30,6 @@ protected:
 
 	UFUNCTION()
 	void OnHealthChanged(class USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
-
-	void LoadWeapon();
 
 	// Camera
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")

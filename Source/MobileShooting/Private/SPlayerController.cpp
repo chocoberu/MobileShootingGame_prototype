@@ -3,6 +3,7 @@
 
 #include "SPlayerController.h"
 #include "SPlayerState.h"
+#include "SCharacter.h"
 #include "SGameInstance.h"
 #include "TestSaveGame.h"
 #include "UI/RightButtonHUDWidget.h"
@@ -16,7 +17,19 @@ void ASPlayerController::OnPossess(APawn* aPawn)
 	UE_LOG(LogTemp, Log, TEXT("ASPlayerController::OnPossess() call"));
 
 	// TEST CODE
+	if (false == bLoadPlayerState)
+	{
+		Client_LoadPlayerStateInfo();
+	}
 
+	ASCharacter* PlayerCharacter = Cast<ASCharacter>(aPawn);
+	if (nullptr == PlayerCharacter)
+	{
+		UE_LOG(LogTemp, Log, TEXT("ASPlayerController::OnPossess(), PlayerCharacter is nullptr"));
+		return;
+	}
+	
+	PlayerCharacter->LoadWeapon();
 }
 
 void ASPlayerController::BindMainWeaponStatusWidget(ASWeapon* MainWeapon)
@@ -103,29 +116,6 @@ void ASPlayerController::BeginPlay()
 		return;
 	}
 
-	UE_LOG(LogTemp, Log, TEXT("Start Load Game"));
-
-	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
-	if (nullptr != SPlayerState)
-	{
-		USGameInstance* SGameInstance = Cast<USGameInstance>(GetGameInstance());
-		if (nullptr != SGameInstance)
-		{
-			UE_LOG(LogTemp, Log, TEXT("Current Player Name : %s"), *SGameInstance->GetCurrentPlayerName());
-		}
-		FString PlayerName = SGameInstance != nullptr ? SGameInstance->GetCurrentPlayerName() : TEXT("Player0");
-		UTestSaveGame* SaveGame = Cast<UTestSaveGame>(UGameplayStatics::LoadGameFromSlot(PlayerName, 0));
-		if (nullptr != SaveGame)
-		{
-			SPlayerState->SetPlayerName(PlayerName);
-			SPlayerState->SetWeaponId(SaveGame->MainWeaponId);
-			SPlayerState->SetSubWeaponId(SaveGame->SubWeaponId);
-			SPlayerState->SetTeamNumber(SaveGame->TeamNum);
-
-			UE_LOG(LogTemp, Log, TEXT("LoadGame Complete : %s"), *PlayerName);
-		}
-	}
-
 	if (nullptr != RightPadButtonHUDClass)
 	{
 		RightButtonHUD = CreateWidget<URightButtonHUDWidget>(this, RightPadButtonHUDClass);
@@ -140,7 +130,6 @@ void ASPlayerController::BeginPlay()
 	{
 		MenuWidget = CreateWidget<USPraticeMenuWidget>(this, MenuWidgetClass);
 	}
-	
 	if (nullptr != MenuWidget)
 	{
 		MenuWidget->OnResumeDelegate.AddUObject(this, &ASPlayerController::OnGameResume);
@@ -163,14 +152,6 @@ void ASPlayerController::BeginPlay()
 	}
 }
 
-void ASPlayerController::LoadPlayerStateInfo()
-{
-	if (true == IsLocalController())
-	{
-		UE_LOG(LogTemp, Log, TEXT("Local Player Controller"));
-	}
-}
-
 void ASPlayerController::Client_LoadPlayerStateInfo_Implementation()
 {
 	UE_LOG(LogTemp, Log, TEXT("ASPlayerController::Client_LoadPlayerStateInfo() called"));
@@ -183,10 +164,9 @@ void ASPlayerController::Client_LoadPlayerStateInfo_Implementation()
 	
 	FString PlayerName = SGameInstance != nullptr ? SGameInstance->GetCurrentPlayerName() : TEXT("Player0");
 	UTestSaveGame* SaveGame = Cast<UTestSaveGame>(UGameplayStatics::LoadGameFromSlot(PlayerName, 0));
-	
 	if (nullptr == SaveGame)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to LoadGame"));
+		UE_LOG(LogTemp, Error, TEXT("ASPlayerController::Client_LoadPlayerStateInfo(), Failed to LoadGame"));
 		return;
 	}
 	else
@@ -204,7 +184,8 @@ void ASPlayerController::Client_LoadPlayerStateInfo_Implementation()
 				SPlayerState->SetWeaponId(SaveGame->MainWeaponId);
 				SPlayerState->SetSubWeaponId(SaveGame->SubWeaponId);
 				SPlayerState->SetTeamNumber(SaveGame->TeamNum);
-			}			
+			}
+			bLoadPlayerState = true;
 			RequestRestartPlayerDelegate.Broadcast(this);
 		}
 		else
@@ -230,6 +211,7 @@ void ASPlayerController::Server_LoadPlayerStateInfo_Implementation(const FString
 	SPlayerState->SetSubWeaponId(NewSubWeaponId);
 	SPlayerState->SetTeamNumber(NewTeamNumber);
 
+	bLoadPlayerState = true;
 	RequestRestartPlayerDelegate.Broadcast(this);
 }
 
