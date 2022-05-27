@@ -64,7 +64,7 @@ protected:
 	class UWidgetComponent* HPBarWidgetComp;
 
 	// Weapon
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	class ASWeapon* MainWeapon;
 
 	UPROPERTY(EditAnywhere, Category = "Player")
@@ -73,7 +73,7 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Player")
 	FName WeaponAttachSocketName;
 
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	class ASSubWeapon* SubWeapon;
 
 	UPROPERTY(EditAnywhere, Category = "Player")
@@ -114,6 +114,8 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	virtual void StartMainAttack(void);
 

@@ -1,22 +1,24 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "SCharacter.h"
-#include "Camera/CameraComponent.h"
-#include "GameFramework/SpringArmComponent.h"
-#include "GameFramework/PawnMovementComponent.h"
-#include "Components/CapsuleComponent.h"
 #include "SWeapon.h"
 #include "SSubWeapon.h"
 #include "SGameInstance.h"
-#include "TestSaveGame.h"
-#include "Components/SHealthComponent.h"
-#include "SCharacterAnimInstance.h"
 #include "SPlayerController.h"
 #include "SPlayerState.h"
+#include "SCharacterAnimInstance.h"
+
+#include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/PawnMovementComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+
+#include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "Components/SHealthComponent.h"
+#include "Components/WidgetComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/SHPBarWidget.h"
-#include "Components/WidgetComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -415,4 +417,12 @@ void ASCharacter::SetGenericTeamId(const FGenericTeamId& NewTeamID)
 	{
 		TeamId = NewTeamID;
 	}
+}
+
+void ASCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ASCharacter, MainWeapon);
+	DOREPLIFETIME(ASCharacter, SubWeapon);
 }
