@@ -130,64 +130,69 @@ void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Hea
 
 	if (Health <= 0.0f && !bDied)
 	{
-		if (nullptr != MainWeapon)
-		{
-			MainWeapon->StopNormalAttack();
-		}
+		OnCharacterDead(OwningHealthComp, Health, HealthDelta, DamageType, InstigatedBy, DamageCauser);
+	}
+}
 
-		FVector ImpulseDireciton;
-		if (nullptr != DamageCauser)
-		{
-			UE_LOG(LogTemp, Log, TEXT("Damage Causer : %s"), *DamageCauser->GetName());
-			ImpulseDireciton = DamageCauser->GetActorForwardVector();
-			ImpulseDireciton.Normalize();
-		}
-		else
-		{
-			ImpulseDireciton = -GetActorForwardVector();
-			ImpulseDireciton.Normalize();
-		}
+void ASCharacter::OnCharacterDead(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
+{
+	if (nullptr != MainWeapon)
+	{
+		MainWeapon->StopNormalAttack();
+	}
 
-		ImpulseDireciton = ImpulseDireciton * 1500.0f;
+	FVector ImpulseDireciton;
+	if (nullptr != DamageCauser)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Damage Causer : %s"), *DamageCauser->GetName());
+		ImpulseDireciton = DamageCauser->GetActorForwardVector();
+		ImpulseDireciton.Normalize();
+	}
+	else
+	{
+		ImpulseDireciton = -GetActorForwardVector();
+		ImpulseDireciton.Normalize();
+	}
 
-		bDied = true;
-		if (true == GetMesh()->IsUsingAbsoluteLocation())
-		{
-			UE_LOG(LogTemp, Log, TEXT("Using Absolute Location"));
-		}
-		else
-		{
-			UE_LOG(LogTemp, Log, TEXT("Using Relative Location"));
-		}
-		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	ImpulseDireciton = ImpulseDireciton * 1500.0f;
 
-		GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
-		GetMesh()->SetSimulatePhysics(true);
-		GetCharacterMovement()->DisableMovement();
+	bDied = true;
+	if (true == GetMesh()->IsUsingAbsoluteLocation())
+	{
+		UE_LOG(LogTemp, Log, TEXT("Using Absolute Location"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Log, TEXT("Using Relative Location"));
+	}
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-		GetMesh()->SetPhysicsLinearVelocity(FVector::ZeroVector);
-		GetMesh()->AddImpulseToAllBodiesBelow(ImpulseDireciton, NAME_None);
+	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
+	GetMesh()->SetSimulatePhysics(true);
+	GetCharacterMovement()->DisableMovement();
 
-		//GetMovementComponent()->StopMovementImmediately();
-		HPBarWidgetComp->SetHiddenInGame(true);
+	GetMesh()->SetPhysicsLinearVelocity(FVector::ZeroVector);
+	GetMesh()->AddImpulseToAllBodiesBelow(ImpulseDireciton, NAME_None);
 
-		// Weapon Reload 관련 처리 
-		PlayerController = Cast<ASPlayerController>(GetController());
-		if (nullptr != PlayerController)
-		{
-			PlayerController->OnPlayerDead();
-			MainWeapon->StopReloadWeapon();
-			SubWeapon->StopReloadSubWeapon();
-		}
+	//GetMovementComponent()->StopMovementImmediately();
+	HPBarWidgetComp->SetHiddenInGame(true);
 
-		// TODO : Character를 5초 후에 리스폰 or 시작 위치로 조정
-		
-		GetWorldTimerManager().SetTimer(RespawnTimer, this, &ASCharacter::RespawnCharacter, RespawnTime, false);
+	// Weapon Reload 관련 처리 
+	PlayerController = Cast<ASPlayerController>(GetController());
+	if (nullptr != PlayerController)
+	{
+		PlayerController->OnPlayerDead();
+		MainWeapon->StopReloadWeapon();
+		SubWeapon->StopReloadSubWeapon();
+	}
 
-		if (nullptr != SPlayerState)
-		{
-			SPlayerState->AddDeathScore();
-		}
+	// TODO : Character를 5초 후에 리스폰 or 시작 위치로 조정
+
+	GetWorldTimerManager().SetTimer(RespawnTimer, this, &ASCharacter::RespawnCharacter, RespawnTime, false);
+
+	if (nullptr != SPlayerState)
+	{
+		SPlayerState->AddDeathScore();
 	}
 }
 
@@ -202,21 +207,6 @@ void ASCharacter::LoadWeapon()
 	// LoadWeapon() 시점에서 PlayerState가 생성되지 않은 경우
 	if (nullptr == SPlayerState)
 	{
-		/*USGameInstance* SGameInstance = Cast<USGameInstance>(GetGameInstance());
-		if (nullptr != SGameInstance)
-		{
-			UE_LOG(LogTemp, Log, TEXT("Current Player Name : %s"), *SGameInstance->GetCurrentPlayerName());
-		}
-		FString PlayerName = SGameInstance != nullptr ? SGameInstance->GetCurrentPlayerName() : TEXT("Player0");
-		UTestSaveGame* SaveGame = Cast<UTestSaveGame>(UGameplayStatics::LoadGameFromSlot(PlayerName, 0));
-		
-		if (nullptr != SaveGame)
-		{
-			CurrentWeaponId = SaveGame->MainWeaponId;
-			CurrentSubWeaponId = SaveGame->SubWeaponId;
-
-			UE_LOG(LogTemp, Log, TEXT("Success to Load SaveGame, SlotName : %s"), *PlayerName);
-		}*/
 		UE_LOG(LogTemp, Log, TEXT("ASCharacter::LoadWeapon(), SPlayerState is nullptr"));
 		return;
 	}
@@ -240,7 +230,7 @@ void ASCharacter::LoadWeapon()
 
 	if (nullptr == TestWeaponClass || nullptr == TestSubWeaponClass)
 	{
-		UE_LOG(LogTemp, Error, TEXT("WeaponClass is nullptr"));
+		UE_LOG(LogTemp, Error, TEXT("ASCharacter::LoadWeapon(), WeaponClass is nullptr"));
 		return;
 	}
 
@@ -292,7 +282,6 @@ void ASCharacter::Tick(float DeltaTime)
 void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &ASCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ASCharacter::MoveRight);
