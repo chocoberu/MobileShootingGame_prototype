@@ -102,6 +102,20 @@ AActor* ATeamNormalGameMode::ChoosePlayerStart_Implementation(AController* Playe
 	return Super::ChoosePlayerStart_Implementation(Player);
 }
 
+void ATeamNormalGameMode::StartMatch()
+{
+	Super::StartMatch();
+
+	UE_LOG(LogTemp, Log, TEXT("ATeamNormalGameMode::StartMatch() called"));
+}
+
+void ATeamNormalGameMode::EndMatch()
+{
+	Super::EndMatch();
+
+	UE_LOG(LogTemp, Log, TEXT("ATeamNormalGameMode::EndMatch() called"));
+}
+
 void ATeamNormalGameMode::ResponseRestartPlayer(AController* NewPlayer)
 {
 	UE_LOG(LogTemp, Log, TEXT("ATeamNormalGameMode::ResponseRestartPlayer() called"));

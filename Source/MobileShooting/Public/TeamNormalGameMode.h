@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class MOBILESHOOTING_API ATeamNormalGameMode : public AGameModeBase
+class MOBILESHOOTING_API ATeamNormalGameMode : public AGameMode
 {
 	GENERATED_BODY()
 	
@@ -24,6 +24,10 @@ public:
 	virtual void RestartPlayer(AController* NewPlayer) override;
 
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
+
+	virtual void StartMatch() override;
+
+	virtual void EndMatch() override;
 
 	void ResponseRestartPlayer(AController* NewPlayer);
 
