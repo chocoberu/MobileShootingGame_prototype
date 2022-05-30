@@ -36,6 +36,7 @@ void ASPlayerController::BindMainWeaponStatusWidget(ASWeapon* MainWeapon)
 {
 	if (nullptr == RightButtonHUD)
 	{
+		UE_LOG(LogTemp, Error, TEXT("ASPlayerController::BindMainWeaponStatusWidget(), RightButtonHUD is nullptr"));
 		return;
 	}
 	RightButtonHUD->BindMainWeapon(MainWeapon);
@@ -45,6 +46,7 @@ void ASPlayerController::BindSubWeaponStatusWidget(ASSubWeapon* SubWeapon)
 {
 	if (nullptr == RightButtonHUD)
 	{
+		UE_LOG(LogTemp, Error, TEXT("ASPlayerController::BindSubWeaponStatusWidget(), RightButtonHUD is nullptr"));
 		return;
 	}
 	RightButtonHUD->BindSubWeapon(SubWeapon);
@@ -54,7 +56,7 @@ void ASPlayerController::OnGamePause()
 {
 	if (nullptr == MenuWidget)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Menu Widget is nullptr"));
+		UE_LOG(LogTemp, Log, TEXT("ASPlayerController::OnGamePause(), Menu Widget is nullptr"));
 		return;
 	}
 	SetPause(true);
@@ -72,7 +74,7 @@ void ASPlayerController::OnGameResume()
 {
 	if (nullptr == MenuWidget)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Menu Widget is nullptr"));
+		UE_LOG(LogTemp, Log, TEXT("ASPlayerController::OnGameResume(), Menu Widget is nullptr"));
 		return;
 	}
 	SetPause(false);
@@ -101,6 +103,8 @@ void ASPlayerController::OnPlayerDead()
 void ASPlayerController::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
+
+	UE_LOG(LogTemp, Log, TEXT("ASPlayerController::PostInitializeComponents() called"));
 }
 
 void ASPlayerController::BeginPlay()
@@ -112,11 +116,13 @@ void ASPlayerController::BeginPlay()
 	// TEST CODE
 	if (false == IsLocalPlayerController())
 	{
-		UE_LOG(LogTemp, Log, TEXT("No Authority "));
+		UE_LOG(LogTemp, Log, TEXT("ASPlayerController::BeginPlay(), No Local Controller"));
 		return;
 	}
-
-	if (nullptr != RightPadButtonHUDClass)
+	
+	// TODO : 일부 플랫폼에서 HUD와 Weapon Bind가 제대로 되지 않음 (HUD == nullptr이여서)
+	// OnPossess()는 클라이언트에서 호출되지 않으므로 다른 곳에서 생성 필요
+	/*if (nullptr != RightPadButtonHUDClass)
 	{
 		RightButtonHUD = CreateWidget<URightButtonHUDWidget>(this, RightPadButtonHUDClass);
 	}
@@ -133,7 +139,7 @@ void ASPlayerController::BeginPlay()
 	if (nullptr != MenuWidget)
 	{
 		MenuWidget->OnResumeDelegate.AddUObject(this, &ASPlayerController::OnGameResume);
-	}
+	}*/
 
 	FString CurrentPlatform = UGameplayStatics::GetPlatformName();
 	// 임시 주석 처리
@@ -152,9 +158,34 @@ void ASPlayerController::BeginPlay()
 	}
 }
 
+void ASPlayerController::InitWidget()
+{
+	if (nullptr != RightPadButtonHUDClass)
+	{
+		RightButtonHUD = CreateWidget<URightButtonHUDWidget>(this, RightPadButtonHUDClass);
+	}
+	if (nullptr == RightButtonHUD)
+	{
+		UE_LOG(LogTemp, Error, TEXT("RightButtonHUD is nullptr"));
+		return;
+	}
+
+	if (nullptr != MenuWidgetClass)
+	{
+		MenuWidget = CreateWidget<USPraticeMenuWidget>(this, MenuWidgetClass);
+	}
+	if (nullptr != MenuWidget)
+	{
+		MenuWidget->OnResumeDelegate.AddUObject(this, &ASPlayerController::OnGameResume);
+	}
+}
+
 void ASPlayerController::Client_LoadPlayerStateInfo_Implementation()
 {
 	UE_LOG(LogTemp, Log, TEXT("ASPlayerController::Client_LoadPlayerStateInfo() called"));
+
+	// TEST CODE
+	InitWidget();
 	
 	USGameInstance* SGameInstance = Cast<USGameInstance>(GetGameInstance());
 	if (nullptr != SGameInstance)

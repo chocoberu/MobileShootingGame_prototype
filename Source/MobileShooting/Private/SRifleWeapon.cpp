@@ -130,7 +130,7 @@ void ASRifleWeapon::SkillAttack()
 
 	if (SpeedupRatio < 1.0f)
 	{
-		UE_LOG(LogTemp, Error, TEXT("SpeedupRatio 값이 잘못 설정되어 있습니다."));
+		//UE_LOG(LogTemp, Error, TEXT("SpeedupRatio 값이 잘못 설정되어 있습니다."));
 		return;
 	}
 

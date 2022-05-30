@@ -22,6 +22,8 @@ void ASessionRoomPlayerController::BeginPlay()
 		return;
 	}
 
+	SetVirtualJoystickVisibility(false);
+
 	SessionRoomWidget = CreateWidget<UTestSessionRoomWidget>(this, SessionRoomUIClass);
 	if (nullptr == SessionRoomWidget)
 	{

@@ -46,6 +46,8 @@ protected:
 
 	virtual void BeginPlay() override;
 
+	void InitWidget();
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI", Meta = (AllowPrivateAccess = true))
 	TSubclassOf<class URightButtonHUDWidget> RightPadButtonHUDClass;
 

@@ -113,6 +113,7 @@ void URightButtonHUDWidget::BindMainWeapon(ASWeapon* MainWeapon)
 {
 	if (nullptr == MainWeapon)
 	{
+		UE_LOG(LogTemp, Error, TEXT("URightButtonHUDWidget::BindMainWeapon(), MainWeapon is nullptr"));
 		return;
 	}
 
@@ -127,6 +128,7 @@ void URightButtonHUDWidget::BindSubWeapon(ASSubWeapon* SubWeapon)
 {
 	if (nullptr == SubWeapon)
 	{
+		UE_LOG(LogTemp, Error, TEXT("URightButtonHUDWidget::BindSubWeapon(), SubWeapon is nullptr"));
 		return;
 	}
 	SubWeaponWeakPtr = SubWeapon;
