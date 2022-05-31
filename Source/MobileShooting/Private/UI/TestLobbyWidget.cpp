@@ -7,6 +7,7 @@
 #include "Components/Button.h"
 #include "Components/ScrollBox.h"
 #include "Components/CircularThrobber.h"
+#include "Kismet/GameplayStatics.h"
 
 UTestLobbyWidget::UTestLobbyWidget(const FObjectInitializer& ObjectInitializer) : UUserWidget(ObjectInitializer)
 {
@@ -20,6 +21,7 @@ bool UTestLobbyWidget::Initialize()
 	CreateSessionButton->OnClicked.AddDynamic(this, &UTestLobbyWidget::CreateSession);
 	JoinSessionButton->OnClicked.AddDynamic(this, &UTestLobbyWidget::JoinSession);
 	SessionRefreshButton->OnClicked.AddDynamic(this, &UTestLobbyWidget::FindSession);
+	PrevButton->OnClicked.AddDynamic(this, &UTestLobbyWidget::OnClickedPrevButton);
 
 	bIsFocusable = true;
 
@@ -37,7 +39,6 @@ bool UTestLobbyWidget::Initialize()
 
 void UTestLobbyWidget::CreateSession()
 {
-	// TODO : GameInstance의 CreateSession 호출
 	if (nullptr == SGameInstance)
 	{
 		return;
@@ -110,4 +111,10 @@ void UTestLobbyWidget::SetSessionList(const TArray<FCustomSessionResult> Session
 void UTestLobbyWidget::SelectSessionIndex(uint32 Index)
 {
 	SelectedSessionIndex = Index;
+}
+
+void UTestLobbyWidget::OnClickedPrevButton()
+{
+	// TODO : 세션을 찾는 도중인 경우 중단한 이후에 open levl 
+	UGameplayStatics::OpenLevel(GetWorld(), FName(TEXT("GameStartLevel")));
 }

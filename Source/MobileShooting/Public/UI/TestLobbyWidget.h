@@ -30,6 +30,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void FindSession();
 
+	UFUNCTION()
+	void OnClickedPrevButton();
+
 	void SetSessionList(const TArray<FCustomSessionResult> SessionList);
 
 	void SelectSessionIndex(uint32 Index);
@@ -50,6 +53,9 @@ protected:
 	
 	UPROPERTY(meta = (BindWidget))
 	class UButton* SessionRefreshButton;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* PrevButton;
 
 	UPROPERTY(meta = (BindWidget))
 	class UCircularThrobber* SessionSearchThrobber;
