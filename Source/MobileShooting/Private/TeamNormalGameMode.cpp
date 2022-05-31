@@ -107,6 +107,12 @@ void ATeamNormalGameMode::StartMatch()
 	Super::StartMatch();
 
 	UE_LOG(LogTemp, Log, TEXT("ATeamNormalGameMode::StartMatch() called"));
+
+	if (true == ReadyToStartMatch())
+	{
+		UE_LOG(LogTemp, Log, TEXT("ATeamNormalGameMode::StartMatch(), Ready to Start Match"));
+	}
+	
 }
 
 void ATeamNormalGameMode::EndMatch()
