@@ -101,6 +101,8 @@ public:
 	// TODO : 필요하다면 매개변수를 통해 QueryParam 수정하도록
 	void FindSession();
 
+	void CancelFindSession();
+
 	void StartSession();
 
 	void LeaveAndDestroySession();
@@ -130,6 +132,7 @@ private:
 	void OnDestroySessionComplete(FName SessionName, bool Success);
 	void OnFindSessionsComplete(bool Success);
 	void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
+	void OnCancelFindSessionsComplete(bool Success);
 
 	void CreateSession();
 
@@ -139,6 +142,7 @@ private:
 	FOnFindSessionsCompleteDelegate OnFindSessionsCompleteDelegate;
 	FOnJoinSessionCompleteDelegate OnJoinSessionCompleteDelegate;
 	FOnDestroySessionCompleteDelegate OnDestroySessionCompleteDelegate;
+	FOnCancelFindSessionsCompleteDelegate OnCancelFindSessionsCompleteDelegate;
 
 	// Delgate Handle
 	FDelegateHandle OnCreateSessionCompleteDelegateHandle;
@@ -146,6 +150,7 @@ private:
 	FDelegateHandle OnFindSessionsCompleteDelegateHandle;
 	FDelegateHandle OnJoinSessionCompleteDelegateHandle;
 	FDelegateHandle OnDestroySessionCompleteDelegateHandle;
+	FDelegateHandle OnCancelFindSessionsCompleteDelegateHandle;
 
 	// Weapon DataTable
 	UPROPERTY(EditDefaultsOnly, Category = "Data")

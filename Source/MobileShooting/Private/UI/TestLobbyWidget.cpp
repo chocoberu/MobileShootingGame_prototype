@@ -43,6 +43,11 @@ void UTestLobbyWidget::CreateSession()
 	{
 		return;
 	}
+	if (true == bFindSession)
+	{
+		SGameInstance->CancelFindSession();
+		bFindSession = false;
+	}
 
 	SGameInstance->Host();
 }
@@ -115,6 +120,10 @@ void UTestLobbyWidget::SelectSessionIndex(uint32 Index)
 
 void UTestLobbyWidget::OnClickedPrevButton()
 {
-	// TODO : 세션을 찾는 도중인 경우 중단한 이후에 open levl 
+	if (true == bFindSession && nullptr != SGameInstance)
+	{
+		SGameInstance->CancelFindSession();
+		bFindSession = false;
+	}
 	UGameplayStatics::OpenLevel(GetWorld(), FName(TEXT("GameStartLevel")));
 }

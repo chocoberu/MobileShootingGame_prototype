@@ -16,6 +16,7 @@ USGameInstance::USGameInstance()
 	OnFindSessionsCompleteDelegate = FOnFindSessionsCompleteDelegate::CreateUObject(this, &USGameInstance::OnFindSessionsComplete);
 	OnJoinSessionCompleteDelegate = FOnJoinSessionCompleteDelegate::CreateUObject(this, &USGameInstance::OnJoinSessionComplete);
 	OnDestroySessionCompleteDelegate = FOnDestroySessionCompleteDelegate::CreateUObject(this, &USGameInstance::OnDestroySessionComplete);
+	OnCancelFindSessionsCompleteDelegate = FOnCancelFindSessionsCompleteDelegate::CreateUObject(this, &USGameInstance::OnCancelFindSessionsComplete);
 
 	SetCurrentGameMode(ECurrentGameMode::None);
 	CurrentPlayerName = TEXT("Player0");
@@ -119,10 +120,8 @@ void USGameInstance::OnCreateSessionComplete(FName SessionName, bool Success)
 	//OnStartSessionCompleteDelegateHandle = SessionInterface->AddOnStartSessionCompleteDelegate_Handle(OnStartSessionCompleteDelegate);
 	//SessionInterface->StartSession(SessionName);
 
-	// TEST CODE
+	// SessionLevel·Î ÀÌµ¿
 	UGameplayStatics::OpenLevel(World, TEXT("/Game/Levels/SessionLevel"), true, "listen");
-	//World->ServerTravel("/Game/Levels/SessionLevel?listen");
-	//World->ServerTravel("/Game/Levels/TestBossLevel?listen");
 }
 
 void USGameInstance::OnStartOnlineGameComplete(FName SessionName, bool Success)
@@ -216,6 +215,22 @@ void USGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessionComp
 	PlayerController->ClientTravel(Address, ETravelType::TRAVEL_Absolute);
 }
 
+void USGameInstance::OnCancelFindSessionsComplete(bool Success)
+{
+	if (false == SessionInterface.IsValid())
+	{
+		return;
+	}
+
+	if (true == Success)
+	{
+		UE_LOG(LogTemp, Log, TEXT("USGameInstance::OnCancelFindSessionComplete : %d"), Success);
+	}
+
+	SessionInterface->ClearOnCancelFindSessionsCompleteDelegate_Handle(OnCancelFindSessionsCompleteDelegateHandle);
+	SessionResultList.Empty();
+}
+
 void USGameInstance::CreateSession()
 {
 	if (false == SessionInterface.IsValid())
@@ -258,6 +273,15 @@ void USGameInstance::FindSession()
 
 		OnFindSessionsCompleteDelegateHandle = SessionInterface->AddOnFindSessionsCompleteDelegate_Handle(OnFindSessionsCompleteDelegate);
 		SessionInterface->FindSessions(*Player->GetPreferredUniqueNetId(), SessionSearch.ToSharedRef());
+	}
+}
+
+void USGameInstance::CancelFindSession()
+{
+	if (true == SessionSearch.IsValid() && true == SessionInterface.IsValid())
+	{
+		OnCancelFindSessionsCompleteDelegateHandle = SessionInterface->AddOnCancelFindSessionsCompleteDelegate_Handle(OnCancelFindSessionsCompleteDelegate);
+		SessionInterface->CancelFindSessions();
 	}
 }
 
