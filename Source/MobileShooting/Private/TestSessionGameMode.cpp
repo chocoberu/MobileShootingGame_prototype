@@ -48,21 +48,6 @@ void ATestSessionGameMode::PostLogin(APlayerController* NewPlayer)
 		return;
 	}
 
-	// TEST CODE : PostLogin()에서 세션에 현재 접속 가능한 인원 수를 차감할 수 있는지 확인
-	IOnlineSubsystem* Subsystem = IOnlineSubsystem::Get();
-	if (nullptr != Subsystem)
-	{
-		auto SessionInterface = Subsystem->GetSessionInterface();
-		if (true == SessionInterface.IsValid())
-		{
-			auto ExitingSession = SessionInterface->GetNamedSession(TEXT("Test Session"));
-			if (nullptr != ExitingSession)
-			{
-				ExitingSession->NumOpenPublicConnections--;
-			}
-		}
-	}
-
 	auto Engine = SGameInstance->GetEngine();
 	if (nullptr == Engine)
 	{
@@ -74,7 +59,6 @@ void ATestSessionGameMode::PostLogin(APlayerController* NewPlayer)
 		UE_LOG(LogTemp, Log, TEXT("%s Login"), *SPlayerController->GetPlayerName());
 		Engine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("%s Login"), *SPlayerController->GetPlayerName()));
 	}
-
 }
 
 void ATestSessionGameMode::Logout(AController* Exiting)

@@ -107,7 +107,9 @@ public:
 
 	TArray<FCustomSessionResult> GetSessionList() const { return SessionResultList; }
 
-	FOnFindSessionCompleteDelegate OnFindSessionCompleteDelegate;
+	FOnFindSessionCompleteDelegate OnFindSessionCompleteDelegate; // TODO : 확인 필요
+
+	void RegisterPlayer(FName SessionName, const FUniqueNetId& UniqueId, bool bWasInvited);
 
 	// ErrorMessage 관련
 	void ShowErrorMessage(uint32 ErrorCode);

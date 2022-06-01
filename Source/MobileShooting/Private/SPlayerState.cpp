@@ -3,7 +3,9 @@
 
 #include "SPlayerState.h"
 #include "TestSaveGame.h"
+#include "SGameInstance.h"
 #include "Net/UnrealNetwork.h"
+#include "Net/OnlineEngineInterface.h"
 
 ASPlayerState::ASPlayerState()
 {
@@ -14,7 +16,23 @@ ASPlayerState::ASPlayerState()
 	CurrentWeaponId = 0;
 	CurrentSubweaponId = 1000;
 
+	SessionName = TEXT("Test Session");
 	bNetLoadOnClient = true;
+}
+
+void ASPlayerState::RegisterPlayerWithSession(bool bWasFromInvite)
+{
+	if (GetNetMode() != NM_Standalone)
+	{
+		if (true == GetUniqueId().IsValid())
+		{
+			USGameInstance* SGameInstance = GetGameInstance<USGameInstance>();
+			if (nullptr != SGameInstance)
+			{
+				SGameInstance->RegisterPlayer(SessionName, *GetUniqueId(), bWasFromInvite);
+			}
+		}
+	}
 }
 
 void ASPlayerState::BeginPlay()
@@ -22,7 +40,6 @@ void ASPlayerState::BeginPlay()
 	Super::BeginPlay();
 
 	UE_LOG(LogTemp, Log, TEXT("ASPlayerState::BeginPlay() call"));
-
 }
 
 void ASPlayerState::ResetPlayerState()

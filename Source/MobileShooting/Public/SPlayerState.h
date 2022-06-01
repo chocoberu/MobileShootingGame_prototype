@@ -17,6 +17,8 @@ class MOBILESHOOTING_API ASPlayerState : public APlayerState
 public:
 	ASPlayerState();
 
+	virtual void RegisterPlayerWithSession(bool bWasFromInvite) override;
+
 	uint32 GetKillScore() const { return KillScore; }
 
 	uint32 GetDeathScore() const { return DeathScore; }

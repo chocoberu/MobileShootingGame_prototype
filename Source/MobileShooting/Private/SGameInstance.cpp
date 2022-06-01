@@ -325,6 +325,16 @@ void USGameInstance::LeaveAndDestroySession()
 	SessionInterface->DestroySession(SESSION_NAME);
 }
 
+void USGameInstance::RegisterPlayer(FName SessionName, const FUniqueNetId& UniqueId, bool bWasInvited)
+{
+	if (false == SessionInterface.IsValid())
+	{
+		return;
+	}
+
+	SessionInterface->RegisterPlayer(SessionName, UniqueId, bWasInvited);
+}
+
 void USGameInstance::ShowErrorMessage(uint32 ErrorCode)
 {
 	// TEST CODE
