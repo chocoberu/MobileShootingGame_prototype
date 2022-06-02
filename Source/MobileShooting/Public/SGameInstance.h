@@ -113,6 +113,8 @@ public:
 
 	void RegisterPlayer(FName SessionName, const FUniqueNetId& UniqueId, bool bWasInvited);
 
+	void UnregisterPlayer(FName SessionName, const FUniqueNetId& PlayerId);
+
 	// ErrorMessage ฐüทร
 	void ShowErrorMessage(uint32 ErrorCode);
 

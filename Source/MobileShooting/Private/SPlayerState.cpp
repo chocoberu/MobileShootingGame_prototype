@@ -35,6 +35,18 @@ void ASPlayerState::RegisterPlayerWithSession(bool bWasFromInvite)
 	}
 }
 
+void ASPlayerState::UnregisterPlayerWithSession()
+{
+	if (GetNetMode() == NM_Client && GetUniqueId().IsValid())
+	{
+		USGameInstance* SGameInstance = GetGameInstance<USGameInstance>();
+		if (SessionName != NAME_None && nullptr != SGameInstance)
+		{
+			SGameInstance->UnregisterPlayer(SessionName, *GetUniqueId());
+		}
+	}
+}
+
 void ASPlayerState::BeginPlay()
 {
 	Super::BeginPlay();

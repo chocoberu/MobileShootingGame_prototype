@@ -4,6 +4,7 @@
 #include "TeamNormalGameMode.h"
 #include "SPlayerController.h"
 #include "SPlayerState.h"
+#include "SGameSession.h"
 #include "SGameInstance.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
@@ -11,6 +12,9 @@
 ATeamNormalGameMode::ATeamNormalGameMode()
 {
 	PlayerStateClass = ASPlayerState::StaticClass();
+	GameSessionClass = ASGameSession::StaticClass();
+
+	bDelayedStart = true;
 }
 
 void ATeamNormalGameMode::PostLogin(APlayerController* NewPlayer)
@@ -19,16 +23,29 @@ void ATeamNormalGameMode::PostLogin(APlayerController* NewPlayer)
 
 	UE_LOG(LogTemp, Log, TEXT("TeamNormalGameMode Player %s PostLogin"), *NewPlayer->GetName());
 
-	ASPlayerController* PC = Cast<ASPlayerController>(NewPlayer);
-	if (nullptr != PC)
+	ASPlayerController* SPlyaerController = Cast<ASPlayerController>(NewPlayer);
+	if (nullptr != SPlyaerController)
 	{
-		PlayerControllerList.Add(PC);
+		PlayerControllerList.Add(SPlyaerController);
+	}
+	
+	// TODO : 로그인한 플레이어 수가 세션의 플레이어 수와 일치하면 StartMatch()
+	// TEST CODE
+	if (PlayerControllerList.Num() == 1)
+	{
+		StartMatch();
 	}
 }
 
 void ATeamNormalGameMode::Logout(AController* Exiting)
 {
 	Super::Logout(Exiting);
+
+	ASPlayerController* SPlyaerController = Cast<ASPlayerController>(Exiting);
+	if (nullptr != SPlyaerController)
+	{
+		PlayerControllerList.Remove(SPlyaerController);
+	}
 
 	UE_LOG(LogTemp, Log, TEXT("TeamNormalGameMode Logout : %s"), *Exiting->GetName());
 }
@@ -112,7 +129,6 @@ void ATeamNormalGameMode::StartMatch()
 	{
 		UE_LOG(LogTemp, Log, TEXT("ATeamNormalGameMode::StartMatch(), Ready to Start Match"));
 	}
-	
 }
 
 void ATeamNormalGameMode::EndMatch()

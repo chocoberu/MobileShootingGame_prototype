@@ -19,6 +19,8 @@ public:
 
 	virtual void RegisterPlayerWithSession(bool bWasFromInvite) override;
 
+	virtual void UnregisterPlayerWithSession() override;
+
 	uint32 GetKillScore() const { return KillScore; }
 
 	uint32 GetDeathScore() const { return DeathScore; }

@@ -359,6 +359,16 @@ void USGameInstance::RegisterPlayer(FName SessionName, const FUniqueNetId& Uniqu
 	SessionInterface->RegisterPlayer(SessionName, UniqueId, bWasInvited);
 }
 
+void USGameInstance::UnregisterPlayer(FName SessionName, const FUniqueNetId& PlayerId)
+{
+	if (false == SessionInterface.IsValid())
+	{
+		return;
+	}
+
+	SessionInterface->UnregisterPlayer(SessionName, PlayerId);
+}
+
 void USGameInstance::ShowErrorMessage(uint32 ErrorCode)
 {
 	// TEST CODE
