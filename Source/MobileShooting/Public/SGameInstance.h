@@ -115,6 +115,8 @@ public:
 
 	void UnregisterPlayer(FName SessionName, const FUniqueNetId& PlayerId);
 
+	int32 GetCurrentSessionPlayerCount();
+
 	// ErrorMessage ฐüทร
 	void ShowErrorMessage(uint32 ErrorCode);
 

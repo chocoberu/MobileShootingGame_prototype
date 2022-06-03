@@ -28,10 +28,16 @@ void ATeamNormalGameMode::PostLogin(APlayerController* NewPlayer)
 	{
 		PlayerControllerList.Add(SPlyaerController);
 	}
+
+	int32 CurrentPlayerCount = 1;
+	USGameInstance* SGameInstance = GetGameInstance<USGameInstance>();
+	if (nullptr != SGameInstance)
+	{
+		CurrentPlayerCount = SGameInstance->GetCurrentSessionPlayerCount();
+	}
 	
-	// TODO : 로그인한 플레이어 수가 세션의 플레이어 수와 일치하면 StartMatch()
-	// TEST CODE
-	if (PlayerControllerList.Num() == 1)
+	// TODO : 모든 플레이어가 준비 되었을 때 Match Start
+	if (PlayerControllerList.Num() == CurrentPlayerCount)
 	{
 		StartMatch();
 	}

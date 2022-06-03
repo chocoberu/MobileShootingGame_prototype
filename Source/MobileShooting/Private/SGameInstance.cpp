@@ -369,6 +369,22 @@ void USGameInstance::UnregisterPlayer(FName SessionName, const FUniqueNetId& Pla
 	SessionInterface->UnregisterPlayer(SessionName, PlayerId);
 }
 
+int32 USGameInstance::GetCurrentSessionPlayerCount()
+{
+	if (false == SessionInterface.IsValid())
+	{
+		return -1;
+	}
+
+	FNamedOnlineSession* Session = SessionInterface->GetNamedSession(SESSION_NAME);
+	if (nullptr == Session)
+	{
+		return -1;
+	}
+
+	return Session->SessionSettings.NumPublicConnections - Session->NumOpenPublicConnections;
+}
+
 void USGameInstance::ShowErrorMessage(uint32 ErrorCode)
 {
 	// TEST CODE

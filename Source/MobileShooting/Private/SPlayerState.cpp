@@ -37,11 +37,12 @@ void ASPlayerState::RegisterPlayerWithSession(bool bWasFromInvite)
 
 void ASPlayerState::UnregisterPlayerWithSession()
 {
-	if (GetNetMode() == NM_Client && GetUniqueId().IsValid())
+	if (GetNetMode() == NM_Client && true == GetUniqueId().IsValid())
 	{
 		USGameInstance* SGameInstance = GetGameInstance<USGameInstance>();
 		if (SessionName != NAME_None && nullptr != SGameInstance)
 		{
+			UE_LOG(LogTemp, Log, TEXT("ASPlayerState::UnregisterPlayerWithSession(), "));
 			SGameInstance->UnregisterPlayer(SessionName, *GetUniqueId());
 		}
 	}

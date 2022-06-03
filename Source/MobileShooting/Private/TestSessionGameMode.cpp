@@ -96,10 +96,11 @@ bool ATestSessionGameMode::StartGame()
 	// TODO : Host의 경우 Ready 상태인지 확인 안해도 될거 같음
 
 	// 홀수 인원인 경우 게임을 시작할 수 없음
-	if (0 != PlayerControllerList.Num() % 2 || BlueTeamCount != RedTeamCount)
+	// TEST : 테스트를 위해 임시 주석 처리
+	/*if (0 != PlayerControllerList.Num() % 2 || BlueTeamCount != RedTeamCount)
 	{
 		return false;
-	}
+	}*/
 
 	bool bCanStartGame = true;
 	for (auto SessionRoomPlayerController : PlayerControllerList)
