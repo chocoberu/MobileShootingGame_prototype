@@ -14,4 +14,5 @@ class MOBILESHOOTING_API ASGameSession : public AGameSession
 {
 	GENERATED_BODY()
 	
+	virtual void UnregisterPlayer(FName InSessionName, const FUniqueNetIdRepl& UniqueId) override;
 };

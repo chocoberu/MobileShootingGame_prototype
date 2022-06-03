@@ -36,6 +36,8 @@ void ATeamNormalGameMode::PostLogin(APlayerController* NewPlayer)
 		CurrentPlayerCount = SGameInstance->GetCurrentSessionPlayerCount();
 	}
 	
+	UE_LOG(LogTemp, Log, TEXT("Total Player Count : %d"), CurrentPlayerCount);
+
 	// TODO : 모든 플레이어가 준비 되었을 때 Match Start
 	if (PlayerControllerList.Num() == CurrentPlayerCount)
 	{
