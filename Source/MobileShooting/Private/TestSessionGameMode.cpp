@@ -29,17 +29,44 @@ void ATestSessionGameMode::PostLogin(APlayerController* NewPlayer)
 	}
 
 	// PlayerName을 Player0, Player1 과 같은 방식으로 설정
-	// TODO : PlayerCount 값을 따로 만들어서 관리 필요 (현재 방식은 같은 이름이 나올 수 있음)
-	// -> 해당 방식이 스레드 안전한가? 확인 필요
-	SessionRoomPlayerController->SetPlayerName(FString::Printf(TEXT("Player%d"), PlayerCount++));
-
-	// 팀 설정 처리
-	ASPlayerState* SPlayerState = SessionRoomPlayerController->GetPlayerState<ASPlayerState>();
-	if (nullptr == SPlayerState)
+	int32 PlayerIndex = BlueTeamCount <= RedTeamCount ? 0 : 1;
+	for (; PlayerIndex < 4; PlayerIndex += 2)
 	{
-		return;
+		FString TempPlayerName = FString::Printf(TEXT("Player%d"), PlayerIndex);
+		bool bExist = false;
+		for (auto PC : PlayerControllerList)
+		{
+			if (0 == PC->GetPlayerName().Compare(TempPlayerName))
+			{
+				bExist = true;
+				break;
+			}
+		}
+		if (true == bExist)
+		{
+			continue;
+		}
+
+		SessionRoomPlayerController->SetPlayerName(TempPlayerName);
+
+		// 팀 설정
+		ASPlayerState* SPlayerState = SessionRoomPlayerController->GetPlayerState<ASPlayerState>();
+		if (nullptr == SPlayerState)
+		{
+			UE_LOG(LogTemp, Error, TEXT("ATestSessionGameMode::PostLogin(), SPlayerState is nullptr"));
+			return;
+		}
+		SPlayerState->SetTeamNumber(PlayerIndex % 2);
+		if (PlayerIndex % 2 == 0)
+		{
+			BlueTeamCount++;
+		}
+		else
+		{
+			RedTeamCount++;
+		}
+		break;
 	}
-	SPlayerState->SetTeamNumber(PlayerControllerList.Num() % 2);
 	PlayerControllerList.Add(SessionRoomPlayerController);
 
 	USGameInstance* SGameInstance = GetGameInstance<USGameInstance>();
@@ -71,6 +98,21 @@ void ATestSessionGameMode::Logout(AController* Exiting)
 		return;
 	}
 	UE_LOG(LogTemp, Log, TEXT("ATestSessionGameMode::Logout() called, PlayerController : %s"), *SessionRoomPlayerController->GetName());
+	
+	ASPlayerState* SPlayerState = SessionRoomPlayerController->GetPlayerState<ASPlayerState>();
+	if (nullptr == SPlayerState)
+	{
+		return;
+	}
+	if (0 == SPlayerState->GetTeamNumber() % 2)
+	{
+		BlueTeamCount--;
+	}
+	else
+	{
+		RedTeamCount--;
+	}
+
 	PlayerControllerList.Remove(SessionRoomPlayerController);
 	UpdatePlayerList();
 
@@ -134,7 +176,6 @@ void ATestSessionGameMode::UpdatePlayerList()
 	PlayerInfoList.Empty();
 	BlueTeamCount = RedTeamCount = 0;
 
-	int32 Index = 0;
 	for (auto SessionRoomPlayerController : PlayerControllerList)
 	{
 		FRoomPlayerInfo NewPlayerInfo;
@@ -147,25 +188,10 @@ void ATestSessionGameMode::UpdatePlayerList()
 
 		// PlayerState의 정보를 이용해서 설정
 		NewPlayerInfo.bPlayerReady = SPlayerState->IsPlayerReady();
-		//NewPlayerInfo.PlayerName = SPlayerState->GetPlayerName();
-		NewPlayerInfo.PlayerName = FString::Printf(TEXT("Player%d"), Index);
-		NewPlayerInfo.TeamNumber = Index % 2;
-
-		SessionRoomPlayerController->SetPlayerName(NewPlayerInfo.PlayerName);
+		NewPlayerInfo.PlayerName = SPlayerState->GetPlayerName();
+		NewPlayerInfo.TeamNumber = SPlayerState->GetTeamNumber();
 		
-		if (0 == Index % 2)
-		{
-			BlueTeamCount++;
-		}
-		else
-		{
-			RedTeamCount++;
-		}
-
-		SPlayerState->SetTeamNumber(NewPlayerInfo.TeamNumber);
-
 		PlayerInfoList.Add(NewPlayerInfo);
-		Index++;
 
 		UE_LOG(LogTemp, Log, TEXT("PlayerList Add(), %s, %d"), *NewPlayerInfo.PlayerName, NewPlayerInfo.bPlayerReady);
 	}
