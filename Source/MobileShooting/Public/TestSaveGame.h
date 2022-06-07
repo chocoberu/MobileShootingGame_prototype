@@ -27,5 +27,5 @@ public:
 	int32 SubWeaponId;
 
 	UPROPERTY()
-	int32 TeamNum;
+	int32 PlayerIndex;
 };

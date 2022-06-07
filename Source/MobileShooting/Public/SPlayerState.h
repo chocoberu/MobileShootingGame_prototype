@@ -39,9 +39,11 @@ public:
 
 	bool IsPlayerReady() const { return bPlayerReady; }
 
-	void SetTeamNumber(const int32 Team) { TeamNumber = Team; }
+	void SetPlayerIndex(const int32 NewPlayerIndex) { PlayerIndex = NewPlayerIndex; }
 
-	int32 GetTeamNumber() const { return TeamNumber; }
+	int32 GetPlayerIndex() const { return PlayerIndex; }
+
+	int32 GetTeamNumber() const { return PlayerIndex % 2; }
 
 	void SetWeaponId(const int32 WeaponId) { CurrentWeaponId = WeaponId; }
 
@@ -56,7 +58,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(Replicated)
-	int32 TeamNumber;
+	int32 PlayerIndex;
 
 	bool bPlayerReady;
 

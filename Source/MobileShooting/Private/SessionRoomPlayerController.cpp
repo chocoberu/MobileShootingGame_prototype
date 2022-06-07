@@ -31,6 +31,7 @@ void ASessionRoomPlayerController::BeginPlay()
 		return;
 	}
 
+	// Session Host만 Start 버튼이 보이도록 설정
 	if (GetLocalRole() != ROLE_Authority)
 	{
 		SessionRoomWidget->SetStartButtonVisible(false);
@@ -54,7 +55,6 @@ void ASessionRoomPlayerController::EndPlay(EEndPlayReason::Type Reason)
 
 void ASessionRoomPlayerController::UpdatePlayerList(const TArray<FRoomPlayerInfo>& PlayerInfoList)
 {
-	// TODO : 인원 배치 방식을 다시 작성할 필요가 있음
 	int32 Index = 0;
 	for (const FRoomPlayerInfo& PlayerInfo : PlayerInfoList)
 	{
@@ -68,7 +68,7 @@ void ASessionRoomPlayerController::UpdatePlayerList(const TArray<FRoomPlayerInfo
 			PlayerName = PlayerInfo.PlayerName;
 		}
 
-		SessionRoomWidget->SetPlayerRowByIndex(Index, PlayerName, PlayerInfo.bPlayerReady);
+		SessionRoomWidget->SetPlayerRowByIndex(PlayerInfo.PlayerIndex, PlayerName, PlayerInfo.bPlayerReady);
 		Index++;
 	}
 
@@ -130,7 +130,7 @@ void ASessionRoomPlayerController::ChangeReadyState()
 		UTestSaveGame* NewSaveGame = NewObject<UTestSaveGame>();
 		NewSaveGame->MainWeaponId = SPlayerState->GetWeaponId();
 		NewSaveGame->SubWeaponId = SPlayerState->GetSubWeaponId();
-		NewSaveGame->TeamNum = SPlayerState->GetTeamNumber();
+		NewSaveGame->PlayerIndex = SPlayerState->GetPlayerIndex();
 
 		if (true == UGameplayStatics::SaveGameToSlot(NewSaveGame, SPlayerState->GetPlayerName(), 0))
 		{
@@ -226,7 +226,6 @@ void ASessionRoomPlayerController::LeaveSession(bool bSessionHost)
 		ATestSessionGameMode* SessionGameMode = Cast<ATestSessionGameMode>(GetWorld()->GetAuthGameMode());
 		if (nullptr != SessionGameMode)
 		{
-			// TODO : SessionHost가 나갈 때 다른 클라이언트 kick 처리
 			SessionGameMode->LeaveSession(GetPlayerName(), bSessionHost);
 		}
 	}

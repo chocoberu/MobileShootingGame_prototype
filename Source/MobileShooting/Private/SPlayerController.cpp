@@ -120,27 +120,6 @@ void ASPlayerController::BeginPlay()
 		return;
 	}
 	
-	// TODO : 일부 플랫폼에서 HUD와 Weapon Bind가 제대로 되지 않음 (HUD == nullptr이여서)
-	// OnPossess()는 클라이언트에서 호출되지 않으므로 다른 곳에서 생성 필요
-	/*if (nullptr != RightPadButtonHUDClass)
-	{
-		RightButtonHUD = CreateWidget<URightButtonHUDWidget>(this, RightPadButtonHUDClass);
-	}
-	if (nullptr == RightButtonHUD)
-	{
-		UE_LOG(LogTemp, Error, TEXT("RightButtonHUD is nullptr"));
-		return;
-	}
-
-	if (nullptr != MenuWidgetClass)
-	{
-		MenuWidget = CreateWidget<USPraticeMenuWidget>(this, MenuWidgetClass);
-	}
-	if (nullptr != MenuWidget)
-	{
-		MenuWidget->OnResumeDelegate.AddUObject(this, &ASPlayerController::OnGameResume);
-	}*/
-
 	FString CurrentPlatform = UGameplayStatics::GetPlatformName();
 	// 임시 주석 처리
 	//if (0 == CurrentPlatform.Compare(TEXT("IOS")) || 0 == CurrentPlatform.Compare(TEXT("Android")))
@@ -185,6 +164,8 @@ void ASPlayerController::Client_LoadPlayerStateInfo_Implementation()
 	UE_LOG(LogTemp, Log, TEXT("ASPlayerController::Client_LoadPlayerStateInfo() called"));
 
 	// TEST CODE
+	// BeginPlayer()에서 InitWidget() 호출 시 일부 플랫폼에서 HUD와 Weapon Bind가 제대로 되지 않음 (HUD == nullptr이여서)
+	// OnPossess()는 클라이언트에서 호출되지 않으므로 다른 곳에서 생성 필요
 	InitWidget();
 	
 	USGameInstance* SGameInstance = Cast<USGameInstance>(GetGameInstance());
@@ -214,19 +195,19 @@ void ASPlayerController::Client_LoadPlayerStateInfo_Implementation()
 				SPlayerState->SetPlayerName(PlayerName);
 				SPlayerState->SetWeaponId(SaveGame->MainWeaponId);
 				SPlayerState->SetSubWeaponId(SaveGame->SubWeaponId);
-				SPlayerState->SetTeamNumber(SaveGame->TeamNum);
+				SPlayerState->SetPlayerIndex(SaveGame->PlayerIndex);
 			}
 			bLoadPlayerState = true;
 			RequestRestartPlayerDelegate.Broadcast(this);
 		}
 		else
 		{
-			Server_LoadPlayerStateInfo(PlayerName, SaveGame->MainWeaponId, SaveGame->SubWeaponId, SaveGame->TeamNum);
+			Server_LoadPlayerStateInfo(PlayerName, SaveGame->MainWeaponId, SaveGame->SubWeaponId, SaveGame->PlayerIndex);
 		}
 	}
 }
 
-void ASPlayerController::Server_LoadPlayerStateInfo_Implementation(const FString& NewPlayerName, int32 NewWeaponId, int32 NewSubWeaponId, int32 NewTeamNumber)
+void ASPlayerController::Server_LoadPlayerStateInfo_Implementation(const FString& NewPlayerName, int32 NewWeaponId, int32 NewSubWeaponId, int32 NewPlayerIndex)
 {
 	UE_LOG(LogTemp, Log, TEXT("ASPlayerController::Server_LoadPlayerStateInfo() called, PlayerName : %s"), *NewPlayerName);
 
@@ -240,13 +221,13 @@ void ASPlayerController::Server_LoadPlayerStateInfo_Implementation(const FString
 	SPlayerState->SetPlayerName(NewPlayerName);
 	SPlayerState->SetWeaponId(NewWeaponId);
 	SPlayerState->SetSubWeaponId(NewSubWeaponId);
-	SPlayerState->SetTeamNumber(NewTeamNumber);
+	SPlayerState->SetPlayerIndex(NewPlayerIndex);
 
 	bLoadPlayerState = true;
 	RequestRestartPlayerDelegate.Broadcast(this);
 }
 
-bool ASPlayerController::Server_LoadPlayerStateInfo_Validate(const FString& NewPlayerName, int32 NewWeaponId, int32 NewSubWeaponId, int32 NewTeamNumber)
+bool ASPlayerController::Server_LoadPlayerStateInfo_Validate(const FString& NewPlayerName, int32 NewWeaponId, int32 NewSubWeaponId, int32 NewPlayerIndex)
 {
 	return true;
 }

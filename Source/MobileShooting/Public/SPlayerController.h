@@ -37,7 +37,7 @@ public:
 	void Client_LoadPlayerStateInfo();
 
 	UFUNCTION(Server, Reliable, WithValidation)
-	void Server_LoadPlayerStateInfo(const FString& NewPlayerName, int32 NewWeaponId, int32 NewSubWeaponId, int32 NewTeamNumber);
+	void Server_LoadPlayerStateInfo(const FString& NewPlayerName, int32 NewWeaponId, int32 NewSubWeaponId, int32 NewPlayerIndex);
 
 	// Delegate
 	FRequestRestartPlayerDelegate RequestRestartPlayerDelegate;
