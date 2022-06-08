@@ -55,7 +55,7 @@ void ASessionRoomPlayerController::EndPlay(EEndPlayReason::Type Reason)
 
 void ASessionRoomPlayerController::UpdatePlayerList(const TArray<FRoomPlayerInfo>& PlayerInfoList)
 {
-	int32 Index = 0;
+	TArray<bool> Visited(false, 4);
 	for (const FRoomPlayerInfo& PlayerInfo : PlayerInfoList)
 	{
 		FString PlayerName;
@@ -69,14 +69,16 @@ void ASessionRoomPlayerController::UpdatePlayerList(const TArray<FRoomPlayerInfo
 		}
 
 		SessionRoomWidget->SetPlayerRowByIndex(PlayerInfo.PlayerIndex, PlayerName, PlayerInfo.bPlayerReady);
-		Index++;
+		Visited[PlayerInfo.PlayerIndex] = true;
 	}
 
-	// 비어있는 Row 초기화
-	// 하드 코딩 수정 필요
-	for (; Index < 4; Index++)
+	// 비어있는 인덱스 처리
+	for (int32 Index = 0; Index < Visited.Num(); Index++)
 	{
-		SessionRoomWidget->SetPlayerRowByIndex(Index, TEXT("Empty"), false);
+		if (false == Visited[Index])
+		{
+			SessionRoomWidget->SetPlayerRowByIndex(Index, TEXT("Empty"), false);
+		}
 	}
 }
 
