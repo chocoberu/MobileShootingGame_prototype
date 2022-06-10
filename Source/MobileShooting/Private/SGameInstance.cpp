@@ -168,7 +168,6 @@ void USGameInstance::OnFindSessionsComplete(bool Success)
 		SessionResultList.Empty();
 		for (const auto& SearchResult : SessionSearch.Get()->SearchResults)
 		{
-			// TODO : Current 수정 필요
 			FCustomSessionResult Result;
 			Result.SessionName = SearchResult.Session.OwningUserName;
 			Result.MaxPlayerNumber = SearchResult.Session.SessionSettings.NumPublicConnections;

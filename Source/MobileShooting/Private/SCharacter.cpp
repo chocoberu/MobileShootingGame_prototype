@@ -35,6 +35,7 @@ ASCharacter::ASCharacter()
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComp->SetupAttachment(SpringArmComp);
 
+	// HealthComponent
 	HealthComp = CreateDefaultSubobject<USHealthComponent>(TEXT("HealthComp"));
 	HealthComp->OnHealthChanged.AddUObject(this, &ASCharacter::OnHealthChanged);
 
@@ -61,7 +62,7 @@ ASCharacter::ASCharacter()
 
 	RespawnTime = 5.0f;
 
-	// TEST CODE
+	// TEST CODE : Team 汲沥 包访
 	TeamId = FGenericTeamId(0);
 
 	bIsAttack = false;
@@ -78,20 +79,20 @@ void ASCharacter::BeginPlay()
 
 	if (nullptr == AnimInstance)
 	{
-		UE_LOG(LogTemp, Error, TEXT("AnimInstance is nullptr"));
+		//UE_LOG(LogTemp, Error, TEXT("AnimInstance is nullptr"));
 	}
 
 	PlayerController = Cast<ASPlayerController>(GetController());
 
 	if (nullptr == PlayerController)
 	{
-		UE_LOG(LogTemp, Error, TEXT("PlayerController is nullptr"));
+		//UE_LOG(LogTemp, Error, TEXT("PlayerController is nullptr"));
 	}
 
 	SPlayerState = Cast<ASPlayerState>(GetPlayerState());
 	if (nullptr == SPlayerState)
 	{
-		UE_LOG(LogTemp, Error, TEXT("PlayerState is nullptr"));
+		//UE_LOG(LogTemp, Error, TEXT("PlayerState is nullptr"));
 	}
 }
 
@@ -141,6 +142,7 @@ void ASCharacter::OnCharacterDead(USHealthComponent* OwningHealthComp, float Hea
 		MainWeapon->StopNormalAttack();
 	}
 
+	// Ragdoll 贸府 包访
 	FVector ImpulseDireciton;
 	if (nullptr != DamageCauser)
 	{

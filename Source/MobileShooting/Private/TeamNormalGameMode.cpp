@@ -119,6 +119,7 @@ AActor* ATeamNormalGameMode::ChoosePlayerStart_Implementation(AController* Playe
 		if (nullptr != PlayerState && PlayerState->GetPlayerName().Compare(Start->PlayerStartTag.ToString()) == 0)
 		{
 			UE_LOG(LogTemp, Log, TEXT("Find Player Start : %s"), *Start->PlayerStartTag.ToString());
+			Player->StartSpot = Iter; // StartSpot¿¡ ÀúÀå
 			return Iter;
 		}
 	}
