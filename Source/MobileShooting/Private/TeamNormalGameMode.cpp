@@ -39,6 +39,7 @@ void ATeamNormalGameMode::PostLogin(APlayerController* NewPlayer)
 	UE_LOG(LogTemp, Log, TEXT("Total Player Count : %d"), CurrentPlayerCount);
 
 	// TODO : 모든 플레이어가 준비 되었을 때 Match Start
+	// TEST : 임시로 조건 추가
 	if (PlayerControllerList.Num() == CurrentPlayerCount || -1 == CurrentPlayerCount)
 	{
 		StartMatch();
@@ -140,12 +141,12 @@ void ATeamNormalGameMode::StartMatch()
 	}
 
 	// TEST CODE
-	FTimerHandle TestTimer;
-	GetWorldTimerManager().SetTimer(TestTimer, FTimerDelegate::CreateLambda([&]()
-		{
-			UE_LOG(LogTemp, Log, TEXT("End Match"));
-			EndMatch();
-		}), 5.0f, false);
+	//FTimerHandle TestTimer;
+	//GetWorldTimerManager().SetTimer(TestTimer, FTimerDelegate::CreateLambda([&]()
+	//	{
+	//		UE_LOG(LogTemp, Log, TEXT("End Match"));
+	//		EndMatch();
+	//	}), 5.0f, false);
 }
 
 void ATeamNormalGameMode::EndMatch()

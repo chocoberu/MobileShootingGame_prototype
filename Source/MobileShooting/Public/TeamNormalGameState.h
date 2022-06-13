@@ -18,10 +18,16 @@ public:
 
 	ATeamNormalGameState();
 
+	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaSeconds) override;
+
+
+
 protected:
 
 	UPROPERTY(Replicated)
-	int32 CurrentGameTime;
+	float CurrentGameTime;
 	
 	
 };
