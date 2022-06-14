@@ -30,6 +30,14 @@ protected:
 	float StartGameTime;
 
 	float GamePlayTime;
+
+	float BeforeGameTime;
 	
-	
+	// UI ฐüทร
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game", Meta = (AllowPrivateAccess = true))
+	TSubclassOf<class USGameTimerHUDWidget> GameTimerWidgetClass;
+
+	UPROPERTY()
+	class USGameTimerHUDWidget* GameTimerWidget;
+
 };
