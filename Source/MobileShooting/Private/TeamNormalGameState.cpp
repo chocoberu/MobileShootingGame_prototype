@@ -9,15 +9,16 @@ ATeamNormalGameState::ATeamNormalGameState()
 {
 	GameModeClass = ATeamNormalGameMode::StaticClass();
 
-	CurrentGameTime = 500;
 	PrimaryActorTick.bCanEverTick = true;
+
+	GamePlayTime = 300.0f;
 }
 
 void ATeamNormalGameState::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(ATeamNormalGameState, CurrentGameTime);
+	DOREPLIFETIME(ATeamNormalGameState, StartGameTime);
 }
 
 void ATeamNormalGameState::BeginPlay()
@@ -31,10 +32,24 @@ void ATeamNormalGameState::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	//UE_LOG(LogTemp, Log, TEXT("Current MatchState : %s"), *GetMatchState().ToString());
+	if (false == HasAuthority())
+	{
+		return;
+	}
 
 	if (true == HasMatchStarted())
 	{
-		UE_LOG(LogTemp, Log, TEXT("GetServerWorldTimeSeconds : %f"), GetServerWorldTimeSeconds());
+		//UE_LOG(LogTemp, Log, TEXT("GetServerWorldTimeSeconds : %f"), GetServerWorldTimeSeconds());
+		UE_LOG(LogTemp, Log, TEXT("Current Time : %f"), GetServerWorldTimeSeconds() - StartGameTime);
+	}
+
+}
+
+void ATeamNormalGameState::SetStartGameTime()
+{
+	UWorld* World = GetWorld();
+	if (nullptr != World)
+	{
+		StartGameTime = World->GetTimeSeconds();
 	}
 }

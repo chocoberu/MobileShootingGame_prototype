@@ -22,12 +22,14 @@ public:
 
 	virtual void Tick(float DeltaSeconds) override;
 
-
+	void SetStartGameTime();
 
 protected:
 
 	UPROPERTY(Replicated)
-	float CurrentGameTime;
+	float StartGameTime;
+
+	float GamePlayTime;
 	
 	
 };

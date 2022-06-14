@@ -2,6 +2,7 @@
 
 
 #include "TeamNormalGameMode.h"
+#include "TeamNormalGameState.h"
 #include "SPlayerController.h"
 #include "SPlayerState.h"
 #include "SGameSession.h"
@@ -12,6 +13,7 @@
 ATeamNormalGameMode::ATeamNormalGameMode()
 {
 	PlayerStateClass = ASPlayerState::StaticClass();
+	GameStateClass = ATeamNormalGameState::StaticClass();
 	GameSessionClass = ASGameSession::StaticClass();
 
 	bDelayedStart = true;
@@ -135,11 +137,12 @@ void ATeamNormalGameMode::StartMatch()
 
 	UE_LOG(LogTemp, Log, TEXT("ATeamNormalGameMode::StartMatch() called"));
 
-	if (true == ReadyToStartMatch())
+	ATeamNormalGameState* TNGameState = GetGameState<ATeamNormalGameState>();
+	if (nullptr != TNGameState)
 	{
-		UE_LOG(LogTemp, Log, TEXT("ATeamNormalGameMode::StartMatch(), Ready to Start Match"));
+		TNGameState->SetStartGameTime();
 	}
-
+	
 	// TEST CODE
 	//FTimerHandle TestTimer;
 	//GetWorldTimerManager().SetTimer(TestTimer, FTimerDelegate::CreateLambda([&]()
