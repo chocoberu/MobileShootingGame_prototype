@@ -27,6 +27,8 @@ public:
 
 	virtual void StartMatch() override;
 
+	void CountForStartMatch();
+
 	virtual void EndMatch() override;
 
 	void ResponseRestartPlayer(AController* NewPlayer);
@@ -34,4 +36,8 @@ public:
 private:
 
 	TArray<class ASPlayerController*> PlayerControllerList;
+
+	int32 StartCount;
+
+	FTimerHandle StartTimer;
 };

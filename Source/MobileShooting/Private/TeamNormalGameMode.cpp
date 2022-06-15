@@ -17,6 +17,7 @@ ATeamNormalGameMode::ATeamNormalGameMode()
 	GameSessionClass = ASGameSession::StaticClass();
 
 	bDelayedStart = true;
+	StartCount = 3;
 }
 
 void ATeamNormalGameMode::PostLogin(APlayerController* NewPlayer)
@@ -44,7 +45,7 @@ void ATeamNormalGameMode::PostLogin(APlayerController* NewPlayer)
 	// TEST : 임시로 조건 추가
 	if (PlayerControllerList.Num() == CurrentPlayerCount || -1 == CurrentPlayerCount)
 	{
-		StartMatch();
+		CountForStartMatch();
 	}
 }
 
@@ -150,6 +151,21 @@ void ATeamNormalGameMode::StartMatch()
 	//		UE_LOG(LogTemp, Log, TEXT("End Match"));
 	//		EndMatch();
 	//	}), 5.0f, false);
+}
+
+void ATeamNormalGameMode::CountForStartMatch()
+{
+	UE_LOG(LogTemp, Log, TEXT("Start Count : %d"), StartCount);
+	StartCount--;
+
+	if (0 < StartCount)
+	{
+		GetWorldTimerManager().SetTimer(StartTimer, this, &ATeamNormalGameMode::CountForStartMatch, 1.0f, false);
+	}
+	else
+	{
+		StartMatch();
+	}
 }
 
 void ATeamNormalGameMode::EndMatch()

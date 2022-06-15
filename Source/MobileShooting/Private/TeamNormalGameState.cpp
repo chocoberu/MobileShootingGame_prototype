@@ -13,6 +13,8 @@ ATeamNormalGameState::ATeamNormalGameState()
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.TickInterval = 0.1f;
 
+
+	BlueTeamKillCount = RedTeamKillCount = 0;
 }
 
 void ATeamNormalGameState::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
@@ -28,7 +30,7 @@ void ATeamNormalGameState::BeginPlay()
 
 	UE_LOG(LogTemp, Log, TEXT("ATeamNormalGameState::BeginPlay() called"));
 
-	GamePlayTime = MaxGamePlayTime;
+	CurrentGamePlayTime = MaxGamePlayTime;
 	BeforeGameTime = static_cast<int32>(MaxGamePlayTime);
 
 	if (nullptr != GameTimerWidgetClass)
@@ -39,7 +41,7 @@ void ATeamNormalGameState::BeginPlay()
 		{
 			GameTimerWidget->AddToViewport();
 		}
-		GameTimerWidget->SetTimeText(static_cast<int32>(GamePlayTime));
+		GameTimerWidget->SetTimeText(BeforeGameTime);
 	}
 }
 
@@ -52,22 +54,23 @@ void ATeamNormalGameState::Tick(float DeltaSeconds)
 		return;
 	}
 
-	if (true == HasMatchStarted() && nullptr != GameTimerWidget)
+	if (MatchState::InProgress == GetMatchState() && nullptr != GameTimerWidget)
 	{
-		float CurrentGameTime = GamePlayTime - GetServerWorldTimeSeconds() + StartGameTime;
-		int32 CurrentGameTimeInt = static_cast<int32>(FMath::CeilToFloat(CurrentGameTime));
-		if (BeforeGameTime > CurrentGameTimeInt)
+		CurrentGamePlayTime = MaxGamePlayTime - GetServerWorldTimeSeconds() + StartGameTime;
+		int32 IntCurrentGamePlayTime = CurrentGamePlayTime > 0.0f ? static_cast<int32>(FMath::CeilToFloat(CurrentGamePlayTime)) : 0;
+		if (BeforeGameTime > IntCurrentGamePlayTime)
 		{
-			UE_LOG(LogTemp, Log, TEXT("Current Game Time : %f"), CurrentGameTime);
-			GameTimerWidget->SetTimeText(CurrentGameTimeInt);
-			BeforeGameTime = CurrentGameTimeInt;
+			UE_LOG(LogTemp, Log, TEXT("Current Game Time : %f"), CurrentGamePlayTime);
+			GameTimerWidget->SetTimeText(IntCurrentGamePlayTime);
+			BeforeGameTime = IntCurrentGamePlayTime;
 		}
 
-		if (GamePlayTime <= 0.0f)
+		if (CurrentGamePlayTime <= 0.0f)
 		{
-			GamePlayTime = 0.0f;
+			CurrentGamePlayTime = 0.0f;
 			BeforeGameTime = 0;
 			GameTimerWidget->SetTimeText(0);
+			SetMatchState(MatchState::WaitingPostMatch); // TODO : EndMatch 처리를 GameMode에서 하도록 수정
 		}
 	}
 

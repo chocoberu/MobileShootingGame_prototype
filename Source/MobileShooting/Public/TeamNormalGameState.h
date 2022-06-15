@@ -26,15 +26,24 @@ public:
 
 protected:
 
+	// Game Time ฐüทร
 	UPROPERTY(Replicated)
 	float StartGameTime;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game", Meta = (AllowPrivateAccess = true))
 	float MaxGamePlayTime;
 
-	float GamePlayTime;
+	float CurrentGamePlayTime;
 
 	int32 BeforeGameTime;
+
+	// ฦภ
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game", Meta = (AllowPrivateAccess = true))
+	int32 TargetKillCount;
+
+	int32 BlueTeamKillCount;
+
+	int32 RedTeamKillCount;
 	
 	// UI ฐüทร
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI", Meta = (AllowPrivateAccess = true))
