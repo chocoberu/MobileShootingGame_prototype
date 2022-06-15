@@ -29,12 +29,15 @@ protected:
 	UPROPERTY(Replicated)
 	float StartGameTime;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game", Meta = (AllowPrivateAccess = true))
+	float MaxGamePlayTime;
+
 	float GamePlayTime;
 
-	float BeforeGameTime;
+	int32 BeforeGameTime;
 	
 	// UI ฐüทร
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI", Meta = (AllowPrivateAccess = true))
 	TSubclassOf<class USGameTimerHUDWidget> GameTimerWidgetClass;
 
 	UPROPERTY()
