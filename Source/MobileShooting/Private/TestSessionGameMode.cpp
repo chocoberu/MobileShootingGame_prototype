@@ -158,8 +158,7 @@ bool ATestSessionGameMode::StartGame()
 void ATestSessionGameMode::UpdatePlayerList()
 {
 	PlayerInfoList.Empty();
-	BlueTeamCount = RedTeamCount = 0;
-
+	
 	for (auto SessionRoomPlayerController : PlayerControllerList)
 	{
 		FRoomPlayerInfo NewPlayerInfo;

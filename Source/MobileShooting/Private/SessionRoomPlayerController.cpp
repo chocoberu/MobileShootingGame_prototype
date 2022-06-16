@@ -55,7 +55,8 @@ void ASessionRoomPlayerController::EndPlay(EEndPlayReason::Type Reason)
 
 void ASessionRoomPlayerController::UpdatePlayerList(const TArray<FRoomPlayerInfo>& PlayerInfoList)
 {
-	TArray<bool> Visited(false, 4);
+	TArray<uint8> Visited;
+	Visited.Init(false, 4);
 	for (const FRoomPlayerInfo& PlayerInfo : PlayerInfoList)
 	{
 		FString PlayerName;

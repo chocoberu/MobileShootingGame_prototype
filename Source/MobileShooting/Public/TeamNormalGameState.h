@@ -24,6 +24,8 @@ public:
 
 	void SetStartGameTime();
 
+	float GetCurrentGamePlayTime() const;
+
 protected:
 
 	// Game Time ฐüทร

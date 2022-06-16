@@ -17,7 +17,10 @@ ATeamNormalGameMode::ATeamNormalGameMode()
 	GameSessionClass = ASGameSession::StaticClass();
 
 	bDelayedStart = true;
-	StartCount = 3;
+	StartCount = 4;
+
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.TickInterval = 0.16f;
 }
 
 void ATeamNormalGameMode::PostLogin(APlayerController* NewPlayer)
@@ -138,25 +141,37 @@ void ATeamNormalGameMode::StartMatch()
 
 	UE_LOG(LogTemp, Log, TEXT("ATeamNormalGameMode::StartMatch() called"));
 
-	ATeamNormalGameState* TNGameState = GetGameState<ATeamNormalGameState>();
-	if (nullptr != TNGameState)
+	ATeamNormalGameState* TeamNormalGameState = GetGameState<ATeamNormalGameState>();
+	if (nullptr != TeamNormalGameState)
 	{
-		TNGameState->SetStartGameTime();
+		TeamNormalGameState->SetStartGameTime();
 	}
-	
-	// TEST CODE
-	//FTimerHandle TestTimer;
-	//GetWorldTimerManager().SetTimer(TestTimer, FTimerDelegate::CreateLambda([&]()
-	//	{
-	//		UE_LOG(LogTemp, Log, TEXT("End Match"));
-	//		EndMatch();
-	//	}), 5.0f, false);
+}
+
+void ATeamNormalGameMode::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if (MatchState::InProgress == GetMatchState())
+	{
+		ATeamNormalGameState* TeamNormalGameState = GetGameState<ATeamNormalGameState>();
+		if (nullptr == TeamNormalGameState)
+		{
+			return;
+		}
+
+		if (TeamNormalGameState->GetCurrentGamePlayTime() <= 0.0f)
+		{
+			UE_LOG(LogTemp, Log, TEXT("Game Over!, Match end"));
+			EndMatch();
+		}
+	}
 }
 
 void ATeamNormalGameMode::CountForStartMatch()
 {
-	UE_LOG(LogTemp, Log, TEXT("Start Count : %d"), StartCount);
 	StartCount--;
+	UE_LOG(LogTemp, Log, TEXT("Start Count : %d"), StartCount);
 
 	if (0 < StartCount)
 	{
@@ -173,6 +188,8 @@ void ATeamNormalGameMode::EndMatch()
 	Super::EndMatch();
 
 	UE_LOG(LogTemp, Log, TEXT("ATeamNormalGameMode::EndMatch() called"));
+
+	// TODO : 모든 플레이어 멈추도록 처리
 }
 
 void ATeamNormalGameMode::ResponseRestartPlayer(AController* NewPlayer)

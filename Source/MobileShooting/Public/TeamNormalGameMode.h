@@ -27,6 +27,8 @@ public:
 
 	virtual void StartMatch() override;
 
+	virtual void Tick(float DeltaSeconds) override;
+
 	void CountForStartMatch();
 
 	virtual void EndMatch() override;

@@ -70,7 +70,6 @@ void ATeamNormalGameState::Tick(float DeltaSeconds)
 			CurrentGamePlayTime = 0.0f;
 			BeforeGameTime = 0;
 			GameTimerWidget->SetTimeText(0);
-			SetMatchState(MatchState::WaitingPostMatch); // TODO : EndMatch 처리를 GameMode에서 하도록 수정
 		}
 	}
 
@@ -83,4 +82,9 @@ void ATeamNormalGameState::SetStartGameTime()
 	{
 		StartGameTime = World->GetTimeSeconds();
 	}
+}
+
+float ATeamNormalGameState::GetCurrentGamePlayTime() const
+{
+	return CurrentGamePlayTime;
 }
