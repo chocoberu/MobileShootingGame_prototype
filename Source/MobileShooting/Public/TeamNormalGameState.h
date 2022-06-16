@@ -26,6 +26,12 @@ public:
 
 	float GetCurrentGamePlayTime() const;
 
+	UFUNCTION()
+	void OnRep_BlueTeamKillCount();
+
+	UFUNCTION()
+	void OnRep_RedTeamKillCount();
+
 protected:
 
 	// Game Time 관련
@@ -43,8 +49,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game", Meta = (AllowPrivateAccess = true))
 	int32 TargetKillCount;
 
+	UPROPERTY(ReplicatedUsing = OnRep_BlueTeamKillCount)
 	int32 BlueTeamKillCount;
 
+	UPROPERTY(ReplicatedUsing = OnRep_RedTeamKillCount)
 	int32 RedTeamKillCount;
 	
 	// UI 관련

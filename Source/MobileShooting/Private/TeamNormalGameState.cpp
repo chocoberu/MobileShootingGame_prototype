@@ -95,3 +95,13 @@ float ATeamNormalGameState::GetCurrentGamePlayTime() const
 {
 	return CurrentGamePlayTime;
 }
+
+void ATeamNormalGameState::OnRep_BlueTeamKillCount()
+{
+	// TODO : UI 업데이트 
+}
+
+void ATeamNormalGameState::OnRep_RedTeamKillCount()
+{
+	// TODO : UI 업데이트 
+}
