@@ -49,12 +49,12 @@ void ATeamNormalGameState::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	if (false == HasAuthority())
+	if (nullptr == GameTimerWidget)
 	{
 		return;
 	}
 
-	if (MatchState::InProgress == GetMatchState() && nullptr != GameTimerWidget)
+	if (MatchState::InProgress == GetMatchState())
 	{
 		CurrentGamePlayTime = MaxGamePlayTime - GetServerWorldTimeSeconds() + StartGameTime;
 		int32 IntCurrentGamePlayTime = CurrentGamePlayTime > 0.0f ? static_cast<int32>(FMath::CeilToFloat(CurrentGamePlayTime)) : 0;
@@ -71,6 +71,13 @@ void ATeamNormalGameState::Tick(float DeltaSeconds)
 			BeforeGameTime = 0;
 			GameTimerWidget->SetTimeText(0);
 		}
+	}
+
+	if (MatchState::WaitingPostMatch == GetMatchState())
+	{
+		CurrentGamePlayTime = 0.0f;
+		BeforeGameTime = 0;
+		GameTimerWidget->SetTimeText(0);
 	}
 
 }
