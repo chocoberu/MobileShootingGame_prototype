@@ -62,4 +62,10 @@ protected:
 	UPROPERTY()
 	class USGameTimerHUDWidget* GameTimerWidget;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI", Meta = (AllowPrivateAccess = true))
+	TSubclassOf<class UTeamScoreWidget> TeamScoreWidgetClass;
+
+	UPROPERTY()
+	class UTeamScoreWidget* TeamScoreWidget;
+
 };

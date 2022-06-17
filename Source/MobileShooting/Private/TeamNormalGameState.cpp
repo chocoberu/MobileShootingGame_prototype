@@ -5,6 +5,7 @@
 #include "TeamNormalGameMode.h"
 #include "Net/UnrealNetwork.h"
 #include "UI/SGameTimerHUDWidget.h"
+#include "UI/TeamScoreWidget.h"
 
 ATeamNormalGameState::ATeamNormalGameState()
 {
@@ -42,6 +43,15 @@ void ATeamNormalGameState::BeginPlay()
 			GameTimerWidget->AddToViewport();
 		}
 		GameTimerWidget->SetTimeText(BeforeGameTime);
+	}
+
+	if (nullptr != TeamScoreWidgetClass)
+	{
+		TeamScoreWidget = CreateWidget<UTeamScoreWidget>(GetWorld(), TeamScoreWidgetClass);
+		if (nullptr != TeamScoreWidget)
+		{
+			TeamScoreWidget->AddToViewport();
+		}
 	}
 }
 
@@ -98,10 +108,20 @@ float ATeamNormalGameState::GetCurrentGamePlayTime() const
 
 void ATeamNormalGameState::OnRep_BlueTeamKillCount()
 {
-	// TODO : UI 업데이트 
+	if (nullptr == TeamScoreWidget)
+	{
+		return;
+	}
+
+	TeamScoreWidget->AddBlueTeamScore();
 }
 
 void ATeamNormalGameState::OnRep_RedTeamKillCount()
 {
-	// TODO : UI 업데이트 
+	if (nullptr == TeamScoreWidget)
+	{
+		return;
+	}
+
+	TeamScoreWidget->AddRedTeamScore();
 }
