@@ -3,9 +3,11 @@
 
 #include "TeamNormalGameState.h"
 #include "TeamNormalGameMode.h"
+#include "SGameInstance.h"
 #include "Net/UnrealNetwork.h"
 #include "UI/SGameTimerHUDWidget.h"
 #include "UI/TeamScoreWidget.h"
+#include "UI/MatchStartCountDownWidget.h"
 
 ATeamNormalGameState::ATeamNormalGameState()
 {
@@ -13,7 +15,6 @@ ATeamNormalGameState::ATeamNormalGameState()
 
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.TickInterval = 0.1f;
-
 
 	BlueTeamKillCount = RedTeamKillCount = 0;
 }
@@ -34,6 +35,8 @@ void ATeamNormalGameState::BeginPlay()
 	CurrentGamePlayTime = MaxGamePlayTime;
 	BeforeGameTime = static_cast<int32>(MaxGamePlayTime);
 
+	CurrentCountDown = MaxCountDown;
+
 	if (nullptr != GameTimerWidgetClass)
 	{
 		GameTimerWidget = CreateWidget<USGameTimerHUDWidget>(GetWorld(), GameTimerWidgetClass);
@@ -52,6 +55,11 @@ void ATeamNormalGameState::BeginPlay()
 		{
 			TeamScoreWidget->AddToViewport();
 		}
+	}
+
+	if (nullptr != MatchStartCountDownWidgetClass)
+	{
+		MatchStartCountDownWidget = CreateWidget<UMatchStartCountDownWidget>(GetWorld(), MatchStartCountDownWidgetClass);
 	}
 }
 
@@ -124,4 +132,22 @@ void ATeamNormalGameState::OnRep_RedTeamKillCount()
 	}
 
 	TeamScoreWidget->AddRedTeamScore();
+}
+
+void ATeamNormalGameState::Multicast_CountDown_Implementation()
+{
+	// TEST CODE
+	USGameInstance* SGameInstance = GetGameInstance<USGameInstance>();
+	if (nullptr == SGameInstance)
+	{
+		return;
+	}
+
+	auto Engine = SGameInstance->GetEngine();
+	if (nullptr == Engine)
+	{
+		return;
+	}
+
+	Engine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::Printf(TEXT("%d"), CurrentCountDown));
 }

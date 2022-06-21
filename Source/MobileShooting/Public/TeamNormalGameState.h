@@ -32,6 +32,9 @@ public:
 	UFUNCTION()
 	void OnRep_RedTeamKillCount();
 
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_CountDown();
+
 protected:
 
 	// Game Time 관련
@@ -68,4 +71,15 @@ protected:
 	UPROPERTY()
 	class UTeamScoreWidget* TeamScoreWidget;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI", Meta = (AllowPrivateAccess = true))
+	TSubclassOf<class UMatchStartCountDownWidget> MatchStartCountDownWidgetClass;
+
+	UPROPERTY()
+	class UMatchStartCountDownWidget* MatchStartCountDownWidget;
+
+	// Match CountDown 관련
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game", Meta = (AllowPrivateAccess = true))
+	int32 MaxCountDown;
+
+	int32 CurrentCountDown;
 };

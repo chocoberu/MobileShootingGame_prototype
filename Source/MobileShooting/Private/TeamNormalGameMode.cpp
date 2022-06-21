@@ -48,6 +48,7 @@ void ATeamNormalGameMode::PostLogin(APlayerController* NewPlayer)
 	// TEST : 임시로 조건 추가
 	if (PlayerControllerList.Num() == CurrentPlayerCount || -1 == CurrentPlayerCount)
 	{
+		SetMatchState(MatchState::InProgress); // 테스트용
 		CountForStartMatch();
 	}
 }
@@ -172,6 +173,13 @@ void ATeamNormalGameMode::CountForStartMatch()
 {
 	StartCount--;
 	UE_LOG(LogTemp, Log, TEXT("Start Count : %d"), StartCount);
+
+	ATeamNormalGameState* TeamNormalGameState = GetGameState<ATeamNormalGameState>();
+	if (nullptr != TeamNormalGameState)
+	{
+		TeamNormalGameState->Multicast_CountDown();
+	}
+
 
 	if (0 < StartCount)
 	{
