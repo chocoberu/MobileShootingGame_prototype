@@ -7,6 +7,8 @@
 void UMatchStartCountDownWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	PlayAnimation(FadeAnimation);
 }
 
 void UMatchStartCountDownWidget::SetCountDownText(int32 CountDownNumber)
@@ -19,4 +21,5 @@ void UMatchStartCountDownWidget::SetCountDownText(int32 CountDownNumber)
 	{
 		CountDownText->SetText(FText::FromString(TEXT("Game Start!")));
 	}
+	PlayAnimation(FadeAnimation);
 }

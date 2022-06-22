@@ -26,4 +26,7 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* CountDownText;
+
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	class UWidgetAnimation* FadeAnimation;
 };

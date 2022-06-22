@@ -33,7 +33,7 @@ public:
 	void OnRep_RedTeamKillCount();
 
 	UFUNCTION(NetMulticast, Reliable)
-	void Multicast_CountDown();
+	void Multicast_CountDown(int32 CountDownNumber);
 
 protected:
 

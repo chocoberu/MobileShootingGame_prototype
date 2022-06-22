@@ -17,6 +17,8 @@ ATeamNormalGameState::ATeamNormalGameState()
 	PrimaryActorTick.TickInterval = 0.1f;
 
 	BlueTeamKillCount = RedTeamKillCount = 0;
+
+	StartGameTime = -1.0f;
 }
 
 void ATeamNormalGameState::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
@@ -37,6 +39,7 @@ void ATeamNormalGameState::BeginPlay()
 
 	CurrentCountDown = MaxCountDown;
 
+	// UI Widget »ý¼º
 	if (nullptr != GameTimerWidgetClass)
 	{
 		GameTimerWidget = CreateWidget<USGameTimerHUDWidget>(GetWorld(), GameTimerWidgetClass);
@@ -60,6 +63,10 @@ void ATeamNormalGameState::BeginPlay()
 	if (nullptr != MatchStartCountDownWidgetClass)
 	{
 		MatchStartCountDownWidget = CreateWidget<UMatchStartCountDownWidget>(GetWorld(), MatchStartCountDownWidgetClass);
+		if (nullptr != MatchStartCountDownWidget)
+		{
+			MatchStartCountDownWidget->AddToViewport();
+		}
 	}
 }
 
@@ -72,7 +79,7 @@ void ATeamNormalGameState::Tick(float DeltaSeconds)
 		return;
 	}
 
-	if (MatchState::InProgress == GetMatchState())
+	if (-1.0f != StartGameTime)
 	{
 		CurrentGamePlayTime = MaxGamePlayTime - GetServerWorldTimeSeconds() + StartGameTime;
 		int32 IntCurrentGamePlayTime = CurrentGamePlayTime > 0.0f ? static_cast<int32>(FMath::CeilToFloat(CurrentGamePlayTime)) : 0;
@@ -134,7 +141,7 @@ void ATeamNormalGameState::OnRep_RedTeamKillCount()
 	TeamScoreWidget->AddRedTeamScore();
 }
 
-void ATeamNormalGameState::Multicast_CountDown_Implementation()
+void ATeamNormalGameState::Multicast_CountDown_Implementation(int32 CountDownNumber)
 {
 	// TEST CODE
 	USGameInstance* SGameInstance = GetGameInstance<USGameInstance>();
@@ -149,5 +156,12 @@ void ATeamNormalGameState::Multicast_CountDown_Implementation()
 		return;
 	}
 
-	Engine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::Printf(TEXT("%d"), CurrentCountDown));
+	Engine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::Printf(TEXT("%d"), CountDownNumber));
+
+	if (nullptr == MatchStartCountDownWidget)
+	{
+		return;
+	}
+
+	MatchStartCountDownWidget->SetCountDownText(CountDownNumber);
 }

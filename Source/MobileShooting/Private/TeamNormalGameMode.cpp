@@ -177,7 +177,7 @@ void ATeamNormalGameMode::CountForStartMatch()
 	ATeamNormalGameState* TeamNormalGameState = GetGameState<ATeamNormalGameState>();
 	if (nullptr != TeamNormalGameState)
 	{
-		TeamNormalGameState->Multicast_CountDown();
+		TeamNormalGameState->Multicast_CountDown(StartCount);
 	}
 
 
