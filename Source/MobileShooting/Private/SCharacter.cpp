@@ -266,6 +266,17 @@ void ASCharacter::LoadWeapon()
 		SubWeapon->SetOwner(this);
 		SubWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, SubWeaponAttachSocketName);
 	}
+
+	// TODO : PlayerController Ready Ã³¸®
+	if (GetNetMode() != ENetMode::NM_Standalone)
+	{
+		PlayerController = GetController<ASPlayerController>();
+		if (nullptr == PlayerController)
+		{
+			return;
+		}
+		PlayerController->Server_ReadyGame(true);
+	}
 }
 
 // Called every frame

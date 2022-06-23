@@ -147,6 +147,12 @@ void ATeamNormalGameMode::StartMatch()
 	{
 		TeamNormalGameState->SetStartGameTime();
 	}
+
+	// TODO : 모든 플레이어 움직이도록 처리
+	for (auto Player : PlayerControllerList)
+	{
+
+	}
 }
 
 void ATeamNormalGameMode::Tick(float DeltaSeconds)
@@ -198,6 +204,10 @@ void ATeamNormalGameMode::EndMatch()
 	UE_LOG(LogTemp, Log, TEXT("ATeamNormalGameMode::EndMatch() called"));
 
 	// TODO : 모든 플레이어 멈추도록 처리
+	for (auto Player : PlayerControllerList)
+	{
+
+	}
 }
 
 void ATeamNormalGameMode::ResponseRestartPlayer(AController* NewPlayer)

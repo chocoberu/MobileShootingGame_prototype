@@ -39,6 +39,9 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_LoadPlayerStateInfo(const FString& NewPlayerName, int32 NewWeaponId, int32 NewSubWeaponId, int32 NewPlayerIndex);
 
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_ReadyGame(bool bReadyState);
+
 	// Delegate
 	FRequestRestartPlayerDelegate RequestRestartPlayerDelegate;
 

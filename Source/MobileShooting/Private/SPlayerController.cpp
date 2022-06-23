@@ -231,3 +231,20 @@ bool ASPlayerController::Server_LoadPlayerStateInfo_Validate(const FString& NewP
 {
 	return true;
 }
+
+void ASPlayerController::Server_ReadyGame_Implementation(bool bReadyState)
+{
+	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
+	if (nullptr == SPlayerState)
+	{
+		UE_LOG(LogTemp, Error, TEXT("SPlayerState is nullptr"));
+		return;
+	}
+
+	SPlayerState->SetPlayerReadyState(true);
+}
+
+bool ASPlayerController::Server_ReadyGame_Validate(bool bReadyState)
+{
+	return true;
+}
