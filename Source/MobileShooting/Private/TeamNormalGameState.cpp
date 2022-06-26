@@ -4,6 +4,7 @@
 #include "TeamNormalGameState.h"
 #include "TeamNormalGameMode.h"
 #include "SGameInstance.h"
+#include "SPlayerState.h"
 #include "Net/UnrealNetwork.h"
 #include "UI/SGameTimerHUDWidget.h"
 #include "UI/TeamScoreWidget.h"
@@ -73,6 +74,11 @@ void ATeamNormalGameState::BeginPlay()
 void ATeamNormalGameState::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
+	if (-1.0f == StartGameTime && true == IsAllPlayerReadyState())
+	{
+		// TODO
+	}
 
 	if (nullptr == GameTimerWidget)
 	{
@@ -164,4 +170,19 @@ void ATeamNormalGameState::Multicast_CountDown_Implementation(int32 CountDownNum
 	}
 
 	MatchStartCountDownWidget->SetCountDownText(CountDownNumber);
+}
+
+bool ATeamNormalGameState::IsAllPlayerReadyState()
+{
+	bool bResult = true;
+	for (auto Iter : PlayerArray)
+	{
+		ASPlayerState* SPlayerState = Cast<ASPlayerState>(Iter);
+		if (nullptr == SPlayerState || false == SPlayerState->IsPlayerReady())
+		{
+			bResult = false;
+			break;
+		}
+	}
+	return bResult;
 }

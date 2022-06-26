@@ -35,6 +35,8 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	void Multicast_CountDown(int32 CountDownNumber);
 
+	bool IsAllPlayerReadyState();
+
 protected:
 
 	// Game Time ฐüทร
