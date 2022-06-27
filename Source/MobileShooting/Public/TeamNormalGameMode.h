@@ -17,6 +17,8 @@ class MOBILESHOOTING_API ATeamNormalGameMode : public AGameMode
 public:
 	ATeamNormalGameMode();
 
+	virtual void InitGameState() override;
+
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 
 	virtual void Logout(AController* Exiting) override;

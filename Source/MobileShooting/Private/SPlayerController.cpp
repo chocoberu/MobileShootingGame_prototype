@@ -135,6 +135,9 @@ void ASPlayerController::BeginPlay()
 			RightButtonHUD->SetHiddenMenuButton(true);
 		}
 	}
+
+	// TEST CODE
+	//Server_ReadyGame(true);
 }
 
 void ASPlayerController::InitWidget()

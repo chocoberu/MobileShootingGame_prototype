@@ -20,6 +20,7 @@ ATeamNormalGameState::ATeamNormalGameState()
 	BlueTeamKillCount = RedTeamKillCount = 0;
 
 	StartGameTime = -1.0f;
+	bAllPlayerReady = false;
 }
 
 void ATeamNormalGameState::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
@@ -75,9 +76,11 @@ void ATeamNormalGameState::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	if (-1.0f == StartGameTime && true == IsAllPlayerReadyState())
+	if (false == bAllPlayerReady && true == IsAllPlayerReadyState())
 	{
 		// TODO
+		bAllPlayerReady = true;
+		OnAllPlayerReadyDelegate.Broadcast();
 	}
 
 	if (nullptr == GameTimerWidget)
@@ -174,11 +177,25 @@ void ATeamNormalGameState::Multicast_CountDown_Implementation(int32 CountDownNum
 
 bool ATeamNormalGameState::IsAllPlayerReadyState()
 {
+	int32 CurrentPlayerCount = 1;
+	USGameInstance* SGameInstance = GetGameInstance<USGameInstance>();
+	if (nullptr != SGameInstance)
+	{
+		CurrentPlayerCount = SGameInstance->GetCurrentSessionPlayerCount();
+	}
+
 	bool bResult = true;
 	for (auto Iter : PlayerArray)
 	{
 		ASPlayerState* SPlayerState = Cast<ASPlayerState>(Iter);
-		if (nullptr == SPlayerState || false == SPlayerState->IsPlayerReady())
+		if (nullptr == SPlayerState)
+		{
+			continue;
+		}
+
+		//UE_LOG(LogTemp, Log, TEXT("PlayerState : %s"), *SPlayerState->GetPlayerName());
+
+		if (false == SPlayerState->IsPlayerReady())
 		{
 			bResult = false;
 			break;

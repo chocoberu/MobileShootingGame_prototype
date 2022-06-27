@@ -6,6 +6,7 @@
 #include "GameFramework/GameState.h"
 #include "TeamNormalGameState.generated.h"
 
+using FOnAllPlayerReadyDelegate = TMulticastDelegate<void()>;
 /**
  * 
  */
@@ -36,6 +37,9 @@ public:
 	void Multicast_CountDown(int32 CountDownNumber);
 
 	bool IsAllPlayerReadyState();
+	
+	// Delegates
+	FOnAllPlayerReadyDelegate OnAllPlayerReadyDelegate;
 
 protected:
 
@@ -84,4 +88,6 @@ protected:
 	int32 MaxCountDown;
 
 	int32 CurrentCountDown;
+
+	bool bAllPlayerReady;
 };

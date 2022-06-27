@@ -23,6 +23,20 @@ ATeamNormalGameMode::ATeamNormalGameMode()
 	PrimaryActorTick.TickInterval = 0.16f;
 }
 
+void ATeamNormalGameMode::InitGameState()
+{
+	Super::InitGameState();
+
+	ATeamNormalGameState* TeamNormalGameState = GetGameState<ATeamNormalGameState>();
+	if (nullptr == TeamNormalGameState)
+	{
+		UE_LOG(LogTemp, Error, TEXT("ATeamNormalGameMode::InitGameState(), TeamNormalGameState is nullptr"));
+		return;
+	}
+
+	TeamNormalGameState->OnAllPlayerReadyDelegate.AddUObject(this, &ATeamNormalGameMode::CountForStartMatch);
+}
+
 void ATeamNormalGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
@@ -33,6 +47,12 @@ void ATeamNormalGameMode::PostLogin(APlayerController* NewPlayer)
 	if (nullptr != SPlyaerController)
 	{
 		PlayerControllerList.Add(SPlyaerController);
+	}
+
+	ATeamNormalGameState* TeamNormalGameState = GetGameState<ATeamNormalGameState>();
+	if (nullptr != TeamNormalGameState)
+	{
+		TeamNormalGameState->AddPlayerState(NewPlayer->GetPlayerState<APlayerState>());
 	}
 
 	int32 CurrentPlayerCount = 1;
@@ -49,7 +69,7 @@ void ATeamNormalGameMode::PostLogin(APlayerController* NewPlayer)
 	if (PlayerControllerList.Num() == CurrentPlayerCount || -1 == CurrentPlayerCount)
 	{
 		SetMatchState(MatchState::InProgress); // 테스트용
-		CountForStartMatch();
+		//CountForStartMatch();
 	}
 }
 
@@ -179,6 +199,12 @@ void ATeamNormalGameMode::CountForStartMatch()
 {
 	StartCount--;
 	UE_LOG(LogTemp, Log, TEXT("Start Count : %d"), StartCount);
+
+	// TEST CODE
+	if (GetMatchState() != MatchState::InProgress)
+	{
+		SetMatchState(MatchState::InProgress);
+	}
 
 	ATeamNormalGameState* TeamNormalGameState = GetGameState<ATeamNormalGameState>();
 	if (nullptr != TeamNormalGameState)
