@@ -80,7 +80,16 @@ void ATeamNormalGameState::Tick(float DeltaSeconds)
 	{
 		// TODO
 		bAllPlayerReady = true;
-		OnAllPlayerReadyDelegate.Broadcast();
+
+		// TEST CODE
+		FTimerHandle CountDownTimer;
+
+		GetWorldTimerManager().SetTimer(CountDownTimer, FTimerDelegate::CreateLambda([&]()
+			{
+				OnAllPlayerReadyDelegate.Broadcast();
+
+			}), 3.0f, false);
+
 	}
 
 	if (nullptr == GameTimerWidget)

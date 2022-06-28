@@ -42,6 +42,9 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_ReadyGame(bool bReadyState);
 
+	UFUNCTION(Client, Reliable)
+	void Client_SetInputMode(bool bGameMode);
+
 	// Delegate
 	FRequestRestartPlayerDelegate RequestRestartPlayerDelegate;
 

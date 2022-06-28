@@ -119,6 +119,13 @@ void ASPlayerController::BeginPlay()
 		UE_LOG(LogTemp, Log, TEXT("ASPlayerController::BeginPlay(), No Local Controller"));
 		return;
 	}
+
+	// 멀티 플레이인 경우 GameMode에서 SetInputMode를 바꾸도록 설정
+	if (GetNetMode() != ENetMode::NM_Standalone)
+	{
+		FInputModeUIOnly UIInputMode;
+		SetInputMode(UIInputMode);
+	}
 	
 	FString CurrentPlatform = UGameplayStatics::GetPlatformName();
 	// 임시 주석 처리
@@ -250,4 +257,18 @@ void ASPlayerController::Server_ReadyGame_Implementation(bool bReadyState)
 bool ASPlayerController::Server_ReadyGame_Validate(bool bReadyState)
 {
 	return true;
+}
+
+void ASPlayerController::Client_SetInputMode_Implementation(bool bGameMode)
+{
+	if (true == bGameMode)
+	{
+		FInputModeGameAndUI GameInputMode;
+		SetInputMode(GameInputMode);
+	}
+	else
+	{
+		FInputModeUIOnly UIInputMode;
+		SetInputMode(UIInputMode);
+	}
 }

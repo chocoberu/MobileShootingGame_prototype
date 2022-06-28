@@ -171,7 +171,7 @@ void ATeamNormalGameMode::StartMatch()
 	// TODO : 모든 플레이어 움직이도록 처리
 	for (auto Player : PlayerControllerList)
 	{
-
+		Player->Client_SetInputMode(true);
 	}
 }
 
@@ -232,7 +232,7 @@ void ATeamNormalGameMode::EndMatch()
 	// TODO : 모든 플레이어 멈추도록 처리
 	for (auto Player : PlayerControllerList)
 	{
-
+		Player->Client_SetInputMode(false);
 	}
 }
 
