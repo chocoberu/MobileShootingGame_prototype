@@ -43,6 +43,8 @@ public:
 
 protected:
 
+	void SetCurrentGamePlayTime();
+
 	// Game Time ฐüทร
 	UPROPERTY(Replicated)
 	float StartGameTime;

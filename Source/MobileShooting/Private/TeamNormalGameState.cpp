@@ -78,18 +78,15 @@ void ATeamNormalGameState::Tick(float DeltaSeconds)
 
 	if (false == bAllPlayerReady && true == IsAllPlayerReadyState())
 	{
-		// TODO
 		bAllPlayerReady = true;
 
-		// TEST CODE
+		// TEST CODE : 모든 플레이어가 준비되었을 때 Match Start CountDown, 3초 이후에 카운트 다운 호출
 		FTimerHandle CountDownTimer;
 
 		GetWorldTimerManager().SetTimer(CountDownTimer, FTimerDelegate::CreateLambda([&]()
 			{
 				OnAllPlayerReadyDelegate.Broadcast();
-
 			}), 3.0f, false);
-
 	}
 
 	if (nullptr == GameTimerWidget)
@@ -97,31 +94,7 @@ void ATeamNormalGameState::Tick(float DeltaSeconds)
 		return;
 	}
 
-	if (-1.0f != StartGameTime)
-	{
-		CurrentGamePlayTime = MaxGamePlayTime - GetServerWorldTimeSeconds() + StartGameTime;
-		int32 IntCurrentGamePlayTime = CurrentGamePlayTime > 0.0f ? static_cast<int32>(FMath::CeilToFloat(CurrentGamePlayTime)) : 0;
-		if (BeforeGameTime > IntCurrentGamePlayTime)
-		{
-			UE_LOG(LogTemp, Log, TEXT("Current Game Time : %f"), CurrentGamePlayTime);
-			GameTimerWidget->SetTimeText(IntCurrentGamePlayTime);
-			BeforeGameTime = IntCurrentGamePlayTime;
-		}
-
-		if (CurrentGamePlayTime <= 0.0f)
-		{
-			CurrentGamePlayTime = 0.0f;
-			BeforeGameTime = 0;
-			GameTimerWidget->SetTimeText(0);
-		}
-	}
-
-	if (MatchState::WaitingPostMatch == GetMatchState())
-	{
-		CurrentGamePlayTime = 0.0f;
-		BeforeGameTime = 0;
-		GameTimerWidget->SetTimeText(0);
-	}
+	SetCurrentGamePlayTime();
 
 }
 
@@ -211,4 +184,34 @@ bool ATeamNormalGameState::IsAllPlayerReadyState()
 		}
 	}
 	return bResult;
+}
+
+void ATeamNormalGameState::SetCurrentGamePlayTime()
+{
+	// 게임이 시작한 경우 현재 게임 시간 설정
+	if (-1.0f != StartGameTime)
+	{
+		CurrentGamePlayTime = MaxGamePlayTime - GetServerWorldTimeSeconds() + StartGameTime;
+		int32 IntCurrentGamePlayTime = CurrentGamePlayTime > 0.0f ? static_cast<int32>(FMath::CeilToFloat(CurrentGamePlayTime)) : 0;
+		if (BeforeGameTime > IntCurrentGamePlayTime)
+		{
+			UE_LOG(LogTemp, Log, TEXT("Current Game Time : %f"), CurrentGamePlayTime);
+			GameTimerWidget->SetTimeText(IntCurrentGamePlayTime);
+			BeforeGameTime = IntCurrentGamePlayTime;
+		}
+
+		if (CurrentGamePlayTime <= 0.0f)
+		{
+			CurrentGamePlayTime = 0.0f;
+			BeforeGameTime = 0;
+			GameTimerWidget->SetTimeText(0);
+		}
+	}
+
+	if (MatchState::WaitingPostMatch == GetMatchState())
+	{
+		CurrentGamePlayTime = 0.0f;
+		BeforeGameTime = 0;
+		GameTimerWidget->SetTimeText(0);
+	}
 }

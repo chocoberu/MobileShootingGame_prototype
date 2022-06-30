@@ -65,11 +65,10 @@ void ATeamNormalGameMode::PostLogin(APlayerController* NewPlayer)
 	UE_LOG(LogTemp, Log, TEXT("Total Player Count : %d"), CurrentPlayerCount);
 
 	// TODO : 모든 플레이어가 준비 되었을 때 Match Start
-	// TEST : 임시로 조건 추가
+	// TEST CODE : 임시로 조건 추가
 	if (PlayerControllerList.Num() == CurrentPlayerCount || -1 == CurrentPlayerCount)
 	{
 		SetMatchState(MatchState::InProgress); // 테스트용
-		//CountForStartMatch();
 	}
 }
 
@@ -168,7 +167,7 @@ void ATeamNormalGameMode::StartMatch()
 		TeamNormalGameState->SetStartGameTime();
 	}
 
-	// TODO : 모든 플레이어 움직이도록 처리
+	// 모든 플레이어의 입력을 받을 수 있도록 처리
 	for (auto Player : PlayerControllerList)
 	{
 		Player->Client_SetInputMode(true);
@@ -200,12 +199,6 @@ void ATeamNormalGameMode::CountForStartMatch()
 	StartCount--;
 	UE_LOG(LogTemp, Log, TEXT("Start Count : %d"), StartCount);
 
-	// TEST CODE
-	if (GetMatchState() != MatchState::InProgress)
-	{
-		SetMatchState(MatchState::InProgress);
-	}
-
 	ATeamNormalGameState* TeamNormalGameState = GetGameState<ATeamNormalGameState>();
 	if (nullptr != TeamNormalGameState)
 	{
@@ -229,7 +222,7 @@ void ATeamNormalGameMode::EndMatch()
 
 	UE_LOG(LogTemp, Log, TEXT("ATeamNormalGameMode::EndMatch() called"));
 
-	// TODO : 모든 플레이어 멈추도록 처리
+	// 모든 플레이어의 입력을 받지 않도록 처리
 	for (auto Player : PlayerControllerList)
 	{
 		Player->Client_SetInputMode(false);
