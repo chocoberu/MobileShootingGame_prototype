@@ -28,6 +28,9 @@ public:
 
 protected:
 
+	UFUNCTION()
+	void AnimNotify_NormalAttack();
+
 	// Montage
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Attack", Meta = (AllowPrivateAccess = true))
 	UAnimMontage* NormalAttackMontage;

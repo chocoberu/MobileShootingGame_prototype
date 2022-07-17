@@ -268,7 +268,7 @@ void ASCharacter::LoadWeapon()
 		SubWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, SubWeaponAttachSocketName);
 	}
 
-	// TODO : PlayerController Ready 贸府
+	// PlayerController Ready 贸府
 	if (GetNetMode() != ENetMode::NM_Standalone)
 	{
 		PlayerController = GetController<ASPlayerController>();

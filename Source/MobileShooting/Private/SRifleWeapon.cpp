@@ -49,6 +49,8 @@ void ASRifleWeapon::NormalAttack()
 		OwnerAnimInstance->PlayNormalAttack();
 	}
 
+	// TODO : AnimMontage에서 총알 발사 로직을 호출하도록 수정
+
 	ASProjectile* Bullet = GetWorld()->SpawnActor<ASProjectile>(ProjectileClass,
 																MeshComp->GetSocketLocation(WeaponMuzzleSocketName), 
 																GetOwner()->GetActorRotation());

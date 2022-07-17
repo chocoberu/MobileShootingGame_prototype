@@ -37,3 +37,8 @@ void USCharacterAnimInstance::SetDeadAnim(bool Value)
 	DeadAnimStartPosition = 0.0f;
 	bDead = Value;
 }
+
+void USCharacterAnimInstance::AnimNotify_NormalAttack()
+{
+	UE_LOG(LogTemp, Log, TEXT("USCharacterAnimInstance::AnimNotify_NormalAttack() called"));
+}
