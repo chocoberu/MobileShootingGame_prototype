@@ -119,6 +119,7 @@ void URightButtonHUDWidget::BindMainWeapon(ASWeapon* MainWeapon)
 
 	MainWeaponWeakPtr = MainWeapon;
 	MainWeaponWeakPtr->OnAttackDelegate.AddUObject(this, &URightButtonHUDWidget::SetMainWeaponText);
+	///MainWeaponWeakPtr->OnReloadMontageDelegate.AddUObject(this, &URightButtonHUDWidget::SetMainWeaponText);
 	MainWeaponWeakPtr->OnSkillAttackDelegate.AddUObject(this, &URightButtonHUDWidget::PlaySkillAttackCoolTime);
 
 	SetMainWeaponText();
@@ -133,6 +134,7 @@ void URightButtonHUDWidget::BindSubWeapon(ASSubWeapon* SubWeapon)
 	}
 	SubWeaponWeakPtr = SubWeapon;
 	SubWeaponWeakPtr->OnAttackDelegate.AddUObject(this, &URightButtonHUDWidget::SetSubWeaponText);
+	//SubWeaponWeakPtr->OnReloadMontageDelegate.AddUObject(this, &URightButtonHUDWidget::SetSubWeaponText);
 
 	SetSubWeaponText();
 }

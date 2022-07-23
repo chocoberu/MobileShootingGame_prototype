@@ -2,6 +2,8 @@
 
 
 #include "SCharacterAnimInstance.h"
+#include "SCharacter.h"
+#include "SWeapon.h"
 
 USCharacterAnimInstance::USCharacterAnimInstance()
 {
@@ -41,4 +43,18 @@ void USCharacterAnimInstance::SetDeadAnim(bool Value)
 void USCharacterAnimInstance::AnimNotify_NormalAttack()
 {
 	UE_LOG(LogTemp, Log, TEXT("USCharacterAnimInstance::AnimNotify_NormalAttack() called"));
+
+	ASCharacter* SCharacter = Cast<ASCharacter>(TryGetPawnOwner());
+	if (nullptr == SCharacter)
+	{
+		return;
+	}
+
+	ASWeapon* SWeapon = SCharacter->GetWeapon();
+	if (nullptr == SWeapon)
+	{
+		return;
+	}
+
+	SWeapon->NormalAttack();
 }

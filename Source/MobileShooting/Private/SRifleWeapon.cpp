@@ -38,6 +38,11 @@ void ASRifleWeapon::StopNormalAttack()
 
 void ASRifleWeapon::NormalAttack()
 {
+	if (EWeaponState::E_IDLE != WeaponState)
+	{
+		return;
+	}
+
 	AActor* MyOwner = GetOwner();
 	if (nullptr == MyOwner)
 	{
@@ -46,7 +51,7 @@ void ASRifleWeapon::NormalAttack()
 
 	if (nullptr != OwnerAnimInstance)
 	{
-		OwnerAnimInstance->PlayNormalAttack();
+		//OwnerAnimInstance->PlayNormalAttack();
 	}
 
 	// TODO : AnimMontage에서 총알 발사 로직을 호출하도록 수정

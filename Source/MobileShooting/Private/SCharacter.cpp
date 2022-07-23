@@ -323,7 +323,19 @@ void ASCharacter::StartMainAttack()
 	if (nullptr != MainWeapon && false == bDied && false == MainWeapon->IsReloading())
 	{
 		bIsAttack = true;
-		MainWeapon->StartNormalAttack();
+		//MainWeapon->StartNormalAttack();
+
+		float FirstDelay = MainWeapon->GetFirstDelay();
+		float NormalAttackCoolTime = MainWeapon->GetNormalAttackCoolTime();
+		GetWorldTimerManager().SetTimer(NormalAttackTimer, this, &ASCharacter::MainAttack, NormalAttackCoolTime, true, FirstDelay);
+	}
+}
+
+void ASCharacter::MainAttack()
+{
+	if (nullptr != MainWeapon && false == bDied && false == MainWeapon->IsReloading())
+	{
+		AnimInstance->PlayNormalAttack();
 	}
 }
 
@@ -332,8 +344,8 @@ void ASCharacter::StopMainAttack()
 	if (nullptr != MainWeapon && false == bDied)
 	{
 		bIsAttack = false;
-		//GetWorldTimerManager().ClearTimer(NormalAttackTimer);
-		MainWeapon->StopNormalAttack();
+		GetWorldTimerManager().ClearTimer(NormalAttackTimer);
+		//MainWeapon->StopNormalAttack();
 	}
 }
 

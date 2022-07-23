@@ -47,7 +47,7 @@ public:
 
 	virtual void SkillAttack(void);
 
-	bool IsReloading(void) const { return bReloading; }
+	bool IsReloading(void) const { return EWeaponState::E_RELOAD == WeaponState; }
 
 	int32 GetCurrentBulletCount(void) { return CurrentBulletCount; }
 

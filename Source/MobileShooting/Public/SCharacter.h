@@ -86,6 +86,8 @@ protected:
 
 	bool bIsAttack;
 
+	FTimerHandle NormalAttackTimer;
+
 	// UI, HUD
 	
 	// Controller
@@ -120,6 +122,8 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	virtual void StartMainAttack(void);
+
+	void MainAttack(void);
 
 	virtual void StopMainAttack(void);
 
