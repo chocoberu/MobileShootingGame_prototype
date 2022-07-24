@@ -320,15 +320,22 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 void ASCharacter::StartMainAttack()
 {
-	if (nullptr != MainWeapon && false == bDied && false == MainWeapon->IsReloading())
+	if (false == IsLocallyControlled())
 	{
-		bIsAttack = true;
-		//MainWeapon->StartNormalAttack();
-
-		float FirstDelay = MainWeapon->GetFirstDelay();
-		float NormalAttackCoolTime = MainWeapon->GetNormalAttackCoolTime();
-		GetWorldTimerManager().SetTimer(NormalAttackTimer, this, &ASCharacter::MainAttack, NormalAttackCoolTime, true, FirstDelay);
+		return;
 	}
+	
+	Server_StartMainAttack();
+
+	//if (nullptr != MainWeapon && false == bDied && false == MainWeapon->IsReloading())
+	//{
+	//	bIsAttack = true;
+	//	//MainWeapon->StartNormalAttack();
+
+	//	float FirstDelay = MainWeapon->GetFirstDelay();
+	//	float NormalAttackCoolTime = MainWeapon->GetNormalAttackCoolTime();
+	//	GetWorldTimerManager().SetTimer(NormalAttackTimer, this, &ASCharacter::MainAttack, NormalAttackCoolTime, true, FirstDelay);
+	//}
 }
 
 void ASCharacter::MainAttack()
@@ -347,6 +354,24 @@ void ASCharacter::StopMainAttack()
 		GetWorldTimerManager().ClearTimer(NormalAttackTimer);
 		//MainWeapon->StopNormalAttack();
 	}
+}
+
+void ASCharacter::Server_StartMainAttack_Implementation()
+{
+	if (nullptr != MainWeapon && false == bDied && false == MainWeapon->IsReloading())
+	{
+		bIsAttack = true;
+		//MainWeapon->StartNormalAttack();
+
+		float FirstDelay = MainWeapon->GetFirstDelay();
+		float NormalAttackCoolTime = MainWeapon->GetNormalAttackCoolTime();
+		GetWorldTimerManager().SetTimer(NormalAttackTimer, this, &ASCharacter::MainAttack, NormalAttackCoolTime, true, FirstDelay);
+	}
+}
+
+bool ASCharacter::Server_StartMainAttack_Validate()
+{
+	return true;
 }
 
 void ASCharacter::ReloadMainWeapon()

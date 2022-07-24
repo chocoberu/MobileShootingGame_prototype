@@ -123,9 +123,14 @@ public:
 
 	virtual void StartMainAttack(void);
 
-	void MainAttack(void);
+	virtual void MainAttack(void);
 
 	virtual void StopMainAttack(void);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_StartMainAttack();
+
+	//UFUNCTION(NetMulticast, )
 
 	virtual void ReloadMainWeapon(void);
 
