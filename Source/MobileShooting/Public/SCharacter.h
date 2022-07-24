@@ -130,9 +130,16 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_StartMainAttack();
 
-	//UFUNCTION(NetMulticast, )
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_StopMainAttack();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_MainAttack();
 
 	virtual void ReloadMainWeapon(void);
+
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_ReloadMainWeaon();
 
 	virtual void StartSubAttack(void);
 

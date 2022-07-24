@@ -258,7 +258,7 @@ void ASCharacter::LoadWeapon()
 		MainWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponAttachSocketName);
 		MainWeapon->SetOwnerAnimInstance(AnimInstance);
 
-		MainWeapon->OnReloadMontageDelegate.AddUObject(this, &ASCharacter::ReloadMainWeapon);
+		MainWeapon->OnReloadMontageDelegate.AddUObject(this, &ASCharacter::Multicast_ReloadMainWeaon);
 	}
 
 	SubWeapon = GetWorld()->SpawnActor<ASSubWeapon>(TestSubWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
@@ -348,12 +348,19 @@ void ASCharacter::MainAttack()
 
 void ASCharacter::StopMainAttack()
 {
-	if (nullptr != MainWeapon && false == bDied)
+	if (false == IsLocallyControlled())
 	{
-		bIsAttack = false;
-		GetWorldTimerManager().ClearTimer(NormalAttackTimer);
-		//MainWeapon->StopNormalAttack();
+		return;
 	}
+
+	Server_StopMainAttack();
+
+	//if (nullptr != MainWeapon && false == bDied)
+	//{
+	//	bIsAttack = false;
+	//	GetWorldTimerManager().ClearTimer(NormalAttackTimer);
+	//	//MainWeapon->StopNormalAttack();
+	//}
 }
 
 void ASCharacter::Server_StartMainAttack_Implementation()
@@ -365,7 +372,7 @@ void ASCharacter::Server_StartMainAttack_Implementation()
 
 		float FirstDelay = MainWeapon->GetFirstDelay();
 		float NormalAttackCoolTime = MainWeapon->GetNormalAttackCoolTime();
-		GetWorldTimerManager().SetTimer(NormalAttackTimer, this, &ASCharacter::MainAttack, NormalAttackCoolTime, true, FirstDelay);
+		GetWorldTimerManager().SetTimer(NormalAttackTimer, this, &ASCharacter::Multicast_MainAttack, NormalAttackCoolTime, true, FirstDelay);
 	}
 }
 
@@ -374,7 +381,47 @@ bool ASCharacter::Server_StartMainAttack_Validate()
 	return true;
 }
 
+void ASCharacter::Multicast_MainAttack_Implementation()
+{
+	if (nullptr != MainWeapon && false == bDied && false == MainWeapon->IsReloading())
+	{
+		AnimInstance->PlayNormalAttack();
+	}
+}
+
+void ASCharacter::Server_StopMainAttack_Implementation()
+{
+	if (nullptr != MainWeapon && false == bDied)
+	{
+		bIsAttack = false;
+		GetWorldTimerManager().ClearTimer(NormalAttackTimer);
+		//MainWeapon->StopNormalAttack();
+	}
+}
+
+bool ASCharacter::Server_StopMainAttack_Validate()
+{
+	return true;
+}
+
 void ASCharacter::ReloadMainWeapon()
+{
+	if (nullptr == MainWeapon)
+	{
+		UE_LOG(LogTemp, Error, TEXT("MainWeapon is nullptr"));
+		return;
+	}
+
+	if (nullptr == AnimInstance)
+	{
+		UE_LOG(LogTemp, Error, TEXT("AnimInstance is nullptr"));
+		return;
+	}
+
+	AnimInstance->PlayReload();
+}
+
+void ASCharacter::Multicast_ReloadMainWeaon_Implementation()
 {
 	if (nullptr == MainWeapon)
 	{
