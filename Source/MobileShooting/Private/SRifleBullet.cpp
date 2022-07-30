@@ -41,13 +41,15 @@ void ASRifleBullet::NotifyActorBeginOverlap(AActor* OtherActor)
 
 	for (auto OtherActorComponent : ComponentArray)
 	{
-		FString ComponentName;
-		OtherActorComponent->GetName(ComponentName);
-
-		if (true == ComponentName.Equals(TEXT("HealthComp")))
+		if (OtherActorComponent->GetClass() == USHealthComponent::StaticClass())
 		{
 			QueryResult = true;
 			break;
+		}
+		else if (OtherActorComponent->GetClass() == UStaticMeshComponent::StaticClass())
+		{
+			Destroy();
+			return;
 		}
 	}
 
