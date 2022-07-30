@@ -34,6 +34,11 @@ void ASRifleBullet::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
 
+	if (false == HasAuthority())
+	{
+		return;
+	}
+
 	// TODO : StaticMesh에 부딪칠때 어떻게 처리할지
 	// HealthComp를 가진 액터에만 데미지 처리
 	const TSet<UActorComponent*> ComponentArray = OtherActor->GetComponents();

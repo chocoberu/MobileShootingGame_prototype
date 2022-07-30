@@ -33,6 +33,9 @@ protected:
 
 	void OnCharacterDead(class USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
 
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_OnHealthChanged(class USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
+
 	// Camera
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	class UCameraComponent* CameraComp;
@@ -59,7 +62,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	class USCharacterAnimInstance* AnimInstance;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	class USHealthComponent* HealthComp;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")

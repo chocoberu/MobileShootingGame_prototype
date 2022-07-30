@@ -27,7 +27,7 @@ protected:
 	void HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType,
 		AController* InstigatedBy, AActor* DamageCauser);
 
-	UPROPERTY(EditDefaultsOnly, Category = "HealthComponent")
+	UPROPERTY(Replicated, EditDefaultsOnly, Category = "HealthComponent")
 	float Health;
 
 	UPROPERTY(EditDefaultsOnly, Category = "HealthComponent")
@@ -44,6 +44,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	float GetHealth() const;
 	float GetHPRatio() const;

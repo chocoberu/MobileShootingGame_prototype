@@ -95,7 +95,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	int32 DefaultBulletCount;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	UPROPERTY(Replicated, EditDefaultsOnly, Category = "Weapon")
 	int32 CurrentBulletCount;
 
 	bool bReloading;

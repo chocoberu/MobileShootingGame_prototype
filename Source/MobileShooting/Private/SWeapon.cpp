@@ -3,6 +3,7 @@
 
 #include "SWeapon.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Net/UnrealNetwork.h"
 #include "SPlayerController.h"
 
 // Sets default values
@@ -92,3 +93,9 @@ void ASWeapon::SetOwnerAnimInstance(USCharacterAnimInstance* NewAnimInstance)
 }
 
 
+void ASWeapon::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ASWeapon, CurrentBulletCount);
+}

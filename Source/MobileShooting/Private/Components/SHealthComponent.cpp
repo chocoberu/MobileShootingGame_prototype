@@ -2,6 +2,7 @@
 
 
 #include "Components/SHealthComponent.h"
+#include "Net/UnrealNetwork.h"
 #include "UI/SDamageTextWidgetComponent.h"
 #include "SPlayerState.h"
 
@@ -20,6 +21,7 @@ USHealthComponent::USHealthComponent()
 		DamageTextWidgetCompClass = WC_DamageText.Class;
 	}
 	bUseDamageText = true;
+
 }
 
 
@@ -131,4 +133,11 @@ void USHealthComponent::RestoreHealth(void)
 	UE_LOG(LogTemp, Log, TEXT("%s Restore Health"), *GetOwner()->GetName());
 	Health = DefaultHealth;
 	bIsDead = false;
+}
+
+void USHealthComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(USHealthComponent, Health);
 }

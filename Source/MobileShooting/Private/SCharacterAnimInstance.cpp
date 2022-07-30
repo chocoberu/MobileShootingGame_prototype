@@ -50,6 +50,11 @@ void USCharacterAnimInstance::AnimNotify_NormalAttack()
 		return;
 	}
 
+	if (false == SCharacter->HasAuthority())
+	{
+		return;
+	}
+
 	ASWeapon* SWeapon = SCharacter->GetWeapon();
 	if (nullptr == SWeapon)
 	{

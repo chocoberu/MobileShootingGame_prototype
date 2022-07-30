@@ -37,7 +37,10 @@ ASCharacter::ASCharacter()
 
 	// HealthComponent
 	HealthComp = CreateDefaultSubobject<USHealthComponent>(TEXT("HealthComp"));
-	HealthComp->OnHealthChanged.AddUObject(this, &ASCharacter::OnHealthChanged);
+	//HealthComp->OnHealthChanged.AddUObject(this, &ASCharacter::OnHealthChanged);
+	HealthComp->OnHealthChanged.AddUObject(this, &ASCharacter::Multicast_OnHealthChanged);
+	HealthComp->SetNetAddressable();
+	HealthComp->SetIsReplicated(true);
 
 	WeaponAttachSocketName = TEXT("hand_r_weapon");
 	SubWeaponAttachSocketName = TEXT("thigh_r_SubWeapon");
@@ -136,6 +139,16 @@ void ASCharacter::MoveRight(float Value)
 }
 
 void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
+{
+	UpdateHPBarWidget();
+
+	if (Health <= 0.0f && !bDied)
+	{
+		OnCharacterDead(OwningHealthComp, Health, HealthDelta, DamageType, InstigatedBy, DamageCauser);
+	}
+}
+
+void ASCharacter::Multicast_OnHealthChanged_Implementation(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
 	UpdateHPBarWidget();
 
@@ -327,15 +340,15 @@ void ASCharacter::StartMainAttack()
 	
 	Server_StartMainAttack();
 
-	//if (nullptr != MainWeapon && false == bDied && false == MainWeapon->IsReloading())
-	//{
-	//	bIsAttack = true;
-	//	//MainWeapon->StartNormalAttack();
+	/*if (nullptr != MainWeapon && false == bDied && false == MainWeapon->IsReloading())
+	{
+		bIsAttack = true;
+		//MainWeapon->StartNormalAttack();
 
-	//	float FirstDelay = MainWeapon->GetFirstDelay();
-	//	float NormalAttackCoolTime = MainWeapon->GetNormalAttackCoolTime();
-	//	GetWorldTimerManager().SetTimer(NormalAttackTimer, this, &ASCharacter::MainAttack, NormalAttackCoolTime, true, FirstDelay);
-	//}
+		float FirstDelay = MainWeapon->GetFirstDelay();
+		float NormalAttackCoolTime = MainWeapon->GetNormalAttackCoolTime();
+		GetWorldTimerManager().SetTimer(NormalAttackTimer, this, &ASCharacter::MainAttack, NormalAttackCoolTime, true, FirstDelay);
+	}*/
 }
 
 void ASCharacter::MainAttack()
@@ -355,12 +368,12 @@ void ASCharacter::StopMainAttack()
 
 	Server_StopMainAttack();
 
-	//if (nullptr != MainWeapon && false == bDied)
-	//{
-	//	bIsAttack = false;
-	//	GetWorldTimerManager().ClearTimer(NormalAttackTimer);
-	//	//MainWeapon->StopNormalAttack();
-	//}
+	/*if (nullptr != MainWeapon && false == bDied)
+	{
+		bIsAttack = false;
+		GetWorldTimerManager().ClearTimer(NormalAttackTimer);
+		//MainWeapon->StopNormalAttack();
+	}*/
 }
 
 void ASCharacter::Server_StartMainAttack_Implementation()
