@@ -41,6 +41,9 @@ public:
 
 	virtual void NormalAttack(void);
 
+	//UFUNCTION(NetMulticast, Reliable)
+	virtual void Multicast_OnNormalAttack();
+
 	virtual void StartSkillAttack(void);
 
 	virtual void StopSkillAttack(void);
@@ -95,7 +98,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	int32 DefaultBulletCount;
 
-	UPROPERTY(Replicated, EditDefaultsOnly, Category = "Weapon")
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	int32 CurrentBulletCount;
 
 	bool bReloading;

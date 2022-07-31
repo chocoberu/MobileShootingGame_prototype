@@ -3,7 +3,6 @@
 
 #include "SWeapon.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "Net/UnrealNetwork.h"
 #include "SPlayerController.h"
 
 // Sets default values
@@ -44,6 +43,11 @@ void ASWeapon::StopNormalAttack()
 }
 
 void ASWeapon::NormalAttack()
+{
+	// 하위 클래스에서 구현
+}
+
+void ASWeapon::Multicast_OnNormalAttack()
 {
 	// 하위 클래스에서 구현
 }
@@ -90,12 +94,4 @@ void ASWeapon::SetOwnerAnimInstance(USCharacterAnimInstance* NewAnimInstance)
 		return;
 	}
 	OwnerAnimInstance = NewAnimInstance;
-}
-
-
-void ASWeapon::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	DOREPLIFETIME(ASWeapon, CurrentBulletCount);
 }

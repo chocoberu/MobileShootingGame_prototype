@@ -65,13 +65,18 @@ void ASRifleWeapon::NormalAttack()
 	}
 	Bullet->SetOwner(MyOwner);
 
+	Multicast_OnNormalAttack();
+}
+
+void ASRifleWeapon::Multicast_OnNormalAttack_Implementation()
+{
 	// ÃÑ¾Ë ¼ö Ã³¸®
 	--CurrentBulletCount;
 
 	UE_LOG(LogTemp, Log, TEXT("Current Bullet : %d"), CurrentBulletCount);
 	OnAttackDelegate.Broadcast();
 
-	if (0 >= CurrentBulletCount)
+	if (CurrentBulletCount <= 0)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Reloading"));
 		WeaponState = EWeaponState::E_RELOAD;

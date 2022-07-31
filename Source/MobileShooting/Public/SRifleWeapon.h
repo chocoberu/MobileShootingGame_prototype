@@ -42,6 +42,9 @@ public:
 
 	virtual void NormalAttack() override;
 
+	UFUNCTION(NetMulticast, Reliable)
+	virtual void Multicast_OnNormalAttack() override;
+
 	virtual void StartSkillAttack() override;
 
 	virtual void StopSkillAttack() override;
