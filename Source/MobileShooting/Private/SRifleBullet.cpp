@@ -34,7 +34,7 @@ void ASRifleBullet::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
 
-	if (false == HasAuthority())
+	if (false == HasAuthority() || OtherActor == GetOwner())
 	{
 		return;
 	}

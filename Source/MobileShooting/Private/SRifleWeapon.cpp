@@ -55,16 +55,17 @@ void ASRifleWeapon::NormalAttack()
 	}
 
 	// TODO : AnimMontage에서 총알 발사 로직을 호출하도록 수정
-
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = MyOwner;
 	ASProjectile* Bullet = GetWorld()->SpawnActor<ASProjectile>(ProjectileClass,
 																MeshComp->GetSocketLocation(WeaponMuzzleSocketName), 
-																GetOwner()->GetActorRotation());
+																GetOwner()->GetActorRotation(),
+																SpawnParams);
 	if (nullptr == Bullet)
 	{
 		return;
 	}
-	Bullet->SetOwner(MyOwner);
-
+	
 	Multicast_OnNormalAttack();
 }
 
