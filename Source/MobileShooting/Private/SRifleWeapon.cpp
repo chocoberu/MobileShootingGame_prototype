@@ -69,7 +69,7 @@ void ASRifleWeapon::NormalAttack()
 	Multicast_OnNormalAttack();
 }
 
-void ASRifleWeapon::Multicast_OnNormalAttack_Implementation()
+void ASRifleWeapon::OnNormalAttack()
 {
 	// ÃÑ¾Ë ¼ö Ã³¸®
 	--CurrentBulletCount;

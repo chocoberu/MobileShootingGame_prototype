@@ -41,8 +41,10 @@ public:
 
 	virtual void NormalAttack(void);
 
-	//UFUNCTION(NetMulticast, Reliable)
-	virtual void Multicast_OnNormalAttack();
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_OnNormalAttack();
+
+	virtual void OnNormalAttack();
 
 	virtual void StartSkillAttack(void);
 

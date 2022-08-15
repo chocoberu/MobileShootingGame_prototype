@@ -47,9 +47,14 @@ void ASWeapon::NormalAttack()
 	// 하위 클래스에서 구현
 }
 
-void ASWeapon::Multicast_OnNormalAttack()
+void ASWeapon::Multicast_OnNormalAttack_Implementation()
 {
-	// 하위 클래스에서 구현
+	OnNormalAttack();
+}
+
+void ASWeapon::OnNormalAttack()
+{
+
 }
 
 void ASWeapon::StartSkillAttack()
