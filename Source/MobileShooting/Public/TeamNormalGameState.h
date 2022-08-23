@@ -45,6 +45,8 @@ protected:
 
 	void SetCurrentGamePlayTime();
 
+	void SetCurrentKillCount();
+
 	// Game Time ฐüทร
 	UPROPERTY(Replicated)
 	float StartGameTime;

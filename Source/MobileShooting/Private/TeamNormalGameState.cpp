@@ -95,7 +95,7 @@ void ATeamNormalGameState::Tick(float DeltaSeconds)
 	}
 
 	SetCurrentGamePlayTime();
-
+	SetCurrentKillCount();
 }
 
 void ATeamNormalGameState::SetStartGameTime()
@@ -213,5 +213,38 @@ void ATeamNormalGameState::SetCurrentGamePlayTime()
 		CurrentGamePlayTime = 0.0f;
 		BeforeGameTime = 0;
 		GameTimerWidget->SetTimeText(0);
+	}
+}
+
+void ATeamNormalGameState::SetCurrentKillCount()
+{
+	int Blue = 0, Red = 0;
+	for (auto Iter : PlayerArray)
+	{
+		ASPlayerState* PlayerState = Cast<ASPlayerState>(Iter);
+		if (nullptr == PlayerState)
+		{
+			continue;
+		}
+
+		if (PlayerState->GetTeamNumber() == 0)
+		{
+			Blue += PlayerState->GetKillScore();
+		}
+		else
+		{
+			Red += PlayerState->GetKillScore();
+		}
+	}
+
+	if (Blue > BlueTeamKillCount)
+	{
+		BlueTeamKillCount = Blue;
+		TeamScoreWidget->AddBlueTeamScore();
+	}
+	if (Red > RedTeamKillCount)
+	{
+		RedTeamKillCount = Red;
+		TeamScoreWidget->AddRedTeamScore();
 	}
 }
