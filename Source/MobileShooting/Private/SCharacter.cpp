@@ -77,6 +77,12 @@ void ASCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	UE_LOG(LogTemp, Log, TEXT("ASPlayerCharacter::BeginPlay() call"));
+
+	if (GetActorForwardVector().X < 0.0f)
+	{
+		ArmRotationTo.Yaw = -180.0f;
+	}
+
 	//if (GetLocalRole() == ROLE_AutonomousProxy || GetLocalRole() == ROLE_Authority)
 	if(true == IsLocallyControlled())
 	{
@@ -131,11 +137,21 @@ void ASCharacter::PostInitializeComponents()
 void ASCharacter::MoveForward(float Value)
 {
 	DirectionToMove.X = Value;
+
+	if (ArmRotationTo.Yaw < 0.0f)
+	{
+		DirectionToMove.X *= -1.0f;
+	}
 }
 
 void ASCharacter::MoveRight(float Value)
 {
 	DirectionToMove.Y = Value;
+
+	if (ArmRotationTo.Yaw < 0.0f)
+	{
+		DirectionToMove.Y *= -1.0f;
+	}
 }
 
 void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
@@ -453,18 +469,48 @@ void ASCharacter::Multicast_ReloadMainWeaon_Implementation()
 
 void ASCharacter::StartSubAttack(void)
 {
+	if (false == IsLocallyControlled())
+	{
+		return;
+	}
+
+	Server_StartSubAttack();
+}
+
+void ASCharacter::StopSubAttack(void)
+{
+	if (false == IsLocallyControlled())
+	{
+		return;
+	}
+
+	Server_StopSubAttack();
+}
+
+void ASCharacter::Server_StartSubAttack_Implementation()
+{
 	if (nullptr != SubWeapon && false == bDied)
 	{
 		SubWeapon->StartSubWeaponAttack();
 	}
 }
 
-void ASCharacter::StopSubAttack(void)
+bool ASCharacter::Server_StartSubAttack_Validate()
+{
+	return true;
+}
+
+void ASCharacter::Server_StopSubAttack_Implementation()
 {
 	if (nullptr != SubWeapon && false == bDied)
 	{
 		SubWeapon->StopSubWeaponAttack();
 	}
+}
+
+bool ASCharacter::Server_StopSubAttack_Validate()
+{
+	return true;
 }
 
 void ASCharacter::StartSkillAttack(void)

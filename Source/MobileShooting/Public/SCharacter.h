@@ -148,6 +148,12 @@ public:
 
 	virtual void StopSubAttack(void);
 
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_StartSubAttack();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_StopSubAttack();
+
 	virtual void StartSkillAttack(void);
 
 	virtual void StopSkillAttack(void);
