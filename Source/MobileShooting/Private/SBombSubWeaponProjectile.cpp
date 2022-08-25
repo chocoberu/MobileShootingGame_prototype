@@ -29,15 +29,17 @@ void ASBombSubWeaponProjectile::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
 
-	BombAttack();
+	BombAttack(OtherActor);
 }
 
-void ASBombSubWeaponProjectile::BombAttack()
+void ASBombSubWeaponProjectile::BombAttack(AActor* OtherActor)
 {
 	TArray<AActor*> IgnoredActors;
 	IgnoredActors.Add(this);
 
-	UGameplayStatics::ApplyRadialDamage(this, BombDamage, GetActorLocation(), BombAttackRadius, nullptr, IgnoredActors, this, GetInstigatorController(), true);
+	//UGameplayStatics::ApplyRadialDamage(this, BombDamage, GetActorLocation(), BombAttackRadius, nullptr, IgnoredActors, this, GetInstigatorController(), true);
+	FDamageEvent DamageEvent;
+	OtherActor->TakeDamage(BombDamage, DamageEvent, nullptr, GetOwner());
 	DrawDebugSphere(GetWorld(), GetActorLocation(), BombAttackRadius, 12, FColor::Yellow, false, 1.0f, 0, 1.0f);
 
 	GetWorldTimerManager().ClearTimer(BombTimer);

@@ -160,7 +160,7 @@ public:
 
 	void RespawnCharacter(void);
 
-	void UpdateHPBarWidget(void);
+	void UpdateHPBarWidget(float Health);
 
 	class USHealthComponent* GetHealthComponent(void) { return HealthComp; }
 

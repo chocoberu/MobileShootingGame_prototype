@@ -109,7 +109,7 @@ void USHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 
 float USHealthComponent::GetHealth() const
 {
-	return Health;;
+	return Health;
 }
 
 float USHealthComponent::GetHPRatio() const

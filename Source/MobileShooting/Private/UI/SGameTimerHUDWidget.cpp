@@ -11,7 +11,7 @@ void USGameTimerHUDWidget::NativeConstruct()
 
 void USGameTimerHUDWidget::SetTimeText(const int32 RemainSecond)
 {
-	UE_LOG(LogTemp, Log, TEXT("Current Time : %d"), RemainSecond);
+	//UE_LOG(LogTemp, Log, TEXT("Current Time : %d"), RemainSecond);
 	int32 Minute = RemainSecond / 60;
 	int32 Second = RemainSecond % 60;
 

@@ -15,7 +15,7 @@ class MOBILESHOOTING_API USHPBarWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	void UpdateHPWidget();
+	void UpdateHPWidget(float Health);
 
 	void BindCharacterHealthComponent(class USHealthComponent* NewHealthComponent);
 	

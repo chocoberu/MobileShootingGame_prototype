@@ -44,5 +44,5 @@ public:
 
 	virtual void PostInitializeComponents() override;
 
-	void UpdateHPBarWidget();
+	void UpdateHPBarWidget(float Health);
 };

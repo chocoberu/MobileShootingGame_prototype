@@ -75,7 +75,7 @@ public:
 
 	virtual void PostInitializeComponents() override;
 
-	void UpdateHPBarWidget(void);
+	void UpdateHPBarWidget(float Health);
 
 	void NormalAttack(void);
 

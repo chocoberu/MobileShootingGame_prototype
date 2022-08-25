@@ -65,7 +65,7 @@ void ASTestBossCharacter::BeginPlay()
 
 void ASTestBossCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
-	UpdateHPBarWidget();
+	UpdateHPBarWidget(Health);
 
 	if (CurrentPhaseArrayIndex + 1 < PhaseToPercentArray.Num() && OwningHealthComp->GetHPRatio() <= PhaseToPercentArray[CurrentPhaseArrayIndex + 1])
 	{
@@ -134,7 +134,7 @@ void ASTestBossCharacter::PostInitializeComponents()
 	}
 }
 
-void ASTestBossCharacter::UpdateHPBarWidget()
+void ASTestBossCharacter::UpdateHPBarWidget(float Health)
 {
 	auto HPBarWidget = Cast<USHPBarWidget>(HPBarWidgetComp->GetUserWidgetObject());
 	if (nullptr == HPBarWidget)
@@ -142,7 +142,7 @@ void ASTestBossCharacter::UpdateHPBarWidget()
 		UE_LOG(LogTemp, Error, TEXT("HPBarWidget is nullptr"));
 		return;
 	}
-	HPBarWidget->UpdateHPWidget();
+	HPBarWidget->UpdateHPWidget(Health);
 }
 
 void ASTestBossCharacter::NormalAttack()

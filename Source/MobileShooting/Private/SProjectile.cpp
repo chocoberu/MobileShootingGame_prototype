@@ -28,7 +28,7 @@ ASProjectile::ASProjectile()
 	ProjectileMovementComp->bShouldBounce = true;
 	ProjectileMovementComp->Bounciness = 0.3f;
 
-	SetReplicates(true);
+	bReplicates = true;
 	SetReplicateMovement(true);
 }
 

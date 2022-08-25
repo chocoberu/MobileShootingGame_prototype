@@ -37,8 +37,8 @@ ASCharacter::ASCharacter()
 
 	// HealthComponent
 	HealthComp = CreateDefaultSubobject<USHealthComponent>(TEXT("HealthComp"));
-	//HealthComp->OnHealthChanged.AddUObject(this, &ASCharacter::OnHealthChanged);
-	HealthComp->OnHealthChanged.AddUObject(this, &ASCharacter::Multicast_OnHealthChanged);
+	HealthComp->OnHealthChanged.AddUObject(this, &ASCharacter::OnHealthChanged);
+	//HealthComp->OnHealthChanged.AddUObject(this, &ASCharacter::Multicast_OnHealthChanged);
 	HealthComp->SetNetAddressable();
 	HealthComp->SetIsReplicated(true);
 
@@ -156,17 +156,19 @@ void ASCharacter::MoveRight(float Value)
 
 void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
-	UpdateHPBarWidget();
+	Multicast_OnHealthChanged(OwningHealthComp, Health, HealthDelta, DamageType, InstigatedBy, DamageCauser);
+	/*UpdateHPBarWidget();
 
 	if (Health <= 0.0f && !bDied)
 	{
 		OnCharacterDead(OwningHealthComp, Health, HealthDelta, DamageType, InstigatedBy, DamageCauser);
-	}
+	}*/
 }
 
 void ASCharacter::Multicast_OnHealthChanged_Implementation(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
-	UpdateHPBarWidget();
+	UE_LOG(LogTemp, Log, TEXT("ASCharacter::Multicast_OnHealthChanged() called, Health : %f"), Health);
+	UpdateHPBarWidget(Health);
 
 	if (Health <= 0.0f && !bDied)
 	{
@@ -546,7 +548,7 @@ void ASCharacter::RespawnCharacter(void)
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	HPBarWidgetComp->SetHiddenInGame(false);
 
-	UpdateHPBarWidget();
+	UpdateHPBarWidget(HealthComp->GetDefaultHealth());
 
 	bDied = false;
 	// TODO : Respawn 할 때 필요한 작업 추가
@@ -555,7 +557,7 @@ void ASCharacter::RespawnCharacter(void)
 	SubWeapon->ReloadSubWeapon();
 }
 
-void ASCharacter::UpdateHPBarWidget()
+void ASCharacter::UpdateHPBarWidget(float Health)
 {
 	auto HPBarWidget = Cast<USHPBarWidget>(HPBarWidgetComp->GetUserWidgetObject());
 	if (nullptr == HPBarWidget)
@@ -563,7 +565,7 @@ void ASCharacter::UpdateHPBarWidget()
 		UE_LOG(LogTemp, Error, TEXT("HPBarWidget is nullptr"));
 		return;
 	}
-	HPBarWidget->UpdateHPWidget();
+	HPBarWidget->UpdateHPWidget(Health);
 }
 
 void ASCharacter::SetGenericTeamId(const FGenericTeamId& NewTeamID)

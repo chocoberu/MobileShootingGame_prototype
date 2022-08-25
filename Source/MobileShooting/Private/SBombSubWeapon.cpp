@@ -98,9 +98,12 @@ void ASBombSubWeapon::StopSubWeaponAttack()
 
 	FVector StartLocation = SubWeaponOwner->GetActorLocation() + SubWeaponOwner->GetActorForwardVector() * 100.0f;
 
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = SubWeaponOwner;
 	auto Bomb = GetWorld()->SpawnActor<ASProjectile>(ProjectileClass,
 		StartLocation,
-		Rot);
+		Rot,
+		SpawnParams);
 
 	if (nullptr != Bomb)
 	{

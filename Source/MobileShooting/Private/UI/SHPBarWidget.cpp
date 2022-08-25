@@ -9,7 +9,7 @@ void USHPBarWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	UpdateHPWidget();
+	HPProgressBar->SetPercent(1.0f);
 }
 
 void USHPBarWidget::BindCharacterHealthComponent(USHealthComponent* NewHealthComponent)
@@ -23,10 +23,10 @@ void USHPBarWidget::BindCharacterHealthComponent(USHealthComponent* NewHealthCom
 	
 }
 
-void USHPBarWidget::UpdateHPWidget()
+void USHPBarWidget::UpdateHPWidget(float Health)
 {
 	if (true == HealthCompWeakPtr.IsValid())
 	{
-		HPProgressBar->SetPercent(HealthCompWeakPtr->GetHPRatio());
+		HPProgressBar->SetPercent(Health / HealthCompWeakPtr->GetDefaultHealth());
 	}
 }

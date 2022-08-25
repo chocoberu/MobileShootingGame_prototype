@@ -25,7 +25,7 @@ public:
 
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
-	void BombAttack();
+	void BombAttack(AActor* OtherActor);
 
 protected:
 
