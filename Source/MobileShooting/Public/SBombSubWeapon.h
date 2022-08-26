@@ -48,4 +48,9 @@ public:
 
 	virtual void StopSubWeaponAttack() override;
 
+	virtual void OnSubWeaponAttack() override;
+
+	virtual void Client_StartSubWeaponAttack() override;
+
+	virtual void Client_StopSubWeaponAttack() override;
 };

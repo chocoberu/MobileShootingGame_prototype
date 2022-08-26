@@ -4,6 +4,8 @@
 #include "UI/TeamGameOverWidget.h"
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
+#include "SGameInstance.h"
+#include "Kismet/GameplayStatics.h"
 
 void UTeamGameOverWidget::SetResultText(FString Result)
 {
@@ -19,5 +21,13 @@ void UTeamGameOverWidget::NativeConstruct()
 
 void UTeamGameOverWidget::OnClickedReturnButton()
 {
-	// TODO : Lobby 화면으로 돌아가도록
+	// Game Start Level로 이동
+	USGameInstance* SGameInstance = Cast<USGameInstance>(GetGameInstance());
+	if (nullptr == SGameInstance)
+	{
+		return;
+	}
+
+	SGameInstance->LeaveAndDestroySession();
+	UGameplayStatics::OpenLevel(GetWorld(), FName(TEXT("GameStartLevel")));
 }

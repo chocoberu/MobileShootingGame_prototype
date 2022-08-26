@@ -9,6 +9,7 @@
 #include "UI/SGameTimerHUDWidget.h"
 #include "UI/TeamScoreWidget.h"
 #include "UI/MatchStartCountDownWidget.h"
+#include "UI/TeamGameOverWidget.h"
 
 ATeamNormalGameState::ATeamNormalGameState()
 {
@@ -69,6 +70,11 @@ void ATeamNormalGameState::BeginPlay()
 		{
 			MatchStartCountDownWidget->AddToViewport();
 		}
+	}
+
+	if (nullptr != GameOverWidgetClass)
+	{
+		GameOverWidget = CreateWidget<UTeamGameOverWidget>(GetWorld(), GameOverWidgetClass);
 	}
 }
 
@@ -186,6 +192,29 @@ bool ATeamNormalGameState::IsAllPlayerReadyState()
 	return bResult;
 }
 
+void ATeamNormalGameState::Multicast_SetGameOverWidget_Implementation()
+{
+	if (nullptr == GameOverWidget)
+	{
+		return;
+	}
+
+	GameOverWidget->AddToViewport();
+	
+	if (BlueTeamKillCount > RedTeamKillCount)
+	{
+		GameOverWidget->SetResultText(TEXT("Blue Team Win"));
+	}
+	else if (BlueTeamKillCount < RedTeamKillCount)
+	{
+		GameOverWidget->SetResultText(TEXT("Red Team Win"));
+	}
+	else
+	{
+		GameOverWidget->SetResultText(TEXT("Draw"));
+	}
+}
+
 void ATeamNormalGameState::SetCurrentGamePlayTime()
 {
 	// 게임이 시작한 경우 현재 게임 시간 설정
@@ -218,6 +247,12 @@ void ATeamNormalGameState::SetCurrentGamePlayTime()
 
 void ATeamNormalGameState::SetCurrentKillCount()
 {
+	// Match가 끝난 이후에는 Kill Count를 추가하지 않음
+	if (MatchState::WaitingPostMatch == GetMatchState())
+	{
+		return;
+	}
+
 	int Blue = 0, Red = 0;
 	for (auto Iter : PlayerArray)
 	{

@@ -51,7 +51,13 @@ void ASBombSubWeapon::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	// Charging이면 Bomb 예측 경로를 출력
-	if (true == GetWorldTimerManager().IsTimerActive(BombChargingTimer))
+	APawn* PawnOwner = Cast<APawn>(GetOwner());
+	if (nullptr == PawnOwner)
+	{
+		return;
+	}
+
+	if (true == GetWorldTimerManager().IsTimerActive(BombChargingTimer) && true == PawnOwner->IsLocallyControlled())
 	{
 		FVector StartLocation = GetOwner()->GetActorLocation() + GetOwner()->GetActorForwardVector() * 100.0f;
 		float RemainTime = BombMaxChargingTime - GetWorldTimerManager().GetTimerRemaining(BombChargingTimer);
@@ -112,17 +118,46 @@ void ASBombSubWeapon::StopSubWeaponAttack()
 		Bomb->SetInitialSpeed(InitialSpeed);
 		Bomb->SetLaunchVelocity(Rot.Vector() * InitialSpeed);
 
-		SubtrackCurrentSubWeaponCount();
-
-		{
-			UE_LOG(LogTemp, Log, TEXT("Bomb Vector : %s"), *(Rot.Vector() * InitialSpeed).ToString());
-			PredictBombPath(Bomb, StartLocation, Rot, InitialSpeed, 2.0f);
-		}
+		Multicast_OnSubWeaponAttack();
 	}
-	
+}
+
+void ASBombSubWeapon::OnSubWeaponAttack()
+{
+	Super::OnSubWeaponAttack();
+
+	/* {
+		UE_LOG(LogTemp, Log, TEXT("Bomb Vector : %s"), *(Rot.Vector() * InitialSpeed).ToString());
+		PredictBombPath(Bomb, StartLocation, Rot, InitialSpeed, 2.0f);
+	}*/
+
 	if (CurrentSubWeaponCount <= 0)
 	{
 		SubWeaponState = ESubWeaponState::E_RELOAD;
 		GetWorldTimerManager().SetTimer(ReloadTimer, this, &ASSubWeapon::ReloadSubWeapon, ReloadTime, false);
-	}	
+	}
+}
+
+void ASBombSubWeapon::Client_StartSubWeaponAttack()
+{
+	APawn* PawnOwner = Cast<APawn>(GetOwner());
+	if (false == PawnOwner->IsLocallyControlled())
+	{
+		return;
+	}
+
+	GetWorldTimerManager().SetTimer(BombChargingTimer, FTimerDelegate::CreateLambda([&]() {
+		Client_StopSubWeaponAttack();
+		}), BombMaxChargingTime, false);
+}
+
+void ASBombSubWeapon::Client_StopSubWeaponAttack()
+{
+	APawn* PawnOwner = Cast<APawn>(GetOwner());
+	if (false == PawnOwner->IsLocallyControlled())
+	{
+		return;
+	}
+
+	GetWorldTimerManager().ClearTimer(BombChargingTimer);
 }

@@ -386,12 +386,6 @@ void ASCharacter::StopMainAttack()
 
 	Server_StopMainAttack();
 
-	/*if (nullptr != MainWeapon && false == bDied)
-	{
-		bIsAttack = false;
-		GetWorldTimerManager().ClearTimer(NormalAttackTimer);
-		//MainWeapon->StopNormalAttack();
-	}*/
 }
 
 void ASCharacter::Server_StartMainAttack_Implementation()
@@ -476,6 +470,11 @@ void ASCharacter::StartSubAttack(void)
 		return;
 	}
 
+	if (nullptr != SubWeapon && false == bDied)
+	{
+		SubWeapon->Client_StartSubWeaponAttack();
+	}
+
 	Server_StartSubAttack();
 }
 
@@ -484,6 +483,11 @@ void ASCharacter::StopSubAttack(void)
 	if (false == IsLocallyControlled())
 	{
 		return;
+	}
+
+	if (nullptr != SubWeapon && false == bDied)
+	{
+		SubWeapon->Client_StopSubWeaponAttack();
 	}
 
 	Server_StopSubAttack();

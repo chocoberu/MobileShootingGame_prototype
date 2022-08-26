@@ -56,6 +56,26 @@ void ASSubWeapon::StopSubWeaponAttack()
 	// 하위 클래스에서 구현
 }
 
+void ASSubWeapon::OnSubWeaponAttack()
+{
+	SubtrackCurrentSubWeaponCount();
+}
+
+void ASSubWeapon::Client_StartSubWeaponAttack()
+{
+	// 하위 클래스에서 구현
+}
+
+void ASSubWeapon::Client_StopSubWeaponAttack()
+{
+	// 하위 클래스에서 구현
+}
+
+void ASSubWeapon::Multicast_OnSubWeaponAttack_Implementation()
+{
+	OnSubWeaponAttack();
+}
+
 void ASSubWeapon::SubtrackCurrentSubWeaponCount(void)
 {
 	--CurrentSubWeaponCount;

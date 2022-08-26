@@ -46,6 +46,10 @@ public:
 
 	virtual void OnNormalAttack();
 
+	virtual void Client_StartSubWeaponAttack(void);
+
+	virtual void Client_StopSubWeaponAttack(void);
+
 	virtual void StartSkillAttack(void);
 
 	virtual void StopSkillAttack(void);

@@ -227,6 +227,13 @@ void ATeamNormalGameMode::EndMatch()
 	{
 		Player->Client_SetInputMode(false);
 	}
+
+	// 게임 결과를 보이도록 처리
+	ATeamNormalGameState* TeamNormalGameState = GetGameState<ATeamNormalGameState>();
+	if (nullptr != TeamNormalGameState)
+	{
+		TeamNormalGameState->Multicast_SetGameOverWidget();
+	}
 }
 
 void ATeamNormalGameMode::ResponseRestartPlayer(AController* NewPlayer)

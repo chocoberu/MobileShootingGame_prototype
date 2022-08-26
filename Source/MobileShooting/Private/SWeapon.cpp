@@ -57,6 +57,16 @@ void ASWeapon::OnNormalAttack()
 
 }
 
+void ASWeapon::Client_StartSubWeaponAttack()
+{
+	// 하위 클래스에서 구현
+}
+
+void ASWeapon::Client_StopSubWeaponAttack()
+{
+	// 하위 클래스에서 구현
+}
+
 void ASWeapon::StartSkillAttack()
 {
 	// 하위 클래스에서 구현

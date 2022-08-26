@@ -37,6 +37,9 @@ public:
 	void Multicast_CountDown(int32 CountDownNumber);
 
 	bool IsAllPlayerReadyState();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_SetGameOverWidget();
 	
 	// Delegates
 	FOnAllPlayerReadyDelegate OnAllPlayerReadyDelegate;
@@ -86,6 +89,12 @@ protected:
 
 	UPROPERTY()
 	class UMatchStartCountDownWidget* MatchStartCountDownWidget;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI", Meta = (AllowPrivateAccess = true))
+	TSubclassOf<class UTeamGameOverWidget> GameOverWidgetClass;
+
+	UPROPERTY()
+	class UTeamGameOverWidget* GameOverWidget;
 
 	// Match CountDown ฐüทร
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game", Meta = (AllowPrivateAccess = true))

@@ -56,6 +56,15 @@ public:
 
 	virtual void StopSubWeaponAttack(void);
 
+	virtual void OnSubWeaponAttack(void);
+
+	virtual void Client_StartSubWeaponAttack(void);
+
+	virtual void Client_StopSubWeaponAttack(void);
+
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_OnSubWeaponAttack();
+
 	void SubtrackCurrentSubWeaponCount(void);
 
 	void ReloadSubWeapon(void);
