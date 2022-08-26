@@ -7,18 +7,14 @@
 void UTeamScoreWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-
-	CurrentBlueTeamScore = CurrentRedTeamScore = 0;
 }
 
-void UTeamScoreWidget::AddBlueTeamScore()
+void UTeamScoreWidget::UpdateBlueTeamScore(const int32& CurrentBlueTeamScore)
 {
-	CurrentBlueTeamScore++;
 	BlueTeamScore->SetText(FText::FromString(FString::Printf(TEXT("%d"), CurrentBlueTeamScore)));
 }
 
-void UTeamScoreWidget::AddRedTeamScore()
+void UTeamScoreWidget::UpdateRedTeamScore(const int32& CurrentRedTeamScore)
 {
-	CurrentRedTeamScore++;
 	RedTeamScore->SetText(FText::FromString(FString::Printf(TEXT("%d"), CurrentRedTeamScore)));
 }

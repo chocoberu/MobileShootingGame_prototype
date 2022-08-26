@@ -561,8 +561,8 @@ void ASCharacter::RespawnCharacter(void)
 	UpdateHPBarWidget(HealthComp->GetDefaultHealth());
 
 	bDied = false;
-	// TODO : Respawn 할 때 필요한 작업 추가
 	
+	// Respawn 할 때 필요한 작업
 	MainWeapon->ReloadWeapon();
 	SubWeapon->ReloadSubWeapon();
 }

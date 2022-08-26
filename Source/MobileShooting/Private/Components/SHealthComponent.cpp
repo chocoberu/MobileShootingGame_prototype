@@ -71,7 +71,7 @@ void USHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, 
 	{
 		return;
 	}
-	// TODO : 같은 팀에게 받은 데미지 무시
+	// 같은 팀에게 받은 데미지 무시
 	auto OwnerInterface = Cast<IGenericTeamAgentInterface>(GetOwner());
 	auto CauserInterface = Cast<IGenericTeamAgentInterface>(DamageCauser);
 
@@ -85,6 +85,7 @@ void USHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, 
 
 	bIsDead = Health <= 0.0f;
 
+	// TODO : Multicast로 변경 필요
 	if (true == bUseDamageText)
 	{
 		UpdateDamageText(Damage);
@@ -93,7 +94,7 @@ void USHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, 
 
 	if (bIsDead == true)
 	{
-		// TODO : 처리
+		// KillScore 처리
 		auto SCharacter = Cast<APawn>(DamageCauser);
 		if (nullptr == SCharacter)
 		{

@@ -29,6 +29,8 @@ void ATeamNormalGameState::GetLifetimeReplicatedProps(TArray< FLifetimeProperty 
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(ATeamNormalGameState, StartGameTime);
+	DOREPLIFETIME(ATeamNormalGameState, BlueTeamKillCount);
+	DOREPLIFETIME(ATeamNormalGameState, RedTeamKillCount);
 }
 
 void ATeamNormalGameState::BeginPlay()
@@ -100,8 +102,25 @@ void ATeamNormalGameState::Tick(float DeltaSeconds)
 		return;
 	}
 
-	SetCurrentGamePlayTime();
-	SetCurrentKillCount();
+	UpdateCurrentGamePlayTime();
+}
+
+void ATeamNormalGameState::AddPlayerState(APlayerState* PlayerState)
+{
+	if (true == PlayerArray.Contains(PlayerState))
+	{
+		return;
+	}
+
+	Super::AddPlayerState(PlayerState);
+
+	ASPlayerState* NewPlayerState = Cast<ASPlayerState>(PlayerState);
+	if (nullptr == NewPlayerState)
+	{
+		return;
+	}
+
+	NewPlayerState->OnAddKillScoreDelegate.AddUObject(this, &ATeamNormalGameState::AddKillScore);
 }
 
 void ATeamNormalGameState::SetStartGameTime()
@@ -120,22 +139,24 @@ float ATeamNormalGameState::GetCurrentGamePlayTime() const
 
 void ATeamNormalGameState::OnRep_BlueTeamKillCount()
 {
+	UE_LOG(LogTemp, Log, TEXT("ATeamNormalGameState::OnRep_BlueTeamKillCount() called"));
 	if (nullptr == TeamScoreWidget)
 	{
 		return;
 	}
 
-	TeamScoreWidget->AddBlueTeamScore();
+	TeamScoreWidget->UpdateBlueTeamScore(BlueTeamKillCount);
 }
 
 void ATeamNormalGameState::OnRep_RedTeamKillCount()
 {
+	UE_LOG(LogTemp, Log, TEXT("ATeamNormalGameState::OnRep_RedTeamKillCount() called"));
 	if (nullptr == TeamScoreWidget)
 	{
 		return;
 	}
 
-	TeamScoreWidget->AddRedTeamScore();
+	TeamScoreWidget->UpdateRedTeamScore(RedTeamKillCount);
 }
 
 void ATeamNormalGameState::Multicast_CountDown_Implementation(int32 CountDownNumber)
@@ -215,7 +236,22 @@ void ATeamNormalGameState::Multicast_SetGameOverWidget_Implementation()
 	}
 }
 
-void ATeamNormalGameState::SetCurrentGamePlayTime()
+void ATeamNormalGameState::AddKillScore(int32 TeamNumber)
+{
+	UE_LOG(LogTemp, Log, TEXT("ATeamNormalGameState::AddKillScore() called, TeamNum : %d"), TeamNumber);
+	if (TeamNumber == 0)
+	{
+		BlueTeamKillCount++;
+		TeamScoreWidget->UpdateBlueTeamScore(BlueTeamKillCount);
+	}
+	else if(TeamNumber == 1)
+	{
+		RedTeamKillCount++;
+		TeamScoreWidget->UpdateRedTeamScore(RedTeamKillCount);
+	}
+}
+
+void ATeamNormalGameState::UpdateCurrentGamePlayTime()
 {
 	// 게임이 시작한 경우 현재 게임 시간 설정
 	if (-1.0f != StartGameTime)
@@ -242,44 +278,5 @@ void ATeamNormalGameState::SetCurrentGamePlayTime()
 		CurrentGamePlayTime = 0.0f;
 		BeforeGameTime = 0;
 		GameTimerWidget->SetTimeText(0);
-	}
-}
-
-void ATeamNormalGameState::SetCurrentKillCount()
-{
-	// Match가 끝난 이후에는 Kill Count를 추가하지 않음
-	if (MatchState::WaitingPostMatch == GetMatchState())
-	{
-		return;
-	}
-
-	int Blue = 0, Red = 0;
-	for (auto Iter : PlayerArray)
-	{
-		ASPlayerState* PlayerState = Cast<ASPlayerState>(Iter);
-		if (nullptr == PlayerState)
-		{
-			continue;
-		}
-
-		if (PlayerState->GetTeamNumber() == 0)
-		{
-			Blue += PlayerState->GetKillScore();
-		}
-		else
-		{
-			Red += PlayerState->GetKillScore();
-		}
-	}
-
-	if (Blue > BlueTeamKillCount)
-	{
-		BlueTeamKillCount = Blue;
-		TeamScoreWidget->AddBlueTeamScore();
-	}
-	if (Red > RedTeamKillCount)
-	{
-		RedTeamKillCount = Red;
-		TeamScoreWidget->AddRedTeamScore();
 	}
 }

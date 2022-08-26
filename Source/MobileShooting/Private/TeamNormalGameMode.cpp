@@ -50,9 +50,10 @@ void ATeamNormalGameMode::PostLogin(APlayerController* NewPlayer)
 	}
 
 	ATeamNormalGameState* TeamNormalGameState = GetGameState<ATeamNormalGameState>();
-	if (nullptr != TeamNormalGameState)
+	ASPlayerState* NewPlayerState = NewPlayer->GetPlayerState<ASPlayerState>();
+	if (nullptr != TeamNormalGameState && nullptr != NewPlayerState)
 	{
-		TeamNormalGameState->AddPlayerState(NewPlayer->GetPlayerState<APlayerState>());
+		TeamNormalGameState->AddPlayerState(NewPlayerState);
 	}
 
 	int32 CurrentPlayerCount = 1;
@@ -80,6 +81,12 @@ void ATeamNormalGameMode::Logout(AController* Exiting)
 	if (nullptr != SPlyaerController)
 	{
 		PlayerControllerList.Remove(SPlyaerController);
+	}
+	
+	ATeamNormalGameState* TeamNormalGameState = GetGameState<ATeamNormalGameState>();
+	if (nullptr != TeamNormalGameState)
+	{
+		TeamNormalGameState->RemovePlayerState(Exiting->GetPlayerState<APlayerState>());
 	}
 
 	UE_LOG(LogTemp, Log, TEXT("TeamNormalGameMode Logout : %s"), *Exiting->GetName());

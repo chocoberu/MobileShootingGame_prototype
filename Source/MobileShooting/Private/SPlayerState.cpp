@@ -63,6 +63,7 @@ void ASPlayerState::ResetPlayerState()
 void ASPlayerState::AddKillScore()
 {
 	++KillScore;
+	OnAddKillScoreDelegate.Broadcast(GetTeamNumber());
 	UE_LOG(LogTemp, Log, TEXT("Current Kill Score : %d"), KillScore);
 }
 

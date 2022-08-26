@@ -16,9 +16,9 @@ class MOBILESHOOTING_API UTeamScoreWidget : public UUserWidget
 	
 public:
 
-	void AddBlueTeamScore();
+	void UpdateBlueTeamScore(const int32& CurrentBlueTeamScore);
 
-	void AddRedTeamScore();
+	void UpdateRedTeamScore(const int32& CurrentRedTeamScore);
 
 protected:
 
@@ -32,7 +32,4 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* RedTeamScore;
 
-	int32 CurrentBlueTeamScore;
-
-	int32 CurrentRedTeamScore;
 };

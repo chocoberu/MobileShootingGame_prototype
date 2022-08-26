@@ -23,6 +23,8 @@ public:
 
 	virtual void Tick(float DeltaSeconds) override;
 
+	virtual void AddPlayerState(APlayerState* PlayerState) override;
+
 	void SetStartGameTime();
 
 	float GetCurrentGamePlayTime() const;
@@ -46,9 +48,9 @@ public:
 
 protected:
 
-	void SetCurrentGamePlayTime();
+	void AddKillScore(int32 TeamNumber);
 
-	void SetCurrentKillCount();
+	void UpdateCurrentGamePlayTime();
 
 	// Game Time ฐüทร
 	UPROPERTY(Replicated)

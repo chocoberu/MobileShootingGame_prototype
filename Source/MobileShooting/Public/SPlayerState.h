@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerState.h"
 #include "SPlayerState.generated.h"
 
+using FOnAddKillScore = TMulticastDelegate<void(int)>;
 /**
  * 
  */
@@ -52,6 +53,9 @@ public:
 	int32 GetWeaponId() const { return CurrentWeaponId; }
 
 	int32 GetSubWeaponId() const { return CurrentSubweaponId; }
+
+	// Delegates
+	FOnAddKillScore OnAddKillScoreDelegate;
 
 protected:
 
