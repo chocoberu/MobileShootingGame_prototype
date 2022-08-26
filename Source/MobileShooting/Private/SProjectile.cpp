@@ -76,3 +76,7 @@ float ASProjectile::GetProjectileGravityZ() const
 	return ProjectileMovementComp->GetGravityZ();
 }
 
+void ASProjectile::SetGenericTeamId(const FGenericTeamId& NewTeamId)
+{
+	TeamId = NewTeamId;
+}

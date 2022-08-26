@@ -43,7 +43,7 @@ void ASRifleWeapon::NormalAttack()
 		return;
 	}
 
-	AActor* MyOwner = GetOwner();
+	ASCharacter* MyOwner = Cast<ASCharacter>(GetOwner());
 	if (nullptr == MyOwner)
 	{
 		return;
@@ -65,6 +65,7 @@ void ASRifleWeapon::NormalAttack()
 	{
 		return;
 	}
+	Bullet->SetGenericTeamId(MyOwner->GetGenericTeamId());
 	
 	Multicast_OnNormalAttack();
 }

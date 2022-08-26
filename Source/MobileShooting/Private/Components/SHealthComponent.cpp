@@ -5,6 +5,7 @@
 #include "Net/UnrealNetwork.h"
 #include "UI/SDamageTextWidgetComponent.h"
 #include "SPlayerState.h"
+#include "GenericTeamAgentInterface.h"
 
 // Sets default values for this component's properties
 USHealthComponent::USHealthComponent()
@@ -71,6 +72,13 @@ void USHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, 
 		return;
 	}
 	// TODO : 같은 팀에게 받은 데미지 무시
+	auto OwnerInterface = Cast<IGenericTeamAgentInterface>(GetOwner());
+	auto CauserInterface = Cast<IGenericTeamAgentInterface>(DamageCauser);
+
+	if (nullptr != OwnerInterface && nullptr != CauserInterface && OwnerInterface->GetGenericTeamId() == CauserInterface->GetGenericTeamId())
+	{
+		return;
+	}
 
 	Health = FMath::Clamp(Health - Damage, 0.0f, DefaultHealth);
 	UE_LOG(LogTemp, Log, TEXT("Health Changed : %s"), *FString::SanitizeFloat(Health));

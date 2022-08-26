@@ -28,6 +28,12 @@ void ASPlayerController::OnPossess(APawn* aPawn)
 		UE_LOG(LogTemp, Log, TEXT("ASPlayerController::OnPossess(), PlayerCharacter is nullptr"));
 		return;
 	}
+
+	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
+	if (nullptr != SPlayerState)
+	{
+		PlayerCharacter->SetGenericTeamId(SPlayerState->GetTeamNumber());
+	}
 	
 	PlayerCharacter->LoadWeapon();
 }

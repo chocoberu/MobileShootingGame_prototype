@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GenericTeamAgentInterface.h"
 #include "SProjectile.generated.h"
 
 UCLASS()
-class MOBILESHOOTING_API ASProjectile : public AActor
+class MOBILESHOOTING_API ASProjectile : public AActor, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 	
@@ -35,6 +36,11 @@ public:
 
 	float GetProjectileGravityZ() const;
 
+	// TeamAgent
+	virtual void SetGenericTeamId(const FGenericTeamId& NewTeamId) override;
+
+	virtual FGenericTeamId GetGenericTeamId() const override { return TeamId; }
+
 protected:
 
 	// Components
@@ -56,4 +62,5 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Attack")
 	float LifeTime;
 
+	FGenericTeamId TeamId;
 };

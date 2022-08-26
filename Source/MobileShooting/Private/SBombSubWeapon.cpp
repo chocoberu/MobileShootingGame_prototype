@@ -5,6 +5,7 @@
 #include "SBombSubWeaponProjectile.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "SCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
 
@@ -98,7 +99,7 @@ void ASBombSubWeapon::StopSubWeaponAttack()
 
 	GetWorldTimerManager().ClearTimer(BombChargingTimer);
 
-	auto SubWeaponOwner = GetOwner();
+	ASCharacter* SubWeaponOwner = Cast<ASCharacter>(GetOwner());
 	FRotator Rot = SubWeaponOwner->GetActorRotation();
 	Rot.Pitch += 30.0f;
 
@@ -113,6 +114,8 @@ void ASBombSubWeapon::StopSubWeaponAttack()
 
 	if (nullptr != Bomb)
 	{
+		Bomb->SetGenericTeamId(SubWeaponOwner->GetGenericTeamId());
+
 		float InitialSpeed = InitialBombSpeed + ChargingBombSpeed * RemainTime / BombMaxChargingTime;
 		UE_LOG(LogTemp, Log, TEXT("Bomb Initial Speed : %f"), InitialSpeed);
 		Bomb->SetInitialSpeed(InitialSpeed);

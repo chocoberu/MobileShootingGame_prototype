@@ -229,8 +229,7 @@ void ASCharacter::OnCharacterDead(USHealthComponent* OwningHealthComp, float Hea
 		SubWeapon->StopReloadSubWeapon();
 	}
 
-	// TODO : Character를 5초 후에 리스폰 or 시작 위치로 조정
-
+	// Character를 5초 후에 시작 위치로 조정
 	GetWorldTimerManager().SetTimer(RespawnTimer, this, &ASCharacter::RespawnCharacter, RespawnTime, false);
 
 	if (nullptr != SPlayerState)
@@ -539,6 +538,13 @@ void ASCharacter::RespawnCharacter(void)
 {
 	HealthComp->RestoreHealth();
 	//AnimInstance->SetDeadAnim(false);
+
+	// SCharacter를 StartSpot으로 이동시킴
+	PlayerController = Cast<ASPlayerController>(GetController());
+	if (nullptr != PlayerController && true == PlayerController->StartSpot.IsValid())
+	{
+		SetActorLocation(PlayerController->StartSpot->GetActorLocation());
+	}
 	
 	GetMesh()->SetSimulatePhysics(false);
 	GetMesh()->SetCollisionProfileName(TEXT("CharacterMesh"));
