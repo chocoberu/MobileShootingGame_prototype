@@ -21,7 +21,8 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	void UpdateDamageText(const float Damage);
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_UpdateDamageText(const float& Damage);
 
 	UFUNCTION()
 	void HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType,

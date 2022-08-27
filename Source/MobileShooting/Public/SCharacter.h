@@ -107,7 +107,7 @@ protected:
 	FTimerHandle RespawnTimer;
 
 	// AI
-	UPROPERTY(ReplicatedUsing = OnRep_UpdateHPBarColor, EditDefaultsOnly, Category = "Player")
+	UPROPERTY(ReplicatedUsing = OnRep_UpdateHPBarWidgetColor, EditDefaultsOnly, Category = "Player")
 	FGenericTeamId TeamId;
 
 	// PlayerState
@@ -163,7 +163,7 @@ public:
 	void UpdateHPBarWidget(float Health);
 
 	UFUNCTION()
-	void OnRep_UpdateHPBarColor();
+	void OnRep_UpdateHPBarWidgetColor();
 
 	class USHealthComponent* GetHealthComponent(void) { return HealthComp; }
 

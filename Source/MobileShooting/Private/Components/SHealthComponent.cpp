@@ -41,7 +41,7 @@ void USHealthComponent::BeginPlay()
 	RestoreHealth();
 }
 
-void USHealthComponent::UpdateDamageText(const float Damage)
+void USHealthComponent::Multicast_UpdateDamageText_Implementation(const float& Damage)
 {
 	// DamageText Widget Update
 	if (nullptr == DamageTextWidgetCompClass)
@@ -88,7 +88,7 @@ void USHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, 
 	// TODO : Multicast로 변경 필요
 	if (true == bUseDamageText)
 	{
-		UpdateDamageText(Damage);
+		Multicast_UpdateDamageText(Damage);
 	}
 	OnHealthChanged.Broadcast(this, Health, Damage, DamageType, InstigatedBy, DamageCauser);
 

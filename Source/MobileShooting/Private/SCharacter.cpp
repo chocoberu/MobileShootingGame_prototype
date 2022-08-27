@@ -578,7 +578,7 @@ void ASCharacter::UpdateHPBarWidget(float Health)
 	HPBarWidget->UpdateHPWidget(Health);
 }
 
-void ASCharacter::OnRep_UpdateHPBarColor()
+void ASCharacter::OnRep_UpdateHPBarWidgetColor()
 {
 	USHPBarWidget* HPBarWidget = Cast<USHPBarWidget>(HPBarWidgetComp->GetUserWidgetObject());
 	if (nullptr == HPBarWidget)
@@ -611,7 +611,7 @@ void ASCharacter::SetGenericTeamId(const FGenericTeamId& NewTeamID)
 		TeamId = NewTeamID;
 	}
 
-	OnRep_UpdateHPBarColor();
+	OnRep_UpdateHPBarWidgetColor();
 }
 
 void ASCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
