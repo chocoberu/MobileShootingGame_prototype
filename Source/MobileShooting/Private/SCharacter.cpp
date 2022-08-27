@@ -469,7 +469,7 @@ void ASCharacter::StartSubAttack(void)
 		return;
 	}
 
-	if (nullptr != SubWeapon && false == bDied)
+	if (nullptr != SubWeapon && false == bDied && false == HasAuthority())
 	{
 		SubWeapon->Client_StartSubWeaponAttack();
 	}
@@ -484,7 +484,7 @@ void ASCharacter::StopSubAttack(void)
 		return;
 	}
 
-	if (nullptr != SubWeapon && false == bDied)
+	if (nullptr != SubWeapon && false == bDied && false == HasAuthority())
 	{
 		SubWeapon->Client_StopSubWeaponAttack();
 	}
@@ -578,12 +578,40 @@ void ASCharacter::UpdateHPBarWidget(float Health)
 	HPBarWidget->UpdateHPWidget(Health);
 }
 
+void ASCharacter::OnRep_UpdateHPBarColor()
+{
+	USHPBarWidget* HPBarWidget = Cast<USHPBarWidget>(HPBarWidgetComp->GetUserWidgetObject());
+	if (nullptr == HPBarWidget)
+	{
+		UE_LOG(LogTemp, Error, TEXT("HPBarWidget is nullptr"));
+		return;
+	}
+
+	if (true == IsLocallyControlled())
+	{
+		HPBarWidget->SetHPBarColor(FColor::Green);
+	}
+	else
+	{
+		if (0 == TeamId.GetId())
+		{
+			HPBarWidget->SetHPBarColor(FColor::Blue);
+		}
+		else if (1 == TeamId.GetId())
+		{
+			HPBarWidget->SetHPBarColor(FColor::Red);
+		}
+	}
+}
+
 void ASCharacter::SetGenericTeamId(const FGenericTeamId& NewTeamID)
 {
 	if (NewTeamID != FGenericTeamId::NoTeam)
 	{
 		TeamId = NewTeamID;
 	}
+
+	OnRep_UpdateHPBarColor();
 }
 
 void ASCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
@@ -592,4 +620,5 @@ void ASCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLif
 
 	DOREPLIFETIME(ASCharacter, MainWeapon);
 	DOREPLIFETIME(ASCharacter, SubWeapon);
+	DOREPLIFETIME(ASCharacter, TeamId);
 }

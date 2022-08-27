@@ -180,7 +180,8 @@ void ASPlayerController::Client_LoadPlayerStateInfo_Implementation()
 	UE_LOG(LogTemp, Log, TEXT("ASPlayerController::Client_LoadPlayerStateInfo() called"));
 
 	// TEST CODE
-	// BeginPlayer()에서 InitWidget() 호출 시 일부 플랫폼에서 HUD와 Weapon Bind가 제대로 되지 않음 (HUD == nullptr이여서)
+	// BeginPlay()에서 InitWidget() 호출 시 일부 플랫폼에서 HUD와 Weapon Bind가 제대로 되지 않음 (HUD == nullptr이여서)
+	// PostInitializeComponents()에서는 Possess 이전이기 때문에 CreateWidget 불가
 	// OnPossess()는 클라이언트에서 호출되지 않으므로 다른 곳에서 생성 필요
 	InitWidget();
 	

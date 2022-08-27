@@ -30,3 +30,8 @@ void USHPBarWidget::UpdateHPWidget(float Health)
 		HPProgressBar->SetPercent(Health / HealthCompWeakPtr->GetDefaultHealth());
 	}
 }
+
+void USHPBarWidget::SetHPBarColor(FColor Color)
+{
+	HPProgressBar->FillColorAndOpacity = Color;
+}

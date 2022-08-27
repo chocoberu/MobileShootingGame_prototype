@@ -97,12 +97,10 @@ void ATeamNormalGameState::Tick(float DeltaSeconds)
 			}), 3.0f, false);
 	}
 
-	if (nullptr == GameTimerWidget)
+	if (nullptr != GameTimerWidget)
 	{
-		return;
+		UpdateCurrentGamePlayTime();
 	}
-
-	UpdateCurrentGamePlayTime();
 }
 
 void ATeamNormalGameState::AddPlayerState(APlayerState* PlayerState)

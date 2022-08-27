@@ -18,6 +18,8 @@ public:
 	void UpdateHPWidget(float Health);
 
 	void BindCharacterHealthComponent(class USHealthComponent* NewHealthComponent);
+
+	void SetHPBarColor(FColor Color);
 	
 protected:
 
