@@ -54,6 +54,8 @@ protected:
 
 	void InitWidget();
 
+	void SetPlayerStateInfo(const FString& NewPlayerName, int32 NewWeaponId, int32 NewSubWeaponId, int32 NewPlayerIndex);
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI", Meta = (AllowPrivateAccess = true))
 	TSubclassOf<class URightButtonHUDWidget> RightPadButtonHUDClass;
 

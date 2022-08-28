@@ -22,7 +22,9 @@ void ASPlayerController::OnPossess(APawn* aPawn)
 		Client_LoadPlayerStateInfo();
 	}
 
-	ASCharacter* PlayerCharacter = Cast<ASCharacter>(aPawn);
+	UE_LOG(LogTemp, Log, TEXT("ASPlayerController::OnPossess(), After Client_LoadPlayerStateInfo()"));
+
+	/*ASCharacter* PlayerCharacter = Cast<ASCharacter>(aPawn);
 	if (nullptr == PlayerCharacter)
 	{
 		UE_LOG(LogTemp, Log, TEXT("ASPlayerController::OnPossess(), PlayerCharacter is nullptr"));
@@ -35,11 +37,16 @@ void ASPlayerController::OnPossess(APawn* aPawn)
 		PlayerCharacter->SetGenericTeamId(SPlayerState->GetTeamNumber());
 	}
 	
-	PlayerCharacter->LoadWeapon();
+	PlayerCharacter->LoadWeapon();*/
 }
 
 void ASPlayerController::BindMainWeaponStatusWidget(ASWeapon* MainWeapon)
 {
+	if (false == IsLocalPlayerController())
+	{
+		return;
+	}
+
 	if (nullptr == RightButtonHUD)
 	{
 		UE_LOG(LogTemp, Error, TEXT("ASPlayerController::BindMainWeaponStatusWidget(), RightButtonHUD is nullptr"));
@@ -50,6 +57,11 @@ void ASPlayerController::BindMainWeaponStatusWidget(ASWeapon* MainWeapon)
 
 void ASPlayerController::BindSubWeaponStatusWidget(ASSubWeapon* SubWeapon)
 {
+	if (false == IsLocalPlayerController())
+	{
+		return;
+	}
+
 	if (nullptr == RightButtonHUD)
 	{
 		UE_LOG(LogTemp, Error, TEXT("ASPlayerController::BindSubWeaponStatusWidget(), RightButtonHUD is nullptr"));
@@ -119,7 +131,6 @@ void ASPlayerController::BeginPlay()
 
 	UE_LOG(LogTemp, Log, TEXT("ASPlayerController::BeginPlay() call"));
 
-	// TEST CODE
 	if (false == IsLocalPlayerController())
 	{
 		UE_LOG(LogTemp, Log, TEXT("ASPlayerController::BeginPlay(), No Local Controller"));
@@ -148,9 +159,6 @@ void ASPlayerController::BeginPlay()
 			RightButtonHUD->SetHiddenMenuButton(true);
 		}
 	}
-
-	// TEST CODE
-	//Server_ReadyGame(true);
 }
 
 void ASPlayerController::InitWidget()
@@ -173,6 +181,35 @@ void ASPlayerController::InitWidget()
 	{
 		MenuWidget->OnResumeDelegate.AddUObject(this, &ASPlayerController::OnGameResume);
 	}
+}
+
+void ASPlayerController::SetPlayerStateInfo(const FString& NewPlayerName, int32 NewWeaponId, int32 NewSubWeaponId, int32 NewPlayerIndex)
+{
+	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
+	if (nullptr == SPlayerState)
+	{
+		UE_LOG(LogTemp, Error, TEXT("SPlayerState is nullptr"));
+		return;
+	}
+
+	SPlayerState->SetPlayerName(NewPlayerName);
+	SPlayerState->SetWeaponId(NewWeaponId);
+	SPlayerState->SetSubWeaponId(NewSubWeaponId);
+	SPlayerState->SetPlayerIndex(NewPlayerIndex);
+
+	bLoadPlayerState = true;
+	RequestRestartPlayerDelegate.Broadcast(this);
+
+	ASCharacter* PlayerCharacter = Cast<ASCharacter>(GetPawn());
+	if (nullptr == PlayerCharacter)
+	{
+		UE_LOG(LogTemp, Log, TEXT("ASPlayerController::OnPossess(), PlayerCharacter is nullptr"));
+		return;
+	}
+
+	PlayerCharacter->SetGenericTeamId(SPlayerState->GetTeamNumber());
+	PlayerCharacter->LoadWeapon();
+
 }
 
 void ASPlayerController::Client_LoadPlayerStateInfo_Implementation()
@@ -202,20 +239,7 @@ void ASPlayerController::Client_LoadPlayerStateInfo_Implementation()
 	{
 		if (GetLocalRole() == ROLE_Authority)
 		{
-			ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
-			if (nullptr == SPlayerState)
-			{
-				UE_LOG(LogTemp, Error, TEXT("ASPlayerState is nullptr"))
-			}
-			else
-			{
-				SPlayerState->SetPlayerName(PlayerName);
-				SPlayerState->SetWeaponId(SaveGame->MainWeaponId);
-				SPlayerState->SetSubWeaponId(SaveGame->SubWeaponId);
-				SPlayerState->SetPlayerIndex(SaveGame->PlayerIndex);
-			}
-			bLoadPlayerState = true;
-			RequestRestartPlayerDelegate.Broadcast(this);
+			SetPlayerStateInfo(PlayerName, SaveGame->MainWeaponId, SaveGame->SubWeaponId, SaveGame->PlayerIndex);
 		}
 		else
 		{
@@ -228,20 +252,7 @@ void ASPlayerController::Server_LoadPlayerStateInfo_Implementation(const FString
 {
 	UE_LOG(LogTemp, Log, TEXT("ASPlayerController::Server_LoadPlayerStateInfo() called, PlayerName : %s"), *NewPlayerName);
 
-	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
-	if (nullptr == SPlayerState)
-	{
-		UE_LOG(LogTemp, Error, TEXT("SPlayerState is nullptr"));
-		return;
-	}
-
-	SPlayerState->SetPlayerName(NewPlayerName);
-	SPlayerState->SetWeaponId(NewWeaponId);
-	SPlayerState->SetSubWeaponId(NewSubWeaponId);
-	SPlayerState->SetPlayerIndex(NewPlayerIndex);
-
-	bLoadPlayerState = true;
-	RequestRestartPlayerDelegate.Broadcast(this);
+	SetPlayerStateInfo(NewPlayerName, NewWeaponId, NewSubWeaponId, NewPlayerIndex);
 }
 
 bool ASPlayerController::Server_LoadPlayerStateInfo_Validate(const FString& NewPlayerName, int32 NewWeaponId, int32 NewSubWeaponId, int32 NewPlayerIndex)

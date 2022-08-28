@@ -69,6 +69,7 @@ ASCharacter::ASCharacter()
 	TeamId = FGenericTeamId(0);
 
 	bIsAttack = false;
+	StartDirection = 1.0f;
 }
 
 // Called when the game starts or when spawned
@@ -81,6 +82,7 @@ void ASCharacter::BeginPlay()
 	if (GetActorForwardVector().X < 0.0f)
 	{
 		ArmRotationTo.Yaw = -180.0f;
+		StartDirection = -1.0f;
 	}
 
 	//if (GetLocalRole() == ROLE_AutonomousProxy || GetLocalRole() == ROLE_Authority)
@@ -136,22 +138,12 @@ void ASCharacter::PostInitializeComponents()
 
 void ASCharacter::MoveForward(float Value)
 {
-	DirectionToMove.X = Value;
-
-	if (ArmRotationTo.Yaw < 0.0f)
-	{
-		DirectionToMove.X *= -1.0f;
-	}
+	DirectionToMove.X = Value * StartDirection;
 }
 
 void ASCharacter::MoveRight(float Value)
 {
-	DirectionToMove.Y = Value;
-
-	if (ArmRotationTo.Yaw < 0.0f)
-	{
-		DirectionToMove.Y *= -1.0f;
-	}
+	DirectionToMove.Y = Value * StartDirection;
 }
 
 void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
@@ -618,6 +610,7 @@ void ASCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLif
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+	DOREPLIFETIME(ASCharacter, HealthComp);
 	DOREPLIFETIME(ASCharacter, MainWeapon);
 	DOREPLIFETIME(ASCharacter, SubWeapon);
 	DOREPLIFETIME(ASCharacter, TeamId);

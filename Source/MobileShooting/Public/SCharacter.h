@@ -114,6 +114,7 @@ protected:
 	UPROPERTY()
 	class ASPlayerState* SPlayerState;
 
+	float StartDirection;
 
 public:	
 	// Called every frame
