@@ -97,7 +97,7 @@ private:
 	float SkillAttackCoolTimeAnimationPauseTime;
 
 public:
-	
+
 	void SetHiddenMenuButton(bool NewValue);
 
 	void BindMainWeapon(class ASWeapon* NewMainWeapon);

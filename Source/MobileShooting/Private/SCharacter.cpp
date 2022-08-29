@@ -65,7 +65,6 @@ ASCharacter::ASCharacter()
 
 	RespawnTime = 5.0f;
 
-	// TEST CODE : Team 설정 관련
 	TeamId = FGenericTeamId(0);
 
 	bIsAttack = false;
@@ -85,16 +84,6 @@ void ASCharacter::BeginPlay()
 		StartDirection = -1.0f;
 	}
 
-	if(true == IsLocallyControlled())
-	{
-		// TODO : 준비 완료 상태로 변경, GameState에서 모든 플레이어가 준비된 경우 CountDown 시작하도록 작성 필요
-		PlayerController = Cast<ASPlayerController>(GetController());
-		if (nullptr != PlayerController)
-		{
-			//PlayerController->Server_ReadyGame(true);
-		}
-	}
-	
 	AnimInstance = Cast<USCharacterAnimInstance>(GetMesh()->GetAnimInstance());
 
 	if (nullptr == AnimInstance)
@@ -148,12 +137,6 @@ void ASCharacter::MoveRight(float Value)
 void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
 	Multicast_OnHealthChanged(OwningHealthComp, Health, HealthDelta, DamageType, InstigatedBy, DamageCauser);
-	/*UpdateHPBarWidget();
-
-	if (Health <= 0.0f && !bDied)
-	{
-		OnCharacterDead(OwningHealthComp, Health, HealthDelta, DamageType, InstigatedBy, DamageCauser);
-	}*/
 }
 
 void ASCharacter::Multicast_OnHealthChanged_Implementation(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
@@ -208,7 +191,6 @@ void ASCharacter::OnCharacterDead(USHealthComponent* OwningHealthComp, float Hea
 	GetMesh()->SetPhysicsLinearVelocity(FVector::ZeroVector);
 	GetMesh()->AddImpulseToAllBodiesBelow(ImpulseDireciton, NAME_None);
 
-	//GetMovementComponent()->StopMovementImmediately();
 	HPBarWidgetComp->SetHiddenInGame(true);
 
 	// Weapon Reload 관련 처리 
@@ -236,8 +218,7 @@ void ASCharacter::LoadWeapon()
 	int32 CurrentSubWeaponId = 1000;
 
 	SPlayerState = Cast<ASPlayerState>(GetPlayerState());
-	// TEST CODE
-	// LoadWeapon() 시점에서 PlayerState가 생성되지 않은 경우
+	
 	if (nullptr == SPlayerState)
 	{
 		UE_LOG(LogTemp, Log, TEXT("ASCharacter::LoadWeapon(), SPlayerState is nullptr"));
@@ -309,15 +290,13 @@ void ASCharacter::Tick(float DeltaTime)
 	SpringArmComp->TargetArmLength = FMath::FInterpTo(SpringArmComp->TargetArmLength, ArmLengthTo, DeltaTime, ArmLengthSpeed);
 	SpringArmComp->SetRelativeRotation(FMath::RInterpTo(SpringArmComp->GetRelativeRotation(), ArmRotationTo, DeltaTime, ArmRotationSpeed));
 
-	//UE_LOG(LogTemp, Log, TEXT("DirectionToMove : %s"), *DirectionToMove.ToString());
 	if (DirectionToMove.SizeSquared() > 0.0f)
 	{
-		// TEST CODE
+		// 공격 중인 경우 처음 공격한 방향을 계속 바라보도록
 		if (false == bIsAttack)
 		{
 			GetController()->SetControlRotation(FRotationMatrix::MakeFromX(DirectionToMove).Rotator());
 		}
-		//UE_LOG(LogTemp, Log, TEXT("FRotationMatrix::MakeFromX(DirectionToMove) : %s"), *FRotationMatrix::MakeFromX(DirectionToMove).Rotator().ToString());
 		AddMovementInput(DirectionToMove);
 	}
 }
@@ -347,16 +326,6 @@ void ASCharacter::StartMainAttack()
 	}
 	
 	Server_StartMainAttack();
-
-	/*if (nullptr != MainWeapon && false == bDied && false == MainWeapon->IsReloading())
-	{
-		bIsAttack = true;
-		//MainWeapon->StartNormalAttack();
-
-		float FirstDelay = MainWeapon->GetFirstDelay();
-		float NormalAttackCoolTime = MainWeapon->GetNormalAttackCoolTime();
-		GetWorldTimerManager().SetTimer(NormalAttackTimer, this, &ASCharacter::MainAttack, NormalAttackCoolTime, true, FirstDelay);
-	}*/
 }
 
 void ASCharacter::MainAttack()
@@ -383,8 +352,7 @@ void ASCharacter::Server_StartMainAttack_Implementation()
 	if (nullptr != MainWeapon && false == bDied && false == MainWeapon->IsReloading())
 	{
 		bIsAttack = true;
-		//MainWeapon->StartNormalAttack();
-
+		
 		float FirstDelay = MainWeapon->GetFirstDelay();
 		float NormalAttackCoolTime = MainWeapon->GetNormalAttackCoolTime();
 		GetWorldTimerManager().SetTimer(NormalAttackTimer, this, &ASCharacter::Multicast_MainAttack, NormalAttackCoolTime, true, FirstDelay);
@@ -410,7 +378,6 @@ void ASCharacter::Server_StopMainAttack_Implementation()
 	{
 		bIsAttack = false;
 		GetWorldTimerManager().ClearTimer(NormalAttackTimer);
-		//MainWeapon->StopNormalAttack();
 	}
 }
 
@@ -528,8 +495,7 @@ void ASCharacter::StopSkillAttack(void)
 void ASCharacter::RespawnCharacter(void)
 {
 	HealthComp->RestoreHealth();
-	//AnimInstance->SetDeadAnim(false);
-
+	
 	// SCharacter를 StartSpot으로 이동시킴
 	PlayerController = Cast<ASPlayerController>(GetController());
 	if (nullptr != PlayerController && true == PlayerController->StartSpot.IsValid())
@@ -537,6 +503,7 @@ void ASCharacter::RespawnCharacter(void)
 		SetActorLocation(PlayerController->StartSpot->GetActorLocation());
 	}
 	
+	// Ragdoll 처리 복구
 	GetMesh()->SetSimulatePhysics(false);
 	GetMesh()->SetCollisionProfileName(TEXT("CharacterMesh"));
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Pawn"));
