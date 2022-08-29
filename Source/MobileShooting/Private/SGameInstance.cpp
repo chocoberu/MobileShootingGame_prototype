@@ -116,10 +116,7 @@ void USGameInstance::OnCreateSessionComplete(FName SessionName, bool Success)
 		return;
 	}
 	
-	// Session Start는 SessionRoom에서 처리하도록 변경
-	//OnStartSessionCompleteDelegateHandle = SessionInterface->AddOnStartSessionCompleteDelegate_Handle(OnStartSessionCompleteDelegate);
-	//SessionInterface->StartSession(SessionName);
-
+	// Session Start는 SessionLevel에서 처리하도록 변경
 	// SessionLevel로 이동
 	UGameplayStatics::OpenLevel(World, TEXT("/Game/Levels/SessionLevel"), true, "listen");
 }
@@ -138,7 +135,6 @@ void USGameInstance::OnStartOnlineGameComplete(FName SessionName, bool Success)
 		return;
 	}
 
-	//UGameplayStatics::OpenLevel(GetWorld(), TEXT("/Game/Levels/SessionLevel"), true, "listen");
 	GetWorld()->ServerTravel("/Game/Levels/TeamNormalMatchLevel?listen");
 }
 

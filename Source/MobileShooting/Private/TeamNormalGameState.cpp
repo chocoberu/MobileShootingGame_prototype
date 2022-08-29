@@ -44,7 +44,7 @@ void ATeamNormalGameState::BeginPlay()
 
 	CurrentCountDown = MaxCountDown;
 
-	// UI Widget 생성
+	// GameState의 UI Widget 생성, GameTimer, TeamScore, MatchCountDown, GameOver
 	if (nullptr != GameTimerWidgetClass)
 	{
 		GameTimerWidget = CreateWidget<USGameTimerHUDWidget>(GetWorld(), GameTimerWidgetClass);
@@ -84,19 +84,19 @@ void ATeamNormalGameState::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
+	// 모든 플레이어가 준비되었을 때 Match Start CountDown, 3초 이후에 카운트 다운 호출
 	if (false == bAllPlayerReady && true == IsAllPlayerReadyState())
 	{
 		bAllPlayerReady = true;
 
-		// TEST CODE : 모든 플레이어가 준비되었을 때 Match Start CountDown, 3초 이후에 카운트 다운 호출
 		FTimerHandle CountDownTimer;
-
 		GetWorldTimerManager().SetTimer(CountDownTimer, FTimerDelegate::CreateLambda([&]()
 			{
 				OnAllPlayerReadyDelegate.Broadcast();
 			}), 3.0f, false);
 	}
 
+	// 현재 게임 시간 업데이트
 	if (nullptr != GameTimerWidget)
 	{
 		UpdateCurrentGamePlayTime();
@@ -159,20 +159,20 @@ void ATeamNormalGameState::OnRep_RedTeamKillCount()
 
 void ATeamNormalGameState::Multicast_CountDown_Implementation(int32 CountDownNumber)
 {
-	// TEST CODE
-	USGameInstance* SGameInstance = GetGameInstance<USGameInstance>();
-	if (nullptr == SGameInstance)
+	// Debug 출력
 	{
-		return;
+		USGameInstance* SGameInstance = GetGameInstance<USGameInstance>();
+		if (nullptr == SGameInstance)
+		{
+			return;
+		}
+		auto Engine = SGameInstance->GetEngine();
+		if (nullptr == Engine)
+		{
+			return;
+		}
+		Engine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::Printf(TEXT("%d"), CountDownNumber));
 	}
-
-	auto Engine = SGameInstance->GetEngine();
-	if (nullptr == Engine)
-	{
-		return;
-	}
-
-	Engine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::Printf(TEXT("%d"), CountDownNumber));
 
 	if (nullptr == MatchStartCountDownWidget)
 	{

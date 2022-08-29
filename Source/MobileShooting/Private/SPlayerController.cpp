@@ -16,34 +16,19 @@ void ASPlayerController::OnPossess(APawn* aPawn)
 
 	UE_LOG(LogTemp, Log, TEXT("ASPlayerController::OnPossess() call"));
 
-	// TEST CODE
+	// PlayerState 정보를 불러오는 과정
 	if (false == bLoadPlayerState)
 	{
 		Client_LoadPlayerStateInfo();
 	}
-
-	UE_LOG(LogTemp, Log, TEXT("ASPlayerController::OnPossess(), After Client_LoadPlayerStateInfo()"));
-
-	/*ASCharacter* PlayerCharacter = Cast<ASCharacter>(aPawn);
-	if (nullptr == PlayerCharacter)
-	{
-		UE_LOG(LogTemp, Log, TEXT("ASPlayerController::OnPossess(), PlayerCharacter is nullptr"));
-		return;
-	}
-
-	ASPlayerState* SPlayerState = GetPlayerState<ASPlayerState>();
-	if (nullptr != SPlayerState)
-	{
-		PlayerCharacter->SetGenericTeamId(SPlayerState->GetTeamNumber());
-	}
-	
-	PlayerCharacter->LoadWeapon();*/
 }
 
 void ASPlayerController::BindMainWeaponStatusWidget(ASWeapon* MainWeapon)
 {
+	UE_LOG(LogTemp, Log, TEXT("ASPlayerController::BindMainWeaponStatusWidget() called"));
 	if (false == IsLocalPlayerController())
 	{
+		UE_LOG(LogTemp, Log, TEXT("ASPlayerController::BindMainWeaponStatusWidget(), Is not local player"));
 		return;
 	}
 
@@ -57,8 +42,10 @@ void ASPlayerController::BindMainWeaponStatusWidget(ASWeapon* MainWeapon)
 
 void ASPlayerController::BindSubWeaponStatusWidget(ASSubWeapon* SubWeapon)
 {
+	UE_LOG(LogTemp, Log, TEXT("ASPlayerController::BindSubWeaponStatusWidget() called"));
 	if (false == IsLocalPlayerController())
 	{
+		UE_LOG(LogTemp, Log, TEXT("ASPlayerController::BindSubWeaponStatusWidget(), Is not local player"));
 		return;
 	}
 
@@ -83,7 +70,7 @@ void ASPlayerController::OnGamePause()
 	MenuWidget->AddToViewport();
 	bShowMouseCursor = true;
 
-	// TEST CODE
+	// Input Mode를 UI로 변경
 	FInputModeUIOnly Mode;
 	SetInputMode(Mode);
 }
@@ -101,21 +88,19 @@ void ASPlayerController::OnGameResume()
 	MenuWidget->RemoveFromViewport();
 	bShowMouseCursor = false;
 
-	// TEST CODE
+	// Input Mode를 GameAndUI로 변경
 	FInputModeGameAndUI Mode;
 	SetInputMode(Mode);
 }
 
 void ASPlayerController::OnPlayerDead()
 {
-	// Stop All Widget Animations
+	// 가상 패드의 모든 위젯 애니메이션을 중지
 	if (nullptr == RightButtonHUD)
 	{
 		return;
 	}
 	RightButtonHUD->StopAllWidgetAnimations();
-
-	// TODO : SCharacter 사망 시 작업 추가
 }
 
 void ASPlayerController::PostInitializeComponents()
@@ -141,7 +126,7 @@ void ASPlayerController::BeginPlay()
 	if (GetNetMode() != ENetMode::NM_Standalone)
 	{
 		FInputModeUIOnly UIInputMode;
-		SetInputMode(UIInputMode);
+		//SetInputMode(UIInputMode);
 	}
 	
 	FString CurrentPlatform = UGameplayStatics::GetPlatformName();
@@ -216,7 +201,6 @@ void ASPlayerController::Client_LoadPlayerStateInfo_Implementation()
 {
 	UE_LOG(LogTemp, Log, TEXT("ASPlayerController::Client_LoadPlayerStateInfo() called"));
 
-	// TEST CODE
 	// BeginPlay()에서 InitWidget() 호출 시 일부 플랫폼에서 HUD와 Weapon Bind가 제대로 되지 않음 (HUD == nullptr이여서)
 	// PostInitializeComponents()에서는 Possess 이전이기 때문에 CreateWidget 불가
 	// OnPossess()는 클라이언트에서 호출되지 않으므로 다른 곳에서 생성 필요

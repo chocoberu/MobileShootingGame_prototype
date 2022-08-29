@@ -31,7 +31,7 @@ void ASSubWeapon::BeginPlay()
 	ReloadSubWeapon();
 
 	auto PlayerController = Cast<ASPlayerController>(GetOwner()->GetInstigatorController());
-	if (nullptr == PlayerController)
+	if (nullptr == PlayerController || false == PlayerController->IsLocalPlayerController())
 	{
 		return;
 	}

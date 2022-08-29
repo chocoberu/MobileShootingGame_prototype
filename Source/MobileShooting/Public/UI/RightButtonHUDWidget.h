@@ -19,8 +19,11 @@ public:
 protected:
 	virtual void NativeConstruct() override;
 
-	TWeakObjectPtr<class ASWeapon> MainWeaponWeakPtr;
-	TWeakObjectPtr<class ASSubWeapon> SubWeaponWeakPtr;
+	UPROPERTY()
+	class ASWeapon* MainWeapon;
+
+	UPROPERTY()
+	class ASSubWeapon* SubWeapon;
 
 private:
 
@@ -97,9 +100,9 @@ public:
 	
 	void SetHiddenMenuButton(bool NewValue);
 
-	void BindMainWeapon(class ASWeapon* MainWeapon);
+	void BindMainWeapon(class ASWeapon* NewMainWeapon);
 
-	void BindSubWeapon(class ASSubWeapon* SubWeapon);
+	void BindSubWeapon(class ASSubWeapon* NewSubWeapon);
 
 	void SetVisibleWeaponStatusAnimation(bool NewValue);
 

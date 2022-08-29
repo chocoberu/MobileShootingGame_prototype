@@ -24,7 +24,7 @@ void ASWeapon::BeginPlay()
 	WeaponState = EWeaponState::E_IDLE;
 
 	auto PlayerController = Cast<ASPlayerController>(GetOwner()->GetInstigatorController());
-	if (nullptr == PlayerController)
+	if (nullptr == PlayerController || false == PlayerController->IsLocalPlayerController())
 	{
 		return;
 	}

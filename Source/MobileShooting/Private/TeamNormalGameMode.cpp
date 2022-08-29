@@ -34,6 +34,7 @@ void ATeamNormalGameMode::InitGameState()
 		return;
 	}
 
+	// 모든 플레이어가 준비 되었을 때 카운트 다운 이후 Match Start
 	TeamNormalGameState->OnAllPlayerReadyDelegate.AddUObject(this, &ATeamNormalGameMode::CountForStartMatch);
 }
 
@@ -43,6 +44,7 @@ void ATeamNormalGameMode::PostLogin(APlayerController* NewPlayer)
 
 	UE_LOG(LogTemp, Log, TEXT("TeamNormalGameMode Player %s PostLogin"), *NewPlayer->GetName());
 
+	// PlayerController, PlayerState 추가
 	ASPlayerController* SPlyaerController = Cast<ASPlayerController>(NewPlayer);
 	if (nullptr != SPlyaerController)
 	{
@@ -69,7 +71,7 @@ void ATeamNormalGameMode::PostLogin(APlayerController* NewPlayer)
 	// TEST CODE : 임시로 조건 추가
 	if (PlayerControllerList.Num() == CurrentPlayerCount || -1 == CurrentPlayerCount)
 	{
-		SetMatchState(MatchState::InProgress); // 테스트용
+		SetMatchState(MatchState::InProgress);
 	}
 }
 
@@ -193,6 +195,7 @@ void ATeamNormalGameMode::Tick(float DeltaSeconds)
 			return;
 		}
 
+		// 남은 시간이 0이 되었을 때 EndMatch
 		if (TeamNormalGameState->GetCurrentGamePlayTime() <= 0.0f)
 		{
 			UE_LOG(LogTemp, Log, TEXT("Game Over!, Match end"));

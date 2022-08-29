@@ -85,7 +85,6 @@ void ASCharacter::BeginPlay()
 		StartDirection = -1.0f;
 	}
 
-	//if (GetLocalRole() == ROLE_AutonomousProxy || GetLocalRole() == ROLE_Authority)
 	if(true == IsLocallyControlled())
 	{
 		// TODO : 준비 완료 상태로 변경, GameState에서 모든 플레이어가 준비된 경우 CountDown 시작하도록 작성 필요

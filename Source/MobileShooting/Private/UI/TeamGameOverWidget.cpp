@@ -5,7 +5,6 @@
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
 #include "SGameInstance.h"
-#include "Kismet/GameplayStatics.h"
 
 void UTeamGameOverWidget::SetResultText(FString Result)
 {
@@ -29,5 +28,4 @@ void UTeamGameOverWidget::OnClickedReturnButton()
 	}
 
 	SGameInstance->LeaveAndDestroySession();
-	UGameplayStatics::OpenLevel(GetWorld(), FName(TEXT("GameStartLevel")));
 }
