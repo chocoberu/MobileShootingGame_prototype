@@ -45,12 +45,7 @@ void USCharacterAnimInstance::AnimNotify_NormalAttack()
 	UE_LOG(LogTemp, Log, TEXT("USCharacterAnimInstance::AnimNotify_NormalAttack() called"));
 
 	ASCharacter* SCharacter = Cast<ASCharacter>(TryGetPawnOwner());
-	if (nullptr == SCharacter)
-	{
-		return;
-	}
-
-	if (false == SCharacter->HasAuthority())
+	if (nullptr == SCharacter || false == SCharacter->HasAuthority())
 	{
 		return;
 	}

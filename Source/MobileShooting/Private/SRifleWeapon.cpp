@@ -49,13 +49,7 @@ void ASRifleWeapon::NormalAttack()
 		return;
 	}
 
-	if (nullptr != OwnerAnimInstance)
-	{
-		//OwnerAnimInstance->PlayNormalAttack();
-	}
-
-	// TODO : AnimMontage에서 총알 발사 로직을 호출하도록 수정
-	FActorSpawnParameters SpawnParams;
+	/*FActorSpawnParameters SpawnParams;
 	SpawnParams.Owner = MyOwner;
 	ASProjectile* Bullet = GetWorld()->SpawnActor<ASProjectile>(ProjectileClass,
 																MeshComp->GetSocketLocation(WeaponMuzzleSocketName), 
@@ -65,13 +59,32 @@ void ASRifleWeapon::NormalAttack()
 	{
 		return;
 	}
-	Bullet->SetGenericTeamId(MyOwner->GetGenericTeamId());
+	Bullet->SetGenericTeamId(MyOwner->GetGenericTeamId());*/
 	
 	Multicast_OnNormalAttack();
 }
 
 void ASRifleWeapon::OnNormalAttack()
 {
+	ASCharacter* MyOwner = Cast<ASCharacter>(GetOwner());
+	if (nullptr == MyOwner)
+	{
+		return;
+	}
+
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = MyOwner;
+	ASProjectile* Bullet = GetWorld()->SpawnActor<ASProjectile>(ProjectileClass,
+		MeshComp->GetSocketLocation(WeaponMuzzleSocketName),
+		GetOwner()->GetActorRotation(),
+		SpawnParams);
+
+	if (nullptr == Bullet)
+	{
+		return;
+	}
+	Bullet->SetGenericTeamId(MyOwner->GetGenericTeamId());
+
 	// 총알 수 처리
 	--CurrentBulletCount;
 

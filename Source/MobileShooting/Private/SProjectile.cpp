@@ -28,8 +28,8 @@ ASProjectile::ASProjectile()
 	ProjectileMovementComp->bShouldBounce = true;
 	ProjectileMovementComp->Bounciness = 0.3f;
 
-	bReplicates = true;
-	SetReplicateMovement(true);
+	//bReplicates = true;
+	//SetReplicateMovement(true);
 }
 
 // Called when the game starts or when spawned
