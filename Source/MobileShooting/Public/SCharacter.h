@@ -138,6 +138,12 @@ public:
 	void Server_StopMainAttack();
 
 	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_StartMainAttack();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_StopMainAttack();
+
+	UFUNCTION(NetMulticast, Reliable)
 	void Multicast_MainAttack();
 
 	virtual void ReloadMainWeapon(void);
@@ -165,6 +171,8 @@ public:
 
 	UFUNCTION()
 	void OnRep_UpdateHPBarWidgetColor();
+
+	class USCharacterAnimInstance* GetSCharacterAnimInstance();
 
 	class USHealthComponent* GetHealthComponent(void) { return HealthComp; }
 

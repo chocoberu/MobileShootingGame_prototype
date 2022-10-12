@@ -17,7 +17,13 @@ void ASRifleWeapon::BeginPlay()
 	Super::BeginPlay();
 
 	NormalAttackCoolTime = 60.0f / RateOfFire;
+	ASCharacter* SCharacter = Cast<ASCharacter>(GetOwner());
+	if (nullptr == SCharacter)
+	{
+		return;
+	}
 
+	SetOwnerAnimInstance(SCharacter->GetSCharacterAnimInstance());
 }
 
 void ASRifleWeapon::StartNormalAttack()
@@ -27,8 +33,20 @@ void ASRifleWeapon::StartNormalAttack()
 		return;
 	}
 
+	UE_LOG(LogTemp, Log, TEXT("ASRifleWeapon::StartNormalAttack() called"));
+
 	float FirstDelay = GetFirstDelay();
-	GetWorldTimerManager().SetTimer(NormalAttackTimer, this, &ASRifleWeapon::NormalAttack, NormalAttackCoolTime, true, FirstDelay);
+	//GetWorldTimerManager().SetTimer(NormalAttackTimer, this, &ASRifleWeapon::NormalAttack, NormalAttackCoolTime, true, FirstDelay);
+	GetWorldTimerManager().SetTimer(NormalAttackTimer, FTimerDelegate::CreateLambda([&]()
+		{
+			if (nullptr == OwnerAnimInstance)
+			{
+				return;
+			}
+			
+			OwnerAnimInstance->PlayNormalAttack();
+
+		}), NormalAttackCoolTime, true, FirstDelay);
 }
 
 void ASRifleWeapon::StopNormalAttack()
@@ -61,11 +79,14 @@ void ASRifleWeapon::NormalAttack()
 	}
 	Bullet->SetGenericTeamId(MyOwner->GetGenericTeamId());*/
 	
+	UE_LOG(LogTemp, Log, TEXT("ASRifleWeapon::NormalAttack() called"));
+	
 	Multicast_OnNormalAttack();
 }
 
 void ASRifleWeapon::OnNormalAttack()
 {
+	UE_LOG(LogTemp, Log, TEXT("ASRifleWeapon::OnNormalAttack() called"));
 	ASCharacter* MyOwner = Cast<ASCharacter>(GetOwner());
 	if (nullptr == MyOwner)
 	{

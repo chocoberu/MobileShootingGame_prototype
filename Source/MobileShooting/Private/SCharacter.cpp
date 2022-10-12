@@ -76,8 +76,11 @@ void ASCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UE_LOG(LogTemp, Log, TEXT("ASPlayerCharacter::BeginPlay() call"));
-
+	if (true == IsLocallyControlled())
+	{
+		UE_LOG(LogTemp, Log, TEXT("ASPlayerCharacter::BeginPlay() call"));
+	}
+	
 	if (GetActorForwardVector().X < 0.0f)
 	{
 		ArmRotationTo.Yaw = -180.0f;
@@ -85,7 +88,7 @@ void ASCharacter::BeginPlay()
 	}
 
 	AnimInstance = Cast<USCharacterAnimInstance>(GetMesh()->GetAnimInstance());
-
+	
 	if (nullptr == AnimInstance)
 	{
 		//UE_LOG(LogTemp, Error, TEXT("AnimInstance is nullptr"));
@@ -326,6 +329,7 @@ void ASCharacter::StartMainAttack()
 	}
 	
 	Server_StartMainAttack();
+	//Multicast_StartMainAttack();
 }
 
 void ASCharacter::MainAttack()
@@ -344,24 +348,43 @@ void ASCharacter::StopMainAttack()
 	}
 
 	Server_StopMainAttack();
-
+	//Multicast_StopMainAttack();
 }
 
 void ASCharacter::Server_StartMainAttack_Implementation()
 {
 	if (nullptr != MainWeapon && false == bDied && false == MainWeapon->IsReloading())
 	{
-		bIsAttack = true;
+		/*bIsAttack = true;
 		
 		float FirstDelay = MainWeapon->GetFirstDelay();
 		float NormalAttackCoolTime = MainWeapon->GetNormalAttackCoolTime();
-		GetWorldTimerManager().SetTimer(NormalAttackTimer, this, &ASCharacter::Multicast_MainAttack, NormalAttackCoolTime, true, FirstDelay);
+		GetWorldTimerManager().SetTimer(NormalAttackTimer, this, &ASCharacter::Multicast_MainAttack, NormalAttackCoolTime, true, FirstDelay);*/
+		Multicast_StartMainAttack();
 	}
 }
 
 bool ASCharacter::Server_StartMainAttack_Validate()
 {
 	return true;
+}
+
+void ASCharacter::Multicast_StartMainAttack_Implementation()
+{
+	if (nullptr != MainWeapon && false == bDied && false == MainWeapon->IsReloading())
+	{
+		bIsAttack = true;
+		MainWeapon->StartNormalAttack();
+	}
+}
+
+void ASCharacter::Multicast_StopMainAttack_Implementation()
+{
+	if (nullptr != MainWeapon && false == bDied)
+	{
+		bIsAttack = false;
+		MainWeapon->StopNormalAttack();
+	}
 }
 
 void ASCharacter::Multicast_MainAttack_Implementation()
@@ -377,7 +400,8 @@ void ASCharacter::Server_StopMainAttack_Implementation()
 	if (nullptr != MainWeapon && false == bDied)
 	{
 		bIsAttack = false;
-		GetWorldTimerManager().ClearTimer(NormalAttackTimer);
+		//GetWorldTimerManager().ClearTimer(NormalAttackTimer);
+		Multicast_StopMainAttack();
 	}
 }
 
@@ -560,6 +584,16 @@ void ASCharacter::OnRep_UpdateHPBarWidgetColor()
 			HPBarWidget->SetHPBarColor(FColor::Red);
 		}
 	}
+}
+
+USCharacterAnimInstance* ASCharacter::GetSCharacterAnimInstance()
+{
+	if (nullptr == AnimInstance)
+	{
+		AnimInstance = Cast<USCharacterAnimInstance>(GetMesh()->GetAnimInstance());
+	}
+
+	return AnimInstance;
 }
 
 void ASCharacter::SetGenericTeamId(const FGenericTeamId& NewTeamID)
