@@ -44,7 +44,7 @@ public:
 
 	bool StartGame();
 
-	void LeaveSession(const FString& PlayerName, bool bSessionHost);
+	void LeaveSession();
 
 protected:
 

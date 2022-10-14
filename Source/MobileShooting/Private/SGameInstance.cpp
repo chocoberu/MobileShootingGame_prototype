@@ -119,6 +119,7 @@ void USGameInstance::OnCreateSessionComplete(FName SessionName, bool Success)
 	// Session Start는 SessionLevel에서 처리하도록 변경
 	// SessionLevel로 이동
 	UGameplayStatics::OpenLevel(World, TEXT("/Game/Levels/SessionLevel"), true, "listen");
+	//World->ServerTravel(TEXT("/Game/Levels/SessionLevel?listen"), true);
 }
 
 void USGameInstance::OnStartOnlineGameComplete(FName SessionName, bool Success)
@@ -350,7 +351,7 @@ void USGameInstance::RegisterPlayer(FName SessionName, const FUniqueNetId& Uniqu
 	{
 		return;
 	}
-
+	
 	SessionInterface->RegisterPlayer(SessionName, UniqueId, bWasInvited);
 }
 

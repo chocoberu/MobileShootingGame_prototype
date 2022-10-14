@@ -186,34 +186,20 @@ void ATestSessionGameMode::UpdatePlayerList()
 	}
 }
 
-void ATestSessionGameMode::LeaveSession(const FString& PlayerName, bool bSessionHost)
+void ATestSessionGameMode::LeaveSession()
 {
 	// 호스트가 떠나는 경우 Session 내의 모든 클라이언트도 LeaveSession() 처리
-	if (true == bSessionHost)
+	ASessionRoomPlayerController* HostPlayerController = nullptr;
+	for (auto SessionRoomPlayerController : PlayerControllerList)
 	{
-		for (auto SessionRoomPlayerController : PlayerControllerList)
+		if (true == SessionRoomPlayerController->HasAuthority())
 		{
-			if (SessionRoomPlayerController->GetPlayerName().Compare(PlayerName) == 0)
-			{
-				SessionRoomPlayerController->Client_LeaveSession();
-			}
-			else
-			{
-				SessionRoomPlayerController->Client_LeaveSession(true);
-			}
+			HostPlayerController = SessionRoomPlayerController;
+		}
+		else
+		{
+			SessionRoomPlayerController->Client_LeaveSession(true);
 		}
 	}
-
-	// 호스트가 아닌 경우
-	else
-	{
-		for (auto SessionRoomPlayerController : PlayerControllerList)
-		{
-			if (SessionRoomPlayerController->GetPlayerName().Compare(PlayerName) == 0)
-			{
-				SessionRoomPlayerController->Client_LeaveSession();
-				return;
-			}
-		}
-	}
+	HostPlayerController->Client_LeaveSession();
 }
