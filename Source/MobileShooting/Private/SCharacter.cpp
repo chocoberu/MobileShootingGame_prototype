@@ -274,7 +274,8 @@ void ASCharacter::LoadWeapon()
 	}
 
 	// PlayerController Ready Ã³¸®
-	if (GetNetMode() != ENetMode::NM_Standalone)
+	//if (GetNetMode() != ENetMode::NM_Standalone)
+	if(true == IsLocallyControlled())
 	{
 		PlayerController = GetController<ASPlayerController>();
 		if (nullptr == PlayerController)
@@ -604,6 +605,36 @@ void ASCharacter::SetGenericTeamId(const FGenericTeamId& NewTeamID)
 	}
 
 	OnRep_UpdateHPBarWidgetColor();
+}
+
+void ASCharacter::OnRep_MainWeapon()
+{
+	UE_LOG(LogTemp, Log, TEXT("ASCharacter::OnRep_MainWeapon() called"));
+	
+	if (MainWeapon != nullptr && SubWeapon != nullptr)
+	{
+		PlayerController = Cast<ASPlayerController>(GetController());
+		if (nullptr != PlayerController && true == IsLocallyControlled())
+		{
+			UE_LOG(LogTemp, Log, TEXT("Ready!"));
+			PlayerController->Server_ReadyGame(true);
+		}
+	}
+}
+
+void ASCharacter::OnRep_SubWeapon()
+{
+	UE_LOG(LogTemp, Log, TEXT("ASCharacter::OnRep_SubWeapon() called"));
+
+	if (MainWeapon != nullptr && SubWeapon != nullptr)
+	{
+		PlayerController = Cast<ASPlayerController>(GetController());
+		if (nullptr != PlayerController && true == IsLocallyControlled())
+		{
+			UE_LOG(LogTemp, Log, TEXT("Ready!"));
+			PlayerController->Server_ReadyGame(true);
+		}
+	}
 }
 
 void ASCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const

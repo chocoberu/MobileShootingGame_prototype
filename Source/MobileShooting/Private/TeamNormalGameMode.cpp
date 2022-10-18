@@ -166,8 +166,6 @@ AActor* ATeamNormalGameMode::ChoosePlayerStart_Implementation(AController* Playe
 
 void ATeamNormalGameMode::StartMatch()
 {
-	Super::StartMatch();
-
 	UE_LOG(LogTemp, Log, TEXT("ATeamNormalGameMode::StartMatch() called"));
 
 	ATeamNormalGameState* TeamNormalGameState = GetGameState<ATeamNormalGameState>();
@@ -177,9 +175,9 @@ void ATeamNormalGameMode::StartMatch()
 	}
 
 	// 모든 플레이어의 입력을 받을 수 있도록 처리
-	for (auto Player : PlayerControllerList)
+	for (auto PlayerController : PlayerControllerList)
 	{
-		Player->Client_SetInputMode(true);
+		PlayerController->Client_SetInputMode(true);
 	}
 }
 

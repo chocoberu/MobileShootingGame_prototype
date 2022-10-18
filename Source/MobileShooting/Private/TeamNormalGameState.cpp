@@ -191,6 +191,11 @@ bool ATeamNormalGameState::IsAllPlayerReadyState()
 		CurrentPlayerCount = SGameInstance->GetCurrentSessionPlayerCount();
 	}
 
+	if (PlayerArray.Num() < CurrentPlayerCount)
+	{
+		return false;
+	}
+
 	bool bResult = true;
 	for (auto Iter : PlayerArray)
 	{

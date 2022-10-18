@@ -185,10 +185,11 @@ void ASPlayerController::SetPlayerStateInfo(const FString& NewPlayerName, int32 
 	bLoadPlayerState = true;
 	RequestRestartPlayerDelegate.Broadcast(this);
 
+	UE_LOG(LogTemp, Log, TEXT("ASPlayerController::SetPlayerStateInfo(), after RequestRestartPlayerDelegate called"));
 	ASCharacter* PlayerCharacter = Cast<ASCharacter>(GetPawn());
 	if (nullptr == PlayerCharacter)
 	{
-		UE_LOG(LogTemp, Log, TEXT("ASPlayerController::OnPossess(), PlayerCharacter is nullptr"));
+		UE_LOG(LogTemp, Error, TEXT("ASPlayerController::SetPlayerStateInfo(), PlayerCharacter is nullptr"));
 		return;
 	}
 
@@ -253,7 +254,7 @@ void ASPlayerController::Server_ReadyGame_Implementation(bool bReadyState)
 		return;
 	}
 
-	SPlayerState->SetPlayerReadyState(true);
+	SPlayerState->SetPlayerReadyState(bReadyState);
 }
 
 bool ASPlayerController::Server_ReadyGame_Validate(bool bReadyState)

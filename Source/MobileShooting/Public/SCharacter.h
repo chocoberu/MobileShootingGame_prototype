@@ -36,6 +36,12 @@ protected:
 	UFUNCTION(NetMulticast, Reliable)
 	void Multicast_OnHealthChanged(class USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
 
+	UFUNCTION()
+	void OnRep_MainWeapon();
+
+	UFUNCTION()
+	void OnRep_SubWeapon();
+
 	// Camera
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	class UCameraComponent* CameraComp;
@@ -69,7 +75,7 @@ protected:
 	class UWidgetComponent* HPBarWidgetComp;
 
 	// Weapon
-	UPROPERTY(Replicated)
+	UPROPERTY(ReplicatedUsing = OnRep_MainWeapon)
 	class ASWeapon* MainWeapon;
 
 	UPROPERTY(EditAnywhere, Category = "Player")
@@ -78,7 +84,7 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Player")
 	FName WeaponAttachSocketName;
 
-	UPROPERTY(Replicated)
+	UPROPERTY(ReplicatedUsing = OnRep_SubWeapon)
 	class ASSubWeapon* SubWeapon;
 
 	UPROPERTY(EditAnywhere, Category = "Player")
